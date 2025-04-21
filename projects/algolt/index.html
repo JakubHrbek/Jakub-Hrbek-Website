@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Algolt – Algorithm Vault</title>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Chivo+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        font-family: 'Chivo Mono', monospace;
+      }
+      a, button {
+        transition: none !important;
+      }
+      .button-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-top: 20px;
+        display: none;
+      }
+      .button-grid button {
+        padding: 20px;
+        border: 2px solid black;
+        background-color: white;
+        font-size: 18px;
+        font-weight: bold;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      .button-grid button:hover {
+        background-color: black;
+        color: white;
+      }
+    </style>
+  </head>
+  <body class="bg-white text-black min-h-screen flex flex-col">
+
+    <header class="w-full px-6 py-4 border-b-4 border-black flex justify-between items-center uppercase text-sm">
+      <h1 class="text-2xl font-black tracking-tight border-2 border-black px-2">ALGOLT</h1>
+      <nav>
+        <ul class="flex gap-4 font-bold">
+          <li><a href="#" class="border-2 border-black px-2 py-1 block">Home</a></li>
+          <li><a href="#" class="border-2 border-black px-2 py-1 block">Visualizers</a></li>
+          <li><a href="#" class="border-2 border-black px-2 py-1 block">Learning Log</a></li>
+          <li><a href="#" class="border-2 border-black px-2 py-1 block">About</a></li>
+          <li><a href="../../index.html" class="border-2 border-black px-2 py-1 block">JH</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="flex-grow flex flex-col justify-center items-center text-center px-6 py-20 border-b-4 border-black">
+      <h2 class="text-5xl sm:text-6xl font-black mb-6 uppercase leading-tight">
+        Visualize Algorithms.<br><span class="underline">Understand Deeply.</span>
+      </h2>
+      <p class="text-lg sm:text-xl font-medium max-w-2xl mb-10 border-t-2 border-b-2 border-black py-4">
+        ALGOLT is your personal study room for raw, distraction-free algorithm visualization and understanding.
+      </p>
+      <a id="getStartedBtn" href="javascript:void(0);" class="border-4 border-black px-8 py-3 uppercase text-lg font-black hover:bg-black hover:text-white">
+        Get Started
+      </a>
+
+      <div id="buttonGrid" class="button-grid">
+        <!-- List of algorithm buttons with onclick navigation -->
+        <button onclick="window.location.href='algorithms/bubble-sort.html'">Bubble Sort</button>
+        <button onclick="window.location.href='quick-sort.html'">Quick Sort</button>
+        <button onclick="window.location.href='merge-sort.html'">Merge Sort</button>
+        <button onclick="window.location.href='insertion-sort.html'">Insertion Sort</button>
+        <button onclick="window.location.href='selection-sort.html'">Selection Sort</button>
+        <button onclick="window.location.href='heap-sort.html'">Heap Sort</button>
+        <button onclick="window.location.href='radix-sort.html'">Radix Sort</button>
+        <button onclick="window.location.href='bucket-sort.html'">Bucket Sort</button>
+        <button onclick="window.location.href='counting-sort.html'">Counting Sort</button>
+        <button onclick="window.location.href='binary-search.html'">Binary Search</button>
+        <button onclick="window.location.href='dfs.html'">Depth First Search (DFS)</button>
+        <button onclick="window.location.href='bfs.html'">Breadth First Search (BFS)</button>
+      </div>      
+    </main>
+
+    <footer class="text-center text-xs uppercase py-6 border-t-4 border-black tracking-widest font-bold">
+      © 2025 Jakub Hrbek – No Rights Reserved
+    </footer>
+
+    <script>
+      const getStartedBtn = document.getElementById('getStartedBtn');
+      const buttonGrid = document.getElementById('buttonGrid');
+
+      getStartedBtn.addEventListener('click', () => {
+        // Hide the "Get Started" button and show the grid
+        getStartedBtn.style.display = 'none';
+        buttonGrid.style.display = 'grid';
+      });
+    </script>
+
+  </body>
+</html>

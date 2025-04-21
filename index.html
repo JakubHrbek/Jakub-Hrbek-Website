@@ -3,52 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jakub Hrbek</title>
+  <title>{{page_title}}</title>
   <link rel="stylesheet" href="css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="assets/images/Donda.png">
 </head>
 <body>
+    <nav class="navbar">
+        <div class="nav-container">
+          <a href="#hero" class="logo">Jakub Hrbek</a>
+          <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+          </div>
+          <ul class="nav-links">
+            <li><a href="#about">{{nav_about}}</a></li>
+            <li><a href="file:///Users/jakubhrbek/Desktop/GitHub-Project/Jakub-Hrbek-Website/projects/algolt/index.html">{{nav_projects}}</a></li>
+            <li><a href="#experience">{{nav_experience}}</a></li>
+            <li><a href="#contact">{{nav_contact}}</a></li>
+          </ul>
+        </div>
+      </nav>       
   <header id="hero">
     <div class="hero-content">
       <h1>Jakub Hrbek</h1>
-      <p>[Insert tagline or mission statement here]</p>
-      <a href="#projects" class="btn">[Call to Action]</a>
+      <p>{{hero_subtitle}}</p>
+      <a href="#projects" class="btn">{{hero_cta}}</a>
     </div>
   </header>
 
   <section id="about">
-    <h2>[About Section Title]</h2>
-    <p>[Write a short bio or description about yourself here]</p>
+    <h2>{{about_heading}}</h2>
+    <p>
+      {{about_paragraph1}}<br><br>
+      {{about_paragraph2}}
+    </p>
   </section>
 
   <section id="projects">
-    <h2>[Projects Section Title]</h2>
+    <h2>{{projects_heading}}</h2>
     <div class="project-grid">
       <div class="project-card">
-        <h3>[Project Name]</h3>
-        <p>[Short project description goes here]</p>
-        <a href="#">[Link Text]</a>
+        <h3>{{project1_title}}</h3>
+        <p>{{project1_description}}</p>
+        <a href="#">{{project1_cta}}</a>
       </div>
+      <!-- More projects can be added here with similar framing -->
     </div>
   </section>
 
   <section id="experience">
-    <h2>[Experience Section Title]</h2>
+    <h2>{{experience_heading}}</h2>
     <ul>
-      <li><strong>[Experience Title 1]</strong> – [Brief Description]</li>
-      <li><strong>[Experience Title 2]</strong> – [Brief Description]</li>
-      <li><strong>[Experience Title 3]</strong> – [Brief Description]</li>
+      <li><strong>{{exp1_title}}</strong> – {{exp1_description}}</li>
+      <li><strong>{{exp2_title}}</strong> – {{exp2_description}}</li>
+      <li><strong>{{exp3_title}}</strong> – {{exp3_description}}</li>
     </ul>
   </section>
 
   <section id="contact">
-    <h2>[Contact Section Title]</h2>
-    <p>[Contact Message or Call to Action]</p>
-    <a href="mailto:jakubhrbek117@gmail.com" class="btn">[Email Button Text]</a>
+    <h2>{{contact_heading}}</h2>
+    <p>
+      {{contact_paragraph}}<br>
+      {{contact_response_time}}
+    </p>
+    <a href="mailto:jakubhrbek117@gmail.com" class="btn">{{contact_cta}}</a>
   </section>
 
   <footer>
-    <p>&copy; 2025 Jakub Hrbek. All rights reserved.</p>
+    <p>{{footer_text_prefix}} Jakub Hrbek {{footer_text_suffix}}</p>
   </footer>
 
   <script src="js/main.js"></script>

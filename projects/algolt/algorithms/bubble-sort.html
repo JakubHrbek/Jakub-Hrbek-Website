@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bubble Sort | Algolt</title>
+  <link href="https://fonts.googleapis.com/css2?family=Chivo+Mono&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.css" />
+  <style>
+    body {
+      font-family: 'Chivo Mono', monospace;
+    }
+    .bar {
+      display: inline-block;
+      width: 18px;
+      margin: 0 1px;
+      background-color: #00bcd4;
+      transition: height 0.3s ease;
+    }
+    .stats {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .stats span {
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body class="bg-white text-black min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="px-6 py-4 border-b border-gray-300">
+    <h1 class="text-2xl font-bold"><a href="../../algolt/index.html">Bubble Sort – Algolt</a></h1>
+  </header>
+
+  <!-- Main Content -->
+  <main class="p-6 flex-grow">
+
+    <!-- Side-by-side Visualization and Code with Same Height -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 h-[400px]">
+
+      <!-- Left Column: Visualizer -->
+      <div class="flex flex-col h-full justify-between">
+        <div id="visualizer" class="flex items-end h-[80%] border border-gray-300 overflow-hidden"></div>
+        <div class="flex gap-4 mt-4">
+          <button id="playBtn" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">Play</button>
+          <button id="pauseBtn" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-400 pauseButtonTag">Pause</button>
+          <button id="resetBtn" class="border border-black px-4 py-2 rounded hover:bg-gray-100">Reset</button>
+        </div>
+        <div class="stats mt-4">
+          <span id="timer">Timer: 0.00s</span>
+          <span id="comparisons">Comparisons: 0</span>
+          <span id="swaps">Swaps: 0</span>
+        </div>
+      </div>
+
+      <!-- Right Column: Code -->
+      <div class="h-full border border-gray-300 p-4 overflow-auto bg-gray-50">
+        <pre class="text-sm"><code class="language-js">
+// Bubble Sort
+function bubbleSort(arr) {
+  for (let i = 0; i < arr.length - 1; i++) {
+    for (let j = 0; j < arr.length - i - 1; j++) {
+      if (arr[j] > arr[j + 1]) {
+        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+      }
+    }
+  }
+  return arr;
+}
+        </code></pre>
+      </div>
+
+    </div>
+
+    <!-- Simple Explanation -->
+    <section class="mb-6">
+      <h2 class="text-lg font-bold mb-2">🧠 Simple Explanation</h2>
+      <p class="text-sm text-gray-700">
+        Bubble Sort compares two elements at a time and swaps them if they’re in the wrong order.
+        It “bubbles” the largest values to the end until the list is sorted.
+      </p>
+    </section>
+
+    <!-- Detailed Explanation -->
+    <section class="mb-6">
+      <h2 class="text-lg font-bold mb-2">📚 Detailed Explanation</h2>
+      <p class="text-sm text-gray-700 leading-relaxed">
+        Bubble Sort is a comparison-based algorithm. It works by iterating over the array multiple times.
+        During each pass, it compares each pair of adjacent items and swaps them if necessary.
+        With every full pass, the largest unsorted element is moved (bubbled) to its correct position at the end of the array.
+        <br><br>
+        This continues until no more swaps are needed, which means the array is sorted.
+        Although easy to implement, Bubble Sort is inefficient for large datasets due to its quadratic time complexity.
+      </p>
+    </section>
+
+    <!-- Complexity Box -->
+    <section>
+      <h2 class="text-lg font-bold mb-2">⏱️ Time & Space Complexity</h2>
+      <ul class="text-sm text-gray-800 leading-relaxed">
+        <li><strong>Best Case:</strong> O(n) – Already sorted</li>
+        <li><strong>Average Case:</strong> O(n²)</li>
+        <li><strong>Worst Case:</strong> O(n²)</li>
+        <li><strong>Space Complexity:</strong> O(1) – In-place sort</li>
+      </ul>
+    </section>
+  </main>
+
+  <!-- Script -->
+  <script>
+    const visualizer = document.getElementById("visualizer");
+    const playBtn = document.getElementById("playBtn");
+    const pauseBtn = document.getElementById("pauseBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const timerDisplay = document.getElementById("timer");
+    const comparisonsDisplay = document.getElementById("comparisons");
+    const swapsDisplay = document.getElementById("swaps");
+
+    let bars = [];
+    let values = [];
+    let isPaused = false;
+    let isPlaying = false;
+    let currentIndex = 0;
+    let currentJIndex = 0;
+    let animationFrame;
+    let startTime;
+    let elapsedTime = 0;
+    let comparisons = 0;
+    let swaps = 0;
+    let timerInterval;
+
+    function generateBars() {
+      visualizer.innerHTML = "";
+      values = Array.from({ length: 30 }, () => Math.floor(Math.random() * 100) + 10);
+      bars = values.map(value => {
+        const bar = document.createElement("div");
+        bar.classList.add("bar");
+        bar.style.height = `${value * 2}px`;
+        visualizer.appendChild(bar);
+        return bar;
+      });
+      currentIndex = 0;
+      currentJIndex = 0;
+      comparisons = 0;
+      swaps = 0;
+      elapsedTime = 0;
+      updateStats();
+    }
+
+    function startTimer() {
+      startTime = Date.now() - elapsedTime * 1000; // Adjust startTime to continue from elapsed time
+      timerInterval = setInterval(() => {
+        if (!isPaused) {
+          elapsedTime = (Date.now() - startTime) / 1000; // Calculate time in seconds
+          timerDisplay.innerText = `Timer: ${elapsedTime.toFixed(2)}s`; // Display with 2 decimals
+        }
+      }, 10); // Update every 10 milliseconds for smooth decimal update
+    }
+
+    function updateStats() {
+      comparisonsDisplay.innerText = `Comparisons: ${comparisons}`;
+      swapsDisplay.innerText = `Swaps: ${swaps}`;
+    }
+
+    async function bubbleSort() {
+      if (isPaused) return;
+      startTimer();
+
+      for (let i = currentIndex; i < values.length - 1; i++) {
+        for (let j = currentJIndex; j < values.length - i - 1; j++) {
+          if (isPaused) return;
+
+          comparisons++;
+          bars[j].style.backgroundColor = "#3ddc84";
+          bars[j + 1].style.backgroundColor = "#3ddc84";
+
+          if (values[j] > values[j + 1]) {
+            swaps++;
+            await new Promise(res => setTimeout(res, 80));
+
+            [values[j], values[j + 1]] = [values[j + 1], values[j]];
+
+            bars[j].style.height = `${values[j] * 2}px`;
+            bars[j + 1].style.height = `${values[j + 1] * 2}px`;
+          }
+
+          bars[j].style.backgroundColor = "#00bcd4";
+          bars[j + 1].style.backgroundColor = "#00bcd4";
+          updateStats();
+        }
+        currentIndex = i;
+        currentJIndex = 0;
+        if (isPaused) return;
+      }
+
+      // Sorting finished, automatically pause the timer
+      clearInterval(timerInterval);
+      isPlaying = false;
+      pauseBtn.innerText = "Resume"; // Update pause button text
+    }
+
+    playBtn.addEventListener("click", () => {
+      if (!isPlaying) {
+        isPlaying = true;
+        bubbleSort();
+      }
+    });
+
+    pauseBtn.addEventListener("click", () => {
+        isPaused = !isPaused;
+        if (!isPaused && isPlaying) {
+            startTime = Date.now() - elapsedTime * 1000; // Resume from where it left off
+            startTimer();
+            bubbleSort();
+            pauseBtn.innerText = "Pause"; // Change text to 'Pause' when resuming
+        } else {
+            pauseBtn.innerText = "Resume"; // Change text to 'Resume' when paused
+        }
+    });
+
+    resetBtn.addEventListener("click", () => {
+      isPaused = false;
+      isPlaying = false;
+      clearInterval(timerInterval); // Reset the timer
+      generateBars();
+    });
+
+    generateBars();
+  </script>
+
+</body>
+</html>
