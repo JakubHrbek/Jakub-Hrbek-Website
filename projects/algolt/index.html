@@ -37,10 +37,16 @@
         background-color: black;
         color: white;
       }
+      .mobileDisplay{display:none}
+      .desktopDisplay{display:block}
+      @media (max-width:800px){
+        .desktopDisplay {display:none}
+        .mobileDisplay {display:block}
+      }
     </style>
   </head>
   <body class="bg-white text-black min-h-screen flex flex-col">
-
+    <div class="desktopDisplay">
     <header class="w-full px-6 py-4 border-b-4 border-black flex justify-between items-center uppercase text-sm">
       <h1 class="text-2xl font-black tracking-tight border-2 border-black px-2">ALGOLT</h1>
       <nav>
@@ -49,7 +55,7 @@
           <li><a href="#" class="border-2 border-black px-2 py-1 block">Visualizers</a></li>
           <li><a href="#" class="border-2 border-black px-2 py-1 block">Learning Log</a></li>
           <li><a href="#" class="border-2 border-black px-2 py-1 block">About</a></li>
-          <li><a href="../../index.html" class="border-2 border-black px-2 py-1 block">JH</a></li>
+          <li><a href="jakubhrbek.com" class="border-2 border-black px-2 py-1 block">JH</a></li>
         </ul>
       </nav>
     </header>
@@ -96,6 +102,9 @@
         buttonGrid.style.display = 'grid';
       });
     </script>
-
+  </div>
+  <div class="mobileDisplay">
+    Be real bro. Use desktop.
+  </div>
   </body>
 </html>

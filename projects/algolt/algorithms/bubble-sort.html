@@ -27,13 +27,19 @@
     .stats span {
       font-size: 14px;
     }
+    .mobileDisplay{display:none}
+    .desktopDisplay{display:block}
+    @media (max-width:800px){
+      .desktopDisplay {display:none}
+      .mobileDisplay {display:block}
+    }
   </style>
 </head>
 <body class="bg-white text-black min-h-screen flex flex-col">
-
+  <div class="desktopDisplay">
   <!-- Header -->
   <header class="px-6 py-4 border-b border-gray-300">
-    <h1 class="text-2xl font-bold"><a href="../../algolt/index.html">Bubble Sort – Algolt</a></h1>
+    <h1 class="text-2xl font-bold"><a href="https://jakubhrbek.com/projects/algolt">Bubble Sort – Algolt</a></h1>
   </header>
 
   <!-- Main Content -->
@@ -47,7 +53,7 @@
         <div id="visualizer" class="flex items-end h-[80%] border border-gray-300 overflow-hidden"></div>
         <div class="flex gap-4 mt-4">
           <button id="playBtn" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">Play</button>
-          <button id="pauseBtn" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-400 pauseButtonTag">Pause</button>
+          <button id="pauseBtn" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 pauseButtonTag">Pause</button>
           <button id="resetBtn" class="border border-black px-4 py-2 rounded hover:bg-gray-100">Reset</button>
         </div>
         <div class="stats mt-4">
@@ -140,6 +146,7 @@ function bubbleSort(arr) {
         const bar = document.createElement("div");
         bar.classList.add("bar");
         bar.style.height = `${value * 2}px`;
+        bar.style.backgroundColor = "#000000"
         visualizer.appendChild(bar);
         return bar;
       });
@@ -170,13 +177,16 @@ function bubbleSort(arr) {
       if (isPaused) return;
       startTimer();
 
+      let swapped;
       for (let i = currentIndex; i < values.length - 1; i++) {
+        swapped = false; // Reset the swapped flag
+
         for (let j = currentJIndex; j < values.length - i - 1; j++) {
           if (isPaused) return;
 
           comparisons++;
-          bars[j].style.backgroundColor = "#3ddc84";
-          bars[j + 1].style.backgroundColor = "#3ddc84";
+          bars[j].style.backgroundColor = "#000000";
+          bars[j + 1].style.backgroundColor = "#808080";
 
           if (values[j] > values[j + 1]) {
             swaps++;
@@ -186,26 +196,35 @@ function bubbleSort(arr) {
 
             bars[j].style.height = `${values[j] * 2}px`;
             bars[j + 1].style.height = `${values[j + 1] * 2}px`;
+
+            swapped = true; // A swap has occurred
           }
 
-          bars[j].style.backgroundColor = "#00bcd4";
-          bars[j + 1].style.backgroundColor = "#00bcd4";
+          bars[j].style.backgroundColor = "#000000";
+          bars[j + 1].style.backgroundColor = "#808080";
           updateStats();
         }
+
         currentIndex = i;
         currentJIndex = 0;
+
+        if (!swapped) { // No swaps, array is sorted
+          clearInterval(timerInterval);
+          isPlaying = false;
+          pauseBtn.innerText = "Resume"; // Update pause button text
+          break; // Stop the loop as sorting is done
+        }
+
         if (isPaused) return;
       }
-
-      // Sorting finished, automatically pause the timer
-      clearInterval(timerInterval);
-      isPlaying = false;
-      pauseBtn.innerText = "Resume"; // Update pause button text
     }
+
 
     playBtn.addEventListener("click", () => {
       if (!isPlaying) {
         isPlaying = true;
+        startedPlaying = true;
+        isPaused = false;
         bubbleSort();
       }
     });
@@ -223,14 +242,19 @@ function bubbleSort(arr) {
     });
 
     resetBtn.addEventListener("click", () => {
-      isPaused = false;
+      isPaused = true;
       isPlaying = false;
+      startedPlaying = false;
       clearInterval(timerInterval); // Reset the timer
+      timerDisplay.innerText = `Timer: 0.00s`;
       generateBars();
     });
 
     generateBars();
   </script>
-
+  </div>
+  <div class="mobileDisplay">
+    Be real bro. Use desktop.
+  </div>
 </body>
 </html>
