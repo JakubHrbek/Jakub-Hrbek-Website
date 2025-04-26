@@ -106,7 +106,6 @@ section {
   text-decoration: underline;
 }
 
-/* Experience */
 ul {
   list-style: none;
   padding-left: 0;
@@ -117,13 +116,11 @@ li {
   border-bottom: 1px solid #333;
 }
 
-/* Contact */
 #contact a.btn {
   display: inline-block;
   margin-top: 20px;
 }
 
-/* Footer */
 footer {
   text-align: center;
   padding: 40px 0;
@@ -135,13 +132,13 @@ footer {
     position: fixed;
     top: 0;
     width: 100%;
-    backdrop-filter: blur(15px);
-    background: rgba(20, 20, 20, 0.4);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     z-index: 999;
+    background: rgba(20, 20, 20, 1);
   }
   
   .nav-container {
+
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -216,20 +213,12 @@ footer {
         top: 70px;
         left: 0;
         right: 0;
-      
-        /* Glassmorphic effect */
-        background: rgba(20, 20, 20, 0.35); /* translucent dark */
-        backdrop-filter: blur(20px); /* glass blur */
-        -webkit-backdrop-filter: blur(20px); /* for Safari */
-      
         flex-direction: column;
         align-items: center;
         max-height: 0;
         overflow: hidden;
-        transition: max-height 0.4s ease, padding 0.3s ease;
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        margin: 10px 20px;
       }
       
   
@@ -239,6 +228,7 @@ footer {
   
     .nav-links.active {
       max-height: 300px;
+      backdrop-filter: blur(15px);
+      background: rgba(20, 20, 20, 0.4);
     }
   }
-  
