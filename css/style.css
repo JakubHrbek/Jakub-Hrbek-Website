@@ -201,6 +201,11 @@ footer {
     border-radius: 10px;
     transition: 0.3s;
   }
+
+  ul ul {
+    margin-left: 1.5rem; /* or padding-left: 1.5rem; */
+  }
+  
   
   /* Responsive Nav */
   @media (max-width: 768px) {

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bubble Sort | Algolt</title>
-  <link href="https://fonts.googleapis.com/css2?family=Chivo+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Chivo+Mono&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.css" />
@@ -12,61 +12,76 @@
     body {
       font-family: 'Chivo Mono', monospace;
     }
+
     .bar {
       display: inline-block;
       width: 18px;
       margin: 0 1px;
-      background-color: #00bcd4;
-      transition: height 0.3s ease;
+      background-color: #444;
+      transition: height 0.3s ease, background-color 0.3s ease;
     }
+
     .stats {
       display: flex;
-      gap: 12px;
+      gap: 16px;
       align-items: center;
     }
+
     .stats span {
       font-size: 14px;
     }
-    .mobileDisplay{display:none}
-    .desktopDisplay{display:block}
-    @media (max-width:800px){
-      .desktopDisplay {display:none}
-      .mobileDisplay {display:block}
+
+    .mobileDisplay {
+      display: none;
+    }
+
+    .desktopDisplay {
+      display: block;
+    }
+
+    @media (max-width: 800px) {
+      .desktopDisplay {
+        display: none;
+      }
+      .mobileDisplay {
+        display: block;
+        text-align: center;
+        padding: 2rem;
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
 <body class="bg-white text-black min-h-screen flex flex-col">
+
   <div class="desktopDisplay">
-  <!-- Header -->
-  <header class="px-6 py-4 border-b border-gray-300">
-    <h1 class="text-2xl font-bold"><a href="https://jakubhrbek.com/projects/algolt">Bubble Sort – Algolt</a></h1>
-  </header>
+    <header class="px-6 py-4 border-b border-gray-300">
+      <h1 class="text-2xl font-bold">
+        <a href="https://jakubhrbek.com/projects/algolt" class="hover:underline">Bubble Sort – Algolt</a>
+      </h1>
+    </header>
 
-  <!-- Main Content -->
-  <main class="p-6 flex-grow">
+    <main class="p-6 flex-grow">
 
-    <!-- Side-by-side Visualization and Code with Same Height -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 h-[400px]">
-
-      <!-- Left Column: Visualizer -->
-      <div class="flex flex-col h-full justify-between">
-        <div id="visualizer" class="flex items-end h-[80%] border border-gray-300 overflow-hidden"></div>
-        <div class="flex gap-4 mt-4">
-          <button id="playBtn" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">Play</button>
-          <button id="pauseBtn" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 pauseButtonTag">Pause</button>
-          <button id="resetBtn" class="border border-black px-4 py-2 rounded hover:bg-gray-100">Reset</button>
+      <!-- Visualizer -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 h-[400px]">
+        <div class="flex flex-col justify-between h-full">
+          <div id="visualizer" class="flex items-end h-[80%] border border-gray-300 overflow-hidden bg-gray-50"></div>
+          <div class="flex flex-wrap gap-3 mt-4">
+            <button id="playBtn" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition">Play</button>
+            <button id="pauseBtn" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition">Pause</button>
+            <button id="stepBtn" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition">Step</button>
+            <button id="resetBtn" class="border border-black px-4 py-2 rounded hover:bg-gray-200 transition">Reset</button>
+          </div>
+          <div class="stats mt-4 text-gray-700 text-sm">
+            <span id="timer">Timer: 0.00s</span>
+            <span id="comparisons">Comparisons: 0</span>
+            <span id="swaps">Swaps: 0</span>
+            <span id="pass">Pass: 0</span>
+          </div>
         </div>
-        <div class="stats mt-4">
-          <span id="timer">Timer: 0.00s</span>
-          <span id="comparisons">Comparisons: 0</span>
-          <span id="swaps">Swaps: 0</span>
-        </div>
-      </div>
-
-      <!-- Right Column: Code -->
-      <div class="h-full border border-gray-300 p-4 overflow-auto bg-gray-50">
-        <pre class="text-sm"><code class="language-js">
-// Bubble Sort
+        <div class="h-full border border-gray-300 p-4 overflow-auto bg-gray-100">
+          <pre class="text-sm"><code class="language-js">// Bubble Sort in JS
 function bubbleSort(arr) {
   for (let i = 0; i < arr.length - 1; i++) {
     for (let j = 0; j < arr.length - i - 1; j++) {
@@ -77,184 +92,300 @@ function bubbleSort(arr) {
   }
   return arr;
 }
-        </code></pre>
+          </code></pre>
+        </div>
       </div>
 
-    </div>
+      <!-- Input -->
+      <section class="mb-10">
+        <h2 class="text-lg font-semibold mb-2">Custom Input</h2>
+        <input id="customInput" class="border p-2 rounded w-full text-sm mb-2" placeholder="Enter comma-separated numbers (e.g. 5,3,8,1)" />
+        <button id="loadCustom" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition">Load</button>
+      </section>
 
-    <!-- Simple Explanation -->
-    <section class="mb-6">
-      <h2 class="text-lg font-bold mb-2">🧠 Simple Explanation</h2>
-      <p class="text-sm text-gray-700">
-        Bubble Sort compares two elements at a time and swaps them if they’re in the wrong order.
-        It “bubbles” the largest values to the end until the list is sorted.
-      </p>
-    </section>
+      <!-- Explanation Sections -->
+      <section class="mb-10">
+        <h2 class="text-lg font-semibold mb-2">Simple Explanation</h2>
+        <p class="text-sm text-gray-800">Bubble Sort compares two elements at a time and swaps them if they’re in the wrong order. It “bubbles” the largest values to the end until the list is sorted.</p>
+      </section>
 
-    <!-- Detailed Explanation -->
-    <section class="mb-6">
-      <h2 class="text-lg font-bold mb-2">📚 Detailed Explanation</h2>
-      <p class="text-sm text-gray-700 leading-relaxed">
-        Bubble Sort is a comparison-based algorithm. It works by iterating over the array multiple times.
-        During each pass, it compares each pair of adjacent items and swaps them if necessary.
-        With every full pass, the largest unsorted element is moved (bubbled) to its correct position at the end of the array.
-        <br><br>
-        This continues until no more swaps are needed, which means the array is sorted.
-        Although easy to implement, Bubble Sort is inefficient for large datasets due to its quadratic time complexity.
-      </p>
-    </section>
+      <section class="mb-10">
+        <h2 class="text-lg font-semibold mb-2">Detailed Explanation</h2>
+        <p class="text-sm text-gray-800 leading-relaxed">
+          Bubble Sort is a comparison-based algorithm. It works by iterating over the array multiple times. During each pass, it compares each pair of adjacent items and swaps them if necessary. With every full pass, the largest unsorted element is moved (bubbled) to its correct position at the end of the array.<br><br>
+          This continues until no more swaps are needed, which means the array is sorted. Although easy to implement, Bubble Sort is inefficient for large datasets due to its quadratic time complexity.
+        </p>
+      </section>
 
-    <!-- Complexity Box -->
-    <section>
-      <h2 class="text-lg font-bold mb-2">⏱️ Time & Space Complexity</h2>
-      <ul class="text-sm text-gray-800 leading-relaxed">
-        <li><strong>Best Case:</strong> O(n) – Already sorted</li>
-        <li><strong>Average Case:</strong> O(n²)</li>
-        <li><strong>Worst Case:</strong> O(n²)</li>
-        <li><strong>Space Complexity:</strong> O(1) – In-place sort</li>
-      </ul>
-    </section>
-  </main>
+      <!-- Complexity -->
+      <section class="mb-10">
+        <h2 class="text-lg font-semibold mb-2">Time & Space Complexity</h2>
+        <ul class="text-sm text-gray-800 leading-relaxed mb-4">
+          <li><strong>Best Case:</strong> O(n)</li>
+          <li><strong>Average Case:</strong> O(n²)</li>
+          <li><strong>Worst Case:</strong> O(n²)</li>
+          <li><strong>Space Complexity:</strong> O(1)</li>
+        </ul>
+        <table class="text-sm w-full border border-collapse">
+          <thead class="bg-gray-200">
+            <tr>
+              <th class="p-2 border">Algorithm</th>
+              <th class="p-2 border">Best</th>
+              <th class="p-2 border">Average</th>
+              <th class="p-2 border">Worst</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="p-2 border">Bubble Sort</td>
+              <td class="p-2 border">O(n)</td>
+              <td class="p-2 border">O(n²)</td>
+              <td class="p-2 border">O(n²)</td>
+            </tr>
+            <tr>
+              <td class="p-2 border">Merge Sort</td>
+              <td class="p-2 border">O(n log n)</td>
+              <td class="p-2 border">O(n log n)</td>
+              <td class="p-2 border">O(n log n)</td>
+            </tr>
+            <tr>
+              <td class="p-2 border">Quick Sort</td>
+              <td class="p-2 border">O(n log n)</td>
+              <td class="p-2 border">O(n log n)</td>
+              <td class="p-2 border">O(n²)</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
 
-  <!-- Script -->
+      <!-- Quiz -->
+      <section class="mb-10" id="quiz-section">
+        <h2 class="text-lg font-semibold mb-2">Quiz Yourself</h2>
+        <div id="quiz-container" class="text-sm text-gray-900"></div>
+      </section>
+
+      <section>
+        <a href="./insertion-sort.html" class="underline text-gray-700">Next: Insertion Sort →</a>
+      </section>
+    </main>
+  </div>
+
+  <div class="mobileDisplay text-gray-700">This experience is best on desktop. Please switch for full features.</div>
+
+  <!-- JavaScript -->
   <script>
     const visualizer = document.getElementById("visualizer");
     const playBtn = document.getElementById("playBtn");
     const pauseBtn = document.getElementById("pauseBtn");
+    const stepBtn = document.getElementById("stepBtn");
     const resetBtn = document.getElementById("resetBtn");
+    const loadCustom = document.getElementById("loadCustom");
+    const input = document.getElementById("customInput");
     const timerDisplay = document.getElementById("timer");
     const comparisonsDisplay = document.getElementById("comparisons");
     const swapsDisplay = document.getElementById("swaps");
+    const passDisplay = document.getElementById("pass");
 
-    let bars = [];
-    let values = [];
-    let isPaused = false;
-    let isPlaying = false;
-    let currentIndex = 0;
-    let currentJIndex = 0;
-    let animationFrame;
-    let startTime;
-    let elapsedTime = 0;
-    let comparisons = 0;
-    let swaps = 0;
-    let timerInterval;
-
-    function generateBars() {
-      visualizer.innerHTML = "";
-      values = Array.from({ length: 30 }, () => Math.floor(Math.random() * 100) + 10);
-      bars = values.map(value => {
-        const bar = document.createElement("div");
-        bar.classList.add("bar");
-        bar.style.height = `${value * 2}px`;
-        bar.style.backgroundColor = "#000000"
-        visualizer.appendChild(bar);
-        return bar;
-      });
-      currentIndex = 0;
-      currentJIndex = 0;
-      comparisons = 0;
-      swaps = 0;
-      elapsedTime = 0;
-      updateStats();
-    }
-
-    function startTimer() {
-      startTime = Date.now() - elapsedTime * 1000; // Adjust startTime to continue from elapsed time
-      timerInterval = setInterval(() => {
-        if (!isPaused) {
-          elapsedTime = (Date.now() - startTime) / 1000; // Calculate time in seconds
-          timerDisplay.innerText = `Timer: ${elapsedTime.toFixed(2)}s`; // Display with 2 decimals
-        }
-      }, 10); // Update every 10 milliseconds for smooth decimal update
-    }
+    let values = [], bars = [], i = 0, j = 0, comparisons = 0, swaps = 0, pass = 0;
+    let isPlaying = false, isPaused = false;
+    let startTime, elapsedTime = 0, timerInterval;
 
     function updateStats() {
       comparisonsDisplay.innerText = `Comparisons: ${comparisons}`;
       swapsDisplay.innerText = `Swaps: ${swaps}`;
+      passDisplay.innerText = `Pass: ${pass}`;
     }
 
-    async function bubbleSort() {
-      if (isPaused) return;
-      startTimer();
+    function generateBars(custom = null) {
+      values = custom || Array.from({ length: 30 }, () => Math.floor(Math.random() * 100) + 10);
+      visualizer.innerHTML = "";
+      bars = values.map(value => {
+        const bar = document.createElement("div");
+        bar.classList.add("bar");
+        bar.style.height = `${value * 2}px`;
+        visualizer.appendChild(bar);
+        return bar;
+      });
+      i = 0; j = 0; comparisons = 0; swaps = 0; pass = 0; elapsedTime = 0;
+      timerDisplay.innerText = `Timer: 0.00s`;
+      updateStats();
+    }
 
-      let swapped;
-      for (let i = currentIndex; i < values.length - 1; i++) {
-        swapped = false; // Reset the swapped flag
-
-        for (let j = currentJIndex; j < values.length - i - 1; j++) {
-          if (isPaused) return;
-
-          comparisons++;
-          bars[j].style.backgroundColor = "#000000";
-          bars[j + 1].style.backgroundColor = "#808080";
-
-          if (values[j] > values[j + 1]) {
-            swaps++;
-            await new Promise(res => setTimeout(res, 80));
-
-            [values[j], values[j + 1]] = [values[j + 1], values[j]];
-
-            bars[j].style.height = `${values[j] * 2}px`;
-            bars[j + 1].style.height = `${values[j + 1] * 2}px`;
-
-            swapped = true; // A swap has occurred
-          }
-
-          bars[j].style.backgroundColor = "#000000";
-          bars[j + 1].style.backgroundColor = "#808080";
-          updateStats();
+    function startTimer() {
+      startTime = Date.now() - elapsedTime * 1000;
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if (!isPaused) {
+          elapsedTime = (Date.now() - startTime) / 1000;
+          timerDisplay.innerText = `Timer: ${elapsedTime.toFixed(2)}s`;
         }
+      }, 10);
+    }
 
-        currentIndex = i;
-        currentJIndex = 0;
-
-        if (!swapped) { // No swaps, array is sorted
-          clearInterval(timerInterval);
-          isPlaying = false;
-          pauseBtn.innerText = "Resume"; // Update pause button text
-          break; // Stop the loop as sorting is done
-        }
-
-        if (isPaused) return;
+    async function sortStep() {
+      if (i >= values.length - 1) return;
+      comparisons++;
+      bars[j].style.backgroundColor = "#888";
+      bars[j + 1].style.backgroundColor = "#888";
+      if (values[j] > values[j + 1]) {
+        swaps++;
+        [values[j], values[j + 1]] = [values[j + 1], values[j]];
+        bars[j].style.height = `${values[j] * 2}px`;
+        bars[j + 1].style.height = `${values[j + 1] * 2}px`;
       }
+      await new Promise(r => setTimeout(r, 100));
+      bars[j].style.backgroundColor = "#444";
+      bars[j + 1].style.backgroundColor = "#444";
+
+      j++;
+      if (j >= values.length - i - 1) {
+        j = 0;
+        i++;
+        pass++;
+      }
+      updateStats();
     }
 
+    async function bubbleSortLoop() {
+      startTimer();
+      while (i < values.length - 1 && isPlaying && !isPaused) {
+        await sortStep();
+      }
+      clearInterval(timerInterval);
+    }
 
-    playBtn.addEventListener("click", () => {
+    playBtn.onclick = () => {
       if (!isPlaying) {
         isPlaying = true;
-        startedPlaying = true;
         isPaused = false;
-        bubbleSort();
+        bubbleSortLoop();
       }
-    });
+    };
 
-    pauseBtn.addEventListener("click", () => {
-        isPaused = !isPaused;
-        if (!isPaused && isPlaying) {
-            startTime = Date.now() - elapsedTime * 1000; // Resume from where it left off
-            startTimer();
-            bubbleSort();
-            pauseBtn.innerText = "Pause"; // Change text to 'Pause' when resuming
-        } else {
-            pauseBtn.innerText = "Resume"; // Change text to 'Resume' when paused
-        }
-    });
+    pauseBtn.onclick = () => {
+      isPaused = !isPaused;
+      if (!isPaused) {
+        bubbleSortLoop();
+        pauseBtn.innerText = "Pause";
+      } else {
+        pauseBtn.innerText = "Resume";
+      }
+    };
 
-    resetBtn.addEventListener("click", () => {
+    stepBtn.onclick = async () => await sortStep();
+
+    resetBtn.onclick = () => {
       isPaused = true;
       isPlaying = false;
-      startedPlaying = false;
-      clearInterval(timerInterval); // Reset the timer
-      timerDisplay.innerText = `Timer: 0.00s`;
+      clearInterval(timerInterval);
       generateBars();
-    });
+    };
+
+    loadCustom.onclick = () => {
+      const nums = input.value.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n)).map(n => Math.min(n, 120));
+      if (nums.length > 1) generateBars(nums);
+    };
 
     generateBars();
+
+    // Quiz logic
+    const quizData = [
+      {
+        question: "What’s the time complexity of Bubble Sort in the best case?",
+        options: ["O(n²)", "O(log n)", "O(n)"],
+        answer: "O(n)",
+        explanation: "Bubble Sort is O(n) best case when the list is already sorted."
+      },
+      {
+        question: "What’s the worst-case time complexity of Bubble Sort?",
+        options: ["O(n)", "O(n²)", "O(n log n)"],
+        answer: "O(n²)",
+        explanation: "Worst case occurs when the list is in reverse order."
+      },
+      {
+        question: "What kind of algorithm is Bubble Sort?",
+        options: ["Divide and conquer", "Greedy", "Comparison-based"],
+        answer: "Comparison-based",
+        explanation: "Bubble Sort compares adjacent elements repeatedly."
+      },
+      {
+        question: "What is the space complexity of Bubble Sort?",
+        options: ["O(n)", "O(n²)", "O(1)"],
+        answer: "O(1)",
+        explanation: "Bubble Sort is in-place and doesn’t need extra space."
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    const quizContainer = document.getElementById("quiz-container");
+
+    function renderQuestion() {
+      const q = quizData[currentQuestion];
+      quizContainer.innerHTML = `
+        <p class="mb-2 font-medium">${q.question}</p>
+        <ul class="mb-4 space-y-1">
+          ${q.options.map(opt => `
+            <li>
+              <label class="cursor-pointer">
+                <input type="radio" name="quiz" value="${opt}" class="mr-2"> ${opt}
+              </label>
+            </li>
+          `).join('')}
+        </ul>
+        <button id="submitQuiz" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">Submit</button>
+      `;
+    }
+
+    function handleAnswer() {
+      const selected = document.querySelector('input[name="quiz"]:checked');
+      if (!selected) return alert("Choose an answer first.");
+      const chosen = selected.value;
+      const correct = quizData[currentQuestion].answer;
+      const explanation = quizData[currentQuestion].explanation;
+
+      const feedback = document.createElement("p");
+      feedback.classList.add("mt-2", "text-sm", "font-medium");
+
+      if (chosen === correct) {
+        feedback.textContent = `✅ Correct! ${explanation}`;
+        feedback.classList.add("text-green-600");
+        score++;
+      } else {
+        feedback.textContent = `❌ Incorrect. ${explanation}`;
+        feedback.classList.add("text-red-600");
+      }
+
+      quizContainer.appendChild(feedback);
+      document.getElementById("submitQuiz").remove();
+      document.querySelectorAll('input[name="quiz"]').forEach(el => el.disabled = true);
+
+      const nextBtn = document.createElement("button");
+      nextBtn.textContent = currentQuestion === quizData.length - 1 ? "See Result" : "Next";
+      nextBtn.className = "mt-2 bg-gray-800 text-white px-4 py-2 rounded hover:bg-black ml-2";
+      nextBtn.onclick = () => {
+        currentQuestion++;
+        if (currentQuestion < quizData.length) {
+          renderQuestion();
+        } else {
+          showFinalResult();
+        }
+      };
+      quizContainer.appendChild(nextBtn);
+    }
+
+    function showFinalResult() {
+      quizContainer.innerHTML = `
+        <h3 class="text-lg font-bold mb-2">🎉 You finished the quiz!</h3>
+        <p class="text-sm">Your score: ${score} / ${quizData.length}</p>
+        <p class="text-sm mt-2">Refresh the page to try again.</p>
+      `;
+    }
+
+    renderQuestion();
+    quizContainer.addEventListener('click', e => {
+      if (e.target && e.target.id === 'submitQuiz') handleAnswer();
+    });
   </script>
-  </div>
-  <div class="mobileDisplay">
-    Be real bro. Use desktop.
-  </div>
 </body>
 </html>
