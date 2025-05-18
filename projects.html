@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects – Jakub Hrbek</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="assets/images/Donda.png">
+  <style>
+    body.preload {
+      opacity: 0;
+    }
+    body.fade {
+      opacity: 1;
+      transition: opacity 0.4s ease-in-out;
+    }
+    .project-section {
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      padding: 6rem 5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      flex-wrap: wrap;
+    }
+    .project-section img {
+      max-width: 400px;
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.1);
+    }
+    .project-info {
+      flex: 1;
+      max-width: 600px;
+    }
+    .project-info h3 {
+      margin-top: 0;
+    }
+    .project-info p {
+      margin-bottom: 1rem;
+    }
+    .project-info a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      text-shadow: 0 0 5px rgba(255,255,255,0.5);
+      transition: text-shadow 0.3s ease;
+    }
+    .project-info a:hover {
+      text-shadow: 0 0 10px rgba(255,255,255,0.8);
+    }
+    .page-header {
+        margin-top: 150px;
+    }
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      requestAnimationFrame(() => {
+        document.body.classList.remove("preload");
+        document.body.classList.add("fade");
+      });
+
+      const links = document.querySelectorAll("a[href]");
+      links.forEach(link => {
+        const url = link.getAttribute("href");
+        if (url && url.endsWith(".html")) {
+          link.addEventListener("click", e => {
+            e.preventDefault();
+            document.body.classList.remove("fade");
+            document.body.classList.add("preload");
+            setTimeout(() => {
+              window.location.href = url;
+            }, 300);
+          });
+        }
+      });
+    });
+  </script>
+</head>
+<body class="preload">
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">Jakub Hrbek</a>
+      <div class="menu-toggle" id="mobile-menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#experience">Experience</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <h1 style="text-align:center; padding-top: 2rem;">All Projects</h1>
+  </header>
+
+  <section class="project-section">
+    <img src="assets/images/algolt.png" alt="ALGOLT project image">
+    <div class="project-info">
+      <h3>ALGOLT</h3>
+      <p>Learn how the most used algorithms work with simple descriptions, visualisations, and exercises.</p>
+      <a href="projects/algolt/index.html">View ALGOLT</a>
+    </div>
+  </section>
+
+  <section class="project-section">
+    <img src="assets/images/raytracer.png" alt="Ray Tracer project image">
+    <div class="project-info">
+      <h3>Ray Tracer (C++)</h3>
+      <p>Custom-built ray tracing engine with real-time rendering. Built in C++ from scratch, inspired by Peter Shirley’s series.</p>
+      <a href="projects/raytracer.html">View Ray Tracer</a>
+    </div>
+  </section>
+
+  <section class="project-section">
+    <img src="assets/images/dronebat.png" alt="DroneBAT project image">
+    <div class="project-info">
+      <h3>DroneBAT</h3>
+      <p>A simulator for autonomous drone swarm behavior. Rule-based coordination in Python using simple agents and visual feedback.</p>
+      <a href="projects/dronebat.html">View DroneBAT</a>
+    </div>
+  </section>
+
+  <footer>
+    <p style="text-align: center;">Made with purpose by Jakub. 2025.</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
