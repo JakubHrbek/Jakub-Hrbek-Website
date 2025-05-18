@@ -206,6 +206,33 @@ footer {
     margin-left: 1.5rem; /* or padding-left: 1.5rem; */
   }
   
+  .hero-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    text-align: center;
+    gap: 2rem;
+    padding: 4rem 2rem;
+  }
+  
+  .profile-photo {
+    width: 250px;
+    height: 350px;
+    border-radius: 10%;
+    object-fit: cover;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+  }
+  
+  .profile-photo:hover {
+    transform: scale(1.05);
+  }
+  
+  .text-content {
+    max-width: 500px;
+  }
+  
   
   /* Responsive Nav */
   @media (max-width: 768px) {
