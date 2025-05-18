@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English C2 Certificate – Jakub Hrbek</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="assets/images/Donda.png">
+  <link rel="preload" as="image" href="assets/images/c2_certificate.jpeg">
+  <style>
+    body.preload {
+      opacity: 0;
+    }
+
+    body.fade {
+      opacity: 1;
+      transition: opacity 0.4s ease-in-out;
+    }
+
+    .cert-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 90vh;
+      background-color: #0a0a0a;
+      margin-top: 100px;
+    }
+
+    .cert-image {
+      max-width: 90%;
+      max-height: 85vh;
+      box-shadow: 0 0 20px rgba(255,255,255,0.15);
+      border-radius: 8px;
+    }
+  </style>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      requestAnimationFrame(() => {
+        document.body.classList.remove("preload");
+        document.body.classList.add("fade");
+      });
+
+      const links = document.querySelectorAll("a[href]");
+      links.forEach(link => {
+        const url = link.getAttribute("href");
+        if (url && url.endsWith(".html")) {
+          link.addEventListener("click", e => {
+            e.preventDefault();
+            document.body.classList.remove("fade");
+            document.body.classList.add("preload");
+            setTimeout(() => {
+              window.location.href = url;
+            }, 300);
+          });
+        }
+      });
+    });
+  </script>
+</head>
+
+<body class="preload">
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">Jakub Hrbek</a>
+      <div class="menu-toggle" id="mobile-menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="https://jakubhrbek.com/projects/algolt/index.html">Projects</a></li>
+        <li><a href="index.html#experience">Experience</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="cert-container">
+    <img src="assets/images/c2_certificate.jpeg" alt="English C2 Certificate" class="cert-image" />
+  </div>
+
+  <footer>
+    <p>Made with purpose by Jakub. 2025.</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
