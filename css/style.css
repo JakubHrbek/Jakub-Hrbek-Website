@@ -68,7 +68,7 @@ section {
   border-radius: 12px;
   text-decoration: none;
   font-weight: 600;
-  transition: 0.3s ease;
+  transition: 0.5s ease;
   box-shadow: var(--btn-glow);
 }
 
@@ -91,14 +91,14 @@ section {
   padding: 20px;
   border-radius: 16px;
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
-  transition: transform 0.3s;
-  transition: 0.3s;
+  transition: transform 0.5s;
+  transition: 0.5s;
 }
 
 .project-card:hover {
   transform: scale(1.005);
   box-shadow: 0 0 20px rgba(248, 248, 248, 0.417);
-  transition: 0.3s;
+  transition: 0.5s;
 }
 
 .project-card a {
@@ -165,7 +165,7 @@ footer {
     color: var(--accent);
     font-weight: 600;
     position: relative;
-    transition: color 0.3s;
+    transition: color 0.5s;
   }
   
   .nav-links li a::after {
@@ -176,7 +176,7 @@ footer {
     bottom: -4px;
     left: 0;
     background: var(--accent);
-    transition: width 0.3s;
+    transition: width 0.5s;
   }
   
   .nav-links li a:hover::after {
@@ -199,7 +199,7 @@ footer {
     height: 3px;
     background-color: var(--accent);
     border-radius: 10px;
-    transition: 0.3s;
+    transition: 0.5s;
   }
 
   ul ul {
@@ -222,7 +222,7 @@ footer {
     border-radius: 10%;
     object-fit: cover;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease;
+    transition: transform 0.5s ease;
   }
   
   .profile-photo:hover {
@@ -246,7 +246,7 @@ footer {
     width: 200px;
     height: auto;
     filter: grayscale(100%) brightness(1.2);
-    transition: filter 0.3s, transform 0.3s;
+    transition: filter 0.5s, transform 0.5s;
   }
   
   .logo-grid img:hover {
@@ -254,7 +254,41 @@ footer {
     transform: scale(1.05);
   }
   
+  .tags {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-top: 0.5rem;
+  }
+
+  .project-section.reverse {
+    flex-direction: row-reverse;
+  }
   
+  .project-section img {
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+  }
+  .project-section img:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+  }
+
+  .search-bar input {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    background: #1a1a1a;
+    color: #f1f1f1;
+    box-shadow: 0 0 10px rgba(255,255,255,0.05);
+    width: 280px;
+    transition: all 0.5s ease;
+  }
+  
+  .search-bar input:focus {
+    width: 300px;
+    box-shadow: 0 0 15px rgba(255,255,255,0.15), 0 0 30px rgba(255,255,255,0.05);
+  } 
   
   /* Responsive Nav */
   @media (max-width: 768px) {

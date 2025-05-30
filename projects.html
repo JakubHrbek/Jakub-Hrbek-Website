@@ -15,9 +15,57 @@
       opacity: 1;
       transition: opacity 0.4s ease-in-out;
     }
+
+    .page-header {
+      margin-top: 150px;
+      text-align: center;
+    }
+
+    .search-bar {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .search-bar input {
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      background: #1a1a1a;
+      color: #f1f1f1;
+      box-shadow: 0 0 10px rgba(255,255,255,0.05);
+      width: 280px;
+      transition: all 0.5s ease;
+    }
+
+    .search-bar input:focus {
+      width: 300px;
+      box-shadow: 0 0 15px rgba(255,255,255,0.15), 0 0 30px rgba(255,255,255,0.05);
+    }
+
+    @keyframes glow-pulse {
+      0% {
+        box-shadow: 0 0 15px rgba(255,255,255,0.15), 0 0 30px rgba(255,255,255,0.05);
+      }
+      50% {
+        box-shadow: 0 0 30px rgba(255,255,255,0.25), 0 0 50px rgba(255,255,255,0.1);
+      }
+      100% {
+        box-shadow: 0 0 15px rgba(255,255,255,0.15), 0 0 30px rgba(255,255,255,0.05);
+      }
+    }
+
+    .typing-glow {
+      animation: glow-pulse 0.5s ease;
+    }
+
+    #project-container {
+      min-height: 75vh;
+    }
+
     .project-section {
       display: flex;
-      flex-direction: row-reverse;
       align-items: center;
       justify-content: space-between;
       gap: 2rem;
@@ -25,34 +73,58 @@
       border-bottom: 1px solid rgba(255,255,255,0.1);
       flex-wrap: wrap;
     }
+
     .project-section img {
       max-width: 400px;
       width: 100%;
       border-radius: 8px;
       box-shadow: 0 0 20px rgba(255,255,255,0.1);
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
     }
+
+    .project-section img:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+    }
+
     .project-info {
       flex: 1;
       max-width: 600px;
     }
+
     .project-info h3 {
       margin-top: 0;
     }
+
     .project-info p {
       margin-bottom: 1rem;
     }
+
+    .project-info .tags {
+      font-size: 0.9rem;
+      color: #aaa;
+      margin-top: -0.5rem;
+      margin-bottom: 1.2rem;
+    }
+
     .project-info a {
       color: #fff;
       text-decoration: none;
       font-weight: 600;
       text-shadow: 0 0 5px rgba(255,255,255,0.5);
-      transition: text-shadow 0.3s ease;
+      transition: text-shadow 0.5s ease;
     }
+
     .project-info a:hover {
       text-shadow: 0 0 10px rgba(255,255,255,0.8);
     }
-    .page-header {
-        margin-top: 150px;
+
+    #no-results {
+      display: none;
+      text-align: center;
+      padding: 4rem 2rem;
+      font-size: 1.2rem;
+      color: #777;
     }
   </style>
   <script>
@@ -76,6 +148,29 @@
           });
         }
       });
+
+      const searchInput = document.getElementById("projectSearch");
+      const projectSections = document.querySelectorAll(".project-section");
+      const noResults = document.getElementById("no-results");
+
+      searchInput.addEventListener("input", () => {
+        const query = searchInput.value.toLowerCase();
+        let anyVisible = false;
+
+        projectSections.forEach(section => {
+          const text = section.textContent.toLowerCase();
+          const match = text.includes(query);
+          section.style.display = match ? "flex" : "none";
+          if (match) anyVisible = true;
+        });
+
+        noResults.style.display = anyVisible ? "none" : "block";
+
+        // glow pulse on every keystroke
+        searchInput.classList.remove("typing-glow");
+        void searchInput.offsetWidth; // force reflow
+        searchInput.classList.add("typing-glow");
+      });
     });
   </script>
 </head>
@@ -98,35 +193,75 @@
   </nav>
 
   <header class="page-header">
-    <h1 style="text-align:center; padding-top: 2rem;">All Projects</h1>
+    <h1>All Projects</h1>
+    <div class="search-bar">
+      <input type="text" id="projectSearch" placeholder="Search by tech or title...">
+    </div>
   </header>
 
-  <section class="project-section">
-    <img src="assets/images/algolt.png" alt="ALGOLT project image">
-    <div class="project-info">
-      <h3>ALGOLT</h3>
-      <p>Learn how the most used algorithms work with simple descriptions, visualisations, and exercises.</p>
-      <a href="projects/algolt/index.html">View ALGOLT</a>
-    </div>
-  </section>
+  <div id="project-container">
+    <div id="no-results">No projects found.</div>
 
-  <section class="project-section">
-    <img src="assets/images/raytracer.png" alt="Ray Tracer project image">
-    <div class="project-info">
-      <h3>Ray Tracer (C++)</h3>
-      <p>Custom-built ray tracing engine with real-time rendering. Built in C++ from scratch, inspired by Peter Shirley’s series.</p>
-      <a href="projects/raytracer.html">View Ray Tracer</a>
-    </div>
-  </section>
+    <section class="project-section">
+      <img src="assets/images/algolt.png" alt="ALGOLT project image">
+      <div class="project-info">
+        <h3>ALGOLT</h3>
+        <p>Learn how the most used algorithms work with simple descriptions, visualisations, and exercises.</p>
+        <p class="tags">Python · Flask · OpenCV</p>
+        <a href="projects/algolt/index.html">Explore ALGOLT</a>
+      </div>
+    </section>
 
-  <section class="project-section">
-    <img src="assets/images/dronebat.png" alt="DroneBAT project image">
-    <div class="project-info">
-      <h3>DroneBAT</h3>
-      <p>A simulator for autonomous drone swarm behavior. Rule-based coordination in Python using simple agents and visual feedback.</p>
-      <a href="projects/dronebat.html">View DroneBAT</a>
-    </div>
-  </section>
+    <section class="project-section">
+      <img src="assets/images/raytracer.png" alt="Ray Tracer project image">
+      <div class="project-info">
+        <h3>Ray Tracer (C++)</h3>
+        <p>Custom-built ray tracing engine with real-time rendering. Built in C++ from scratch, inspired by Peter Shirley’s series.</p>
+        <p class="tags">C++ · Custom Engine · Rendering</p>
+        <a href="projects/raytracer.html">Explore Ray Tracer</a>
+      </div>
+    </section>
+
+    <section class="project-section">
+      <img src="assets/images/dronebat.png" alt="DroneBAT project image">
+      <div class="project-info">
+        <h3>DroneBAT</h3>
+        <p>A simulator for autonomous drone swarm behavior. Rule-based coordination in Python using simple agents and visual feedback.</p>
+        <p class="tags">Python · Pygame · AI Simulation</p>
+        <a href="projects/dronebat.html">Explore DroneBAT</a>
+      </div>
+    </section>
+
+    <section class="project-section">
+      <img src="assets/images/shopify.png" alt="Shopify Web Dev project image">
+      <div class="project-info">
+        <h3>Shopify Web Development</h3>
+        <p>Developed and optimized custom Shopify storefronts with responsive design and performance enhancements, handling both UI and backend config.</p>
+        <p class="tags">Shopify · Liquid · HTML/CSS · JavaScript</p>
+        <a href="#">Explore Project</a>
+      </div>
+    </section>
+
+    <section class="project-section">
+      <img src="assets/images/cybersecurityfirst.png" alt="CybersecurityFirst.cz project image">
+      <div class="project-info">
+        <h3>Cybersecurityfirst.cz</h3>
+        <p>End-to-end design and implementation of a cyber awareness site offering webinars, blogs, and resources for general public education.</p>
+        <p class="tags">Framer · UX/UI · Webflow · Figma</p>
+        <a href="#">Explore CybersecurityFirst</a>
+      </div>
+    </section>
+
+    <section class="project-section">
+      <img src="assets/images/alef.png" alt="ALEF Website Design project image">
+      <div class="project-info">
+        <h3>ALEF Website Redesign</h3>
+        <p>Redesigned ALEF’s outdated website with a sleek, glassmorphism-based UI, improving clarity and visual hierarchy across their service offerings.</p>
+        <p class="tags">Figma · Glassmorphism · Web Design · Consulting</p>
+        <a href="#">Explore ALEF Design</a>
+      </div>
+    </section>
+  </div>
 
   <footer>
     <p style="text-align: center;">Made with purpose by Jakub. 2025.</p>
