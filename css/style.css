@@ -289,6 +289,58 @@ footer {
     width: 300px;
     box-shadow: 0 0 15px rgba(255,255,255,0.15), 0 0 30px rgba(255,255,255,0.05);
   } 
+
+  .hero-content {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 3rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 6rem 2rem;
+    text-align: left;
+  }
+  
+  .photo-column img.profile-photo {
+    width: 240px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  }
+  
+  .text-column {
+    flex: 1;
+    min-width: 300px;
+    max-width: 600px;
+  }
+  
+  .text-column h1 {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .text-column p {
+    font-size: 1.1rem;
+    color: #aaa;
+    margin-bottom: 1.5rem;
+  }
+  
+  @media (max-width: 768px) {
+    .hero-content {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+  
+    .text-column {
+      text-align: center;
+    }
+  }
+  
+  
+  
   
   /* Responsive Nav */
   @media (max-width: 768px) {
@@ -305,7 +357,6 @@ footer {
         align-items: center;
         max-height: 0;
         overflow: hidden;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
       }
       

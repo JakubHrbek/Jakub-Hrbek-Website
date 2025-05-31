@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shopify Development – Jakub Hrbek</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="assets/images/favicon.png">
+  <link rel="stylesheet" href="css/project-styling.css">
+  <style>
+    #lightbox {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      cursor: zoom-out;
+    }
+
+    #lightbox img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 10px;
+      box-shadow: 0 0 30px rgba(255,255,255,0.2);
+      transition: transform 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">Jakub Hrbek</a>
+      <div class="menu-toggle" id="mobile-menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#experience">Experience</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1 class="projectTitle">Shopify Development</h1>
+    <img src="assets/images/shopify.png" alt="Shopify Project Banner" class="banner"/>
+
+    <p class="tagline">Custom-built storefronts. Themes. Liquid code. Revenue-backed results.</p>
+
+    <div class="section">
+      <h2>Overview</h2>
+      <p>
+        I've developed and customized multiple Shopify websites across various industries. 
+        From sleek storefronts to advanced theme logic and performance tuning, I handled 
+        it all end-to-end — including revenue-generating designs and backend integrations.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>Technologies Used</h2>
+      <div class="tech-stack">
+        <span>Shopify</span>
+        <span>Liquid</span>
+        <span>HTML5</span>
+        <span>CSS3</span>
+        <span>JavaScript</span>
+        <span>Shopify CLI</span>
+        <span>UX Optimization</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Revenue Impact</h2>
+      <p>Here's a glimpse of revenue from one of the Shopify stores I worked on:</p>
+      <img src="assets/images/shopify-revenue.png" alt="Shopify Revenue Screenshot" class="revenue-img"/>
+    </div>
+
+    <div class="section">
+      <h2>Live Store Showcase</h2>
+      <p>Some real screenshots from stores I helped build and scale on Shopify:</p>
+      <div class="store-gallery">
+        <img src="assets/images/shopify-3.png" alt="Shopify Screenshot 3">
+        <img src="assets/images/shopify-2.png" alt="Shopify Screenshot 2">
+        <img src="assets/images/shopify-4.png" alt="Shopify Screenshot 4">
+        <img src="assets/images/shopify-1.png" alt="Shopify Screenshot 1">
+        <img src="assets/images/shopify-5.png" alt="Shopify Screenshot 5">
+        <img src="assets/images/shopify-8.png" alt="Shopify Screenshot 8">
+        <img src="assets/images/shopify-6.png" alt="Shopify Screenshot 6">
+      </div>
+    </div>
+
+    <a href="projects.html" class="btn">Explore other projects</a>
+  </div>
+
+  <div id="lightbox">
+    <img id="lightbox-img" src="" alt="Preview">
+  </div>
+
+  <script>
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const galleryImages = document.querySelectorAll('.store-gallery img');
+
+    galleryImages.forEach(img => {
+      img.addEventListener('click', () => {
+        lightboxImg.src = img.src;
+        lightbox.style.display = 'flex';
+      });
+    });
+
+    lightbox.addEventListener('click', () => {
+      lightbox.style.display = 'none';
+    });
+  </script>
+</body>
+</html>
