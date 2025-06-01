@@ -370,4 +370,10 @@ footer {
       backdrop-filter: blur(15px);
       background: rgba(20, 20, 20, 0.4);
     }
-  }
+
+    body.preload,
+    body.fade {
+      opacity: 1 !important;
+      transition: none !important;
+    }
+  }  
