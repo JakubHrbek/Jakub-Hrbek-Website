@@ -37,40 +37,150 @@
         background-color: black;
         color: white;
       }
-      .mobileDisplay{display:none}
-      .desktopDisplay{display:block}
-      @media (max-width:800px){
-        .desktopDisplay {display:none}
-        .mobileDisplay {display:block}
+
+      .mobile-nav {
+        display: none;
+      }
+      
+      /* Mobile-specific styles */
+      @media (max-width: 768px) {
+        .button-grid {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+        .button-grid button {
+          padding: 16px 12px;
+          font-size: 14px;
+          border: 2px solid black;
+        }
+        
+        /* Mobile navigation */
+        .mobile-nav {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100vh;
+          background-color: white;
+          z-index: 50;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          border: 4px solid black;
+        }
+        
+        .mobile-nav.active {
+          display: flex;
+        }
+        
+        .mobile-nav ul {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          text-align: center;
+        }
+        
+        .mobile-nav a {
+          border: 2px solid black;
+          padding: 12px 24px;
+          display: block;
+          font-size: 18px;
+          text-transform: uppercase;
+          font-weight: bold;
+        }
+        
+        .hamburger {
+          display: flex;
+          flex-direction: column;
+          cursor: pointer;
+          gap: 4px;
+        }
+        
+        .hamburger span {
+          width: 25px;
+          height: 3px;
+          background-color: black;
+          transition: 0.3s;
+        }
+        
+        .hamburger.active span:nth-child(1) {
+          transform: rotate(-45deg) translate(-5px, 6px);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+          opacity: 0;
+        }
+        
+        .hamburger.active span:nth-child(3) {
+          transform: rotate(45deg) translate(-5px, -6px);
+        }
+      }
+      
+      @media (min-width: 769px) {
+        .hamburger {
+          display: none;
+        }
+        
+        .desktop-nav {
+          display: flex;
+        }
+      }
+      
+      @media (max-width: 768px) {
+        .desktop-nav {
+          display: none;
+        }
       }
     </style>
   </head>
   <body class="bg-white text-black min-h-screen flex flex-col">
-    <div class="desktopDisplay">
-    <header class="w-full px-6 py-4 border-b-4 border-black flex justify-between items-center uppercase text-sm">
-      <h1 class="text-2xl font-black tracking-tight border-2 border-black px-2">ALGOLT</h1>
-      <nav>
+    <header class="w-full px-4 md:px-6 py-4 border-b-4 border-black flex justify-between items-center uppercase text-sm">
+      <h1 class="text-xl md:text-2xl font-black tracking-tight border-2 border-black px-2">ALGOLT</h1>
+      
+      <!-- Desktop Navigation -->
+      <nav class="desktop-nav">
         <ul class="flex gap-4 font-bold">
           <li><a href="#" class="border-2 border-black px-2 py-1 block">Home</a></li>
           <li><a href="#" class="border-2 border-black px-2 py-1 block">Learning Log</a></li>
-          <li><a href="https://www.jakubhrbek.com#about" class="border-2 border-black px-2 py-1 block">About</a></li>
-          <li><a href="https://www.jakubhrbek.com" class="border-2 border-black px-2 py-1 block">JH</a></li>
+          <li><a href="../../index.html#projects" class="border-2 border-black px-2 py-1 block">About</a></li>
+          <li><a href="../../index.html" class="border-2 border-black px-2 py-1 block">JH</a></li>
         </ul>
       </nav>
+      
+      <!-- Mobile Hamburger -->
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
     </header>
 
-    <main class="flex-grow flex flex-col justify-center items-center text-center px-6 py-20 border-b-4 border-black">
-      <h2 class="text-5xl sm:text-6xl font-black mb-6 uppercase leading-tight">
+    <!-- Mobile Navigation Menu -->
+    <nav class="mobile-nav" id="mobileNav">
+      <ul class="font-bold">
+        <li><a href="#" onclick="closeMobileNav()">Home</a></li>
+        <li><a href="#" onclick="closeMobileNav()">Learning Log</a></li>
+        <li><a href="../../index.html#projects" onclick="closeMobileNav()">About</a></li>
+        <li><a href="../../index.html" onclick="closeMobileNav()">JH</a></li>
+      </ul>
+      <button onclick="closeMobileNav()" class="mt-8 border-2 border-black px-4 py-2 uppercase font-bold">
+        Close
+      </button>
+    </nav>
+
+    <main class="flex-grow flex flex-col justify-center items-center text-center px-4 md:px-6 py-12 md:py-20 border-b-4 border-black">
+      <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-6 uppercase leading-tight">
         Visualize Algorithms.<br><span class="underline">Understand Deeply.</span>
       </h2>
-      <p class="text-lg sm:text-xl font-medium max-w-2xl mb-10 border-t-2 border-b-2 border-black py-4">
+      <p class="text-base sm:text-lg md:text-xl font-medium max-w-2xl mb-8 md:mb-10 border-t-2 border-b-2 border-black py-4">
         ALGOLT is your personal study room for raw, distraction-free algorithm visualization and understanding.
       </p>
-      <a id="getStartedBtn" href="javascript:void(0);" class="border-4 border-black px-8 py-3 uppercase text-lg font-black hover:bg-black hover:text-white">
+      <a id="getStartedBtn" href="javascript:void(0);" class="border-4 border-black px-6 md:px-8 py-3 uppercase text-base md:text-lg font-black hover:bg-black hover:text-white">
         Get Started
       </a>
 
-      <div id="buttonGrid" class="button-grid">
+      <div id="buttonGrid" class="button-grid w-full max-w-4xl px-4">
         <!-- List of algorithm buttons with onclick navigation -->
         <button onclick="window.location.href='algorithms/bubble-sort.html'">Bubble Sort</button>
         <button onclick="window.location.href='quick-sort.html'">Quick Sort</button>
@@ -94,16 +204,41 @@
     <script>
       const getStartedBtn = document.getElementById('getStartedBtn');
       const buttonGrid = document.getElementById('buttonGrid');
+      const hamburger = document.getElementById('hamburger');
+      const mobileNav = document.getElementById('mobileNav');
 
       getStartedBtn.addEventListener('click', () => {
         // Hide the "Get Started" button and show the grid
         getStartedBtn.style.display = 'none';
         buttonGrid.style.display = 'grid';
       });
+
+      // Mobile navigation toggle
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        mobileNav.classList.toggle('active');
+        document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : 'auto';
+      });
+
+      function closeMobileNav() {
+        hamburger.classList.remove('active');
+        mobileNav.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      }
+
+      // Close mobile nav when clicking outside
+      mobileNav.addEventListener('click', (e) => {
+        if (e.target === mobileNav) {
+          closeMobileNav();
+        }
+      });
+
+      // Handle escape key to close mobile nav
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
+          closeMobileNav();
+        }
+      });
     </script>
-  </div>
-  <div class="mobileDisplay">
-    ALGOLT doesn't work on mobile. You'll be more focused on desktop anyways!
-  </div>
   </body>
 </html>

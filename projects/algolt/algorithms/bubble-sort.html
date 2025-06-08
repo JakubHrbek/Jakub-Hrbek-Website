@@ -4,175 +4,551 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bubble Sort | Algolt</title>
-  <link href="https://fonts.googleapis.com/css2?family=Chivo+Mono&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.css" />
   <style>
+    :root {
+      --primary: #1a1a1a;
+      --secondary: #4a4a4a;
+      --accent: #0066cc;
+      --surface: #fafafa;
+      --border: #e1e5e9;
+      --text-primary: #1a1a1a;
+      --text-secondary: #6b7280;
+    }
+
+    * {
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    }
+
     body {
-      font-family: 'Chivo Mono', monospace;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 400;
+      line-height: 1.6;
+      letter-spacing: -0.011em;
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+    }
+
+    .navbar {
+      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.8);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .navbar-link {
+      position: relative;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .navbar-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -8px;
+      left: 50%;
+      background: #2A2A2A;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateX(-50%);
+    }
+
+    .navbar-link:hover::after {
+      width: 100%;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card:hover {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.06);
+      transform: translateY(-1px);
+    }
+
+    .visualizer-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .visualizer-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.4;
     }
 
     .bar {
       display: inline-block;
-      width: 18px;
-      margin: 0 1px;
-      background-color: #444;
-      transition: height 0.5s ease, background-color 0.5s ease;
+      margin: 0 2px;
+      background: linear-gradient(135deg, #363636 0%, #363636 100%);
+      border-radius: 2px 2px 0 0;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2);
     }
 
-    .stats {
-      display: flex;
-      gap: 16px;
-      align-items: center;
+    .bar.comparing {
+      background: linear-gradient(135deg, #404040 0%, #6e6e6e 100%);
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+      transform: scale(1.05);
     }
 
-    .stats span {
-      font-size: 14px;
+    .bar.sorted {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      box-shadow: 0 1px 3px rgba(16, 185, 129, 0.2);
     }
 
-    .mobileDisplay {
-      display: none;
-    }
-
-    .desktopDisplay {
-      display: block;
-    }
-
-    @media (max-width: 800px) {
-      .desktopDisplay {
-        display: none;
+    /* Desktop bars */
+    @media (min-width: 769px) {
+      .bar {
+        width: 20px;
       }
-      .mobileDisplay {
-        display: block;
-        text-align: center;
-        padding: 2rem;
-        font-size: 1rem;
+    }
+
+    /* Mobile bars */
+    @media (max-width: 768px) {
+      .bar {
+        width: 14px;
+        margin: 0 1px;
+      }
+    }
+
+    .btn {
+      font-weight: 500;
+      font-size: 14px;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    }
+
+    .btn-primary:hover {
+      background: #2a2a2a;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--primary);
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-secondary:hover {
+      background: var(--surface);
+      border-color: var(--secondary);
+      transform: translateY(-1px);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 16px;
+    }
+
+    .stat-item {
+      background: white;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .stat-item:hover {
+      border-color: var(--accent);
+      box-shadow: 0 2px 4px rgba(0, 102, 204, 0.1);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .code-block {
+      background: #FFFFFF;
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid #e1e5e9;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+    }
+
+    .code-block::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+
+    }
+
+    .code-block pre {
+      margin: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #e5e7eb;
+      background: #FFFFFF;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .complexity-table {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .complexity-table th {
+      background: var(--surface);
+      font-weight: 600;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+    }
+
+    .complexity-table td {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+    }
+
+    .quiz-card {
+      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    .quiz-option {
+      transition: all 0.2s ease;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin: 8px 0;
+      border: 1px solid var(--border);
+      background: white;
+      cursor: pointer;
+    }
+
+    .quiz-option:hover {
+      border-color: var(--accent);
+      background: rgba(0, 102, 204, 0.02);
+    }
+
+    .input-group {
+      position: relative;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      background: white;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+    }
+
+    .bg-blue-600 {
+      background-color: #2a2a2a !important;
+    }
+
+    .text-blue-600 {
+      color: #2a2a2a !important;
+    }
+
+    .text-gray-900:hover {
+      color: #2a2a2a !important;
+    }
+
+    @media (max-width: 768px) {
+      .visualizer-container {
+        height: 280px !important;
+      }
+      
+      .control-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .section-title {
+        font-size: 18px;
       }
     }
   </style>
 </head>
-<body class="bg-white text-black min-h-screen flex flex-col">
-
-  <div class="desktopDisplay">
-    <header class="px-6 py-4 border-b border-gray-300">
-      <h1 class="text-2xl font-bold">
-        <a href="https://jakubhrbek.com/projects/algolt" class="hover:underline">Bubble Sort – Algolt</a>
-      </h1>
-    </header>
-
-    <main class="p-6 flex-grow">
-
-      <!-- Visualizer -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 h-[400px]">
-        <div class="flex flex-col justify-between h-full">
-          <div id="visualizer" class="flex items-end h-[80%] border border-gray-300 overflow-hidden bg-gray-50"></div>
-          <div class="flex flex-wrap gap-3 mt-4">
-            <button id="playBtn" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition">Play</button>
-            <button id="pauseBtn" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition">Pause</button>
-            <button id="stepBtn" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition">Step</button>
-            <button id="resetBtn" class="border border-black px-4 py-2 rounded hover:bg-gray-200 transition">Reset</button>
-          </div>
-          <div class="stats mt-4 text-gray-700 text-sm">
-            <span id="timer">Timer: 0.00s</span>
-            <span id="comparisons">Comparisons: 0</span>
-            <span id="swaps">Swaps: 0</span>
-            <span id="pass">Pass: 0</span>
-          </div>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center space-x-8">
+          <a href="../index.html" class="navbar-link text-sm font-medium text-gray-900 hover:text-blue-600">JH</a>
+          <a href="../../algolt/index.html" class="navbar-link far-link text-sm font-medium text-gray-900 hover:text-blue-600">Home</a>
         </div>
-        <div class="h-full border border-gray-300 p-4 overflow-auto bg-gray-100">
-          <pre class="text-sm"><code class="language-js">// Bubble Sort in JS
-function bubbleSort(arr) {
-  for (let i = 0; i < arr.length - 1; i++) {
-    for (let j = 0; j < arr.length - i - 1; j++) {
-      if (arr[j] > arr[j + 1]) {
-        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
-      }
-    }
-  }
-  return arr;
-}
-          </code></pre>
+        <div class="flex items-center">
+          <span class="text-sm font-medium text-gray-600">Bubble Sort</span>
         </div>
       </div>
+    </div>
+  </nav>
 
-      <!-- Input -->
-      <section class="mb-10">
-        <h2 class="text-lg font-semibold mb-2">Custom Input</h2>
-        <input id="customInput" class="border p-2 rounded w-full text-sm mb-2" placeholder="Enter comma-separated numbers (e.g. 5,3,8,1)" />
-        <button id="loadCustom" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition">Load</button>
-      </section>
+  <!-- Header -->
+  <header class="px-4 md:px-6 py-12 border-b border-gray-200 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+        Bubble Sort Visualizer
+      </h1>
+      <p class="text-lg text-gray-600 max-w-2xl">
+        Interactive visualization of the bubble sort algorithm with step-by-step execution and performance metrics.
+      </p>
+    </div>
+  </header>
 
-      <!-- Explanation Sections -->
-      <section class="mb-10">
-        <h2 class="text-lg font-semibold mb-2">Simple Explanation</h2>
-        <p class="text-sm text-gray-800">Bubble Sort compares two elements at a time and swaps them if they’re in the wrong order. It “bubbles” the largest values to the end until the list is sorted.</p>
-      </section>
+  <main class="max-w-7xl mx-auto p-4 md:p-6 space-y-12">
+    <!-- Visualizer Section -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Visualizer -->
+      <div class="lg:col-span-2 space-y-6">
+        <div class="visualizer-card card p-6">
+          <div id="visualizer" class="flex items-end justify-center h-[280px] md:h-[320px] overflow-hidden"></div>
+        </div>
+        
+        <!-- Controls -->
+        <div class="card p-6">
+          <div class="control-buttons flex flex-wrap gap-3 mb-6">
+            <button id="playBtn" class="btn btn-primary px-6 py-3">Play</button>
+            <button id="pauseBtn" class="btn btn-primary px-6 py-3">Pause</button>
+            <button id="stepBtn" class="btn btn-primary px-6 py-3">Step</button>
+            <button id="resetBtn" class="btn btn-secondary px-6 py-3">Reset</button>
+          </div>
+          
+          <!-- Stats -->
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-label">Timer</div>
+              <div id="timer" class="stat-value mono">0.00s</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Comparisons</div>
+              <div id="comparisons" class="stat-value mono">0</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Swaps</div>
+              <div id="swaps" class="stat-value mono">0</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Pass</div>
+              <div id="pass" class="stat-value mono">0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Code -->
+      <div class="lg:col-span-1">
+        <div class="code-block h-full">
+          <pre><code class="language-js">// Bubble Sort Algorithm
+function bubbleSort(arr) {
+  const n = arr.length;
+  
+  for (let i = 0; i < n - 1; i++) {
+    let swapped = false;
+    
+    for (let j = 0; j < n - i - 1; j++) {
+      if (arr[j] > arr[j + 1]) {
+        // Swap elements
+        [arr[j], arr[j + 1]] = 
+          [arr[j + 1], arr[j]];
+        swapped = true;
+      }
+    }
+    
+    // Optimization: stop if no swaps
+    if (!swapped) break;
+  }
+  
+  return arr;
+}</code></pre>
+        </div>
+      </div>
+    </section>
 
-      <section class="mb-10">
-        <h2 class="text-lg font-semibold mb-2">Detailed Explanation</h2>
-        <p class="text-sm text-gray-800 leading-relaxed">
-          Bubble Sort is a comparison-based algorithm. It works by iterating over the array multiple times. During each pass, it compares each pair of adjacent items and swaps them if necessary. With every full pass, the largest unsorted element is moved (bubbled) to its correct position at the end of the array.<br><br>
-          This continues until no more swaps are needed, which means the array is sorted. Although easy to implement, Bubble Sort is inefficient for large datasets due to its quadratic time complexity.
+    <!-- Custom Input -->
+    <section class="card p-6">
+      <h2 class="section-title">Custom Input</h2>
+      <p class="text-gray-600 mb-4">Enter your own array of numbers to visualize the sorting process.</p>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <div class="input-group flex-1">
+          <input id="customInput" class="input-field" placeholder="Enter comma-separated numbers (e.g. 64,34,25,12,22,11,90)" />
+        </div>
+        <button id="loadCustom" class="btn btn-primary px-6 py-3 whitespace-nowrap">Load Array</button>
+      </div>
+    </section>
+
+    <!-- Algorithm Explanation -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="card p-6">
+        <h2 class="section-title">How It Works</h2>
+        <p class="text-gray-700 leading-relaxed">
+          Bubble Sort repeatedly steps through the array, compares adjacent elements, and swaps them if they're in the wrong order. The largest elements "bubble" to the end with each pass through the array.
         </p>
-      </section>
-
-      <!-- Complexity -->
-      <section class="mb-10">
-        <h2 class="text-lg font-semibold mb-2">Time & Space Complexity</h2>
-        <ul class="text-sm text-gray-800 leading-relaxed mb-4">
-          <li><strong>Best Case:</strong> O(n)</li>
-          <li><strong>Average Case:</strong> O(n²)</li>
-          <li><strong>Worst Case:</strong> O(n²)</li>
-          <li><strong>Space Complexity:</strong> O(1)</li>
+      </div>
+      
+      <div class="card p-6">
+        <h2 class="section-title">Key Characteristics</h2>
+        <ul class="space-y-2 text-gray-700">
+          <li class="flex items-start">
+            <span class="text-blue-600 mr-2">•</span>
+            <span><strong>Stable:</strong> Equal elements maintain relative order</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-blue-600 mr-2">•</span>
+            <span><strong>In-place:</strong> Sorts with O(1) extra space</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-blue-600 mr-2">•</span>
+            <span><strong>Adaptive:</strong> Performs better on partially sorted data</span>
+          </li>
         </ul>
-        <table class="text-sm w-full border border-collapse">
-          <thead class="bg-gray-200">
-            <tr>
-              <th class="p-2 border">Algorithm</th>
-              <th class="p-2 border">Best</th>
-              <th class="p-2 border">Average</th>
-              <th class="p-2 border">Worst</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="p-2 border">Bubble Sort</td>
-              <td class="p-2 border">O(n)</td>
-              <td class="p-2 border">O(n²)</td>
-              <td class="p-2 border">O(n²)</td>
-            </tr>
-            <tr>
-              <td class="p-2 border">Merge Sort</td>
-              <td class="p-2 border">O(n log n)</td>
-              <td class="p-2 border">O(n log n)</td>
-              <td class="p-2 border">O(n log n)</td>
-            </tr>
-            <tr>
-              <td class="p-2 border">Quick Sort</td>
-              <td class="p-2 border">O(n log n)</td>
-              <td class="p-2 border">O(n log n)</td>
-              <td class="p-2 border">O(n²)</td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
+      </div>
+    </section>
 
-      <!-- Quiz -->
-      <section class="mb-10" id="quiz-section">
-        <h2 class="text-lg font-semibold mb-2">Quiz Yourself</h2>
-        <div id="quiz-container" class="text-sm text-gray-900"></div>
-      </section>
+    <!-- Complexity Analysis -->
+    <section class="card p-6">
+      <h2 class="section-title">Time & Space Complexity</h2>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <h3 class="text-lg font-semibold mb-4 text-gray-800">Bubble Sort Analysis</h3>
+          <div class="space-y-3">
+            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+              <span class="font-medium text-gray-700">Best Case:</span>
+              <span class="mono text-green-600 font-semibold">O(n)</span>
+            </div>
+            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+              <span class="font-medium text-gray-700">Average Case:</span>
+              <span class="mono text-yellow-600 font-semibold">O(n²)</span>
+            </div>
+            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+              <span class="font-medium text-gray-700">Worst Case:</span>
+              <span class="mono text-red-600 font-semibold">O(n²)</span>
+            </div>
+            <div class="flex justify-between items-center py-2">
+              <span class="font-medium text-gray-700">Space:</span>
+              <span class="mono text-blue-600 font-semibold">O(1)</span>
+            </div>
+          </div>
+        </div>
+        <!--
+        <div class="overflow-x-auto">
+          <table class="complexity-table w-full text-sm">
+            <thead>
+              <tr>
+                <th class="p-3 text-left">Algorithm</th>
+                <th class="p-3 text-center">Best</th>
+                <th class="p-3 text-center">Average</th>
+                <th class="p-3 text-center">Worst</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <tr class="hover:bg-gray-50">
+                <td class="p-3 font-medium">Bubble Sort</td>
+                <td class="p-3 text-center text-green-600">O(n)</td>
+                <td class="p-3 text-center text-yellow-600">O(n²)</td>
+                <td class="p-3 text-center text-red-600">O(n²)</td>
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="p-3 font-medium">Quick Sort</td>
+                <td class="p-3 text-center text-green-600">O(n log n)</td>
+                <td class="p-3 text-center text-green-600">O(n log n)</td>
+                <td class="p-3 text-center text-red-600">O(n²)</td>
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="p-3 font-medium">Merge Sort</td>
+                <td class="p-3 text-center text-green-600">O(n log n)</td>
+                <td class="p-3 text-center text-green-600">O(n log n)</td>
+                <td class="p-3 text-center text-green-600">O(n log n)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        -->
+      </div>
+    </section>
 
-      <section>
-        <a href="./insertion-sort.html" class="underline text-gray-700">Next: Insertion Sort →</a>
-      </section>
-    </main>
-  </div>
+    <!-- Quiz Section -->
+    <section class="quiz-card" id="quiz-section">
+      <h2 class="section-title">Test Your Knowledge</h2>
+      <div id="quiz-container"></div>
+    </section>
 
-  <div class="mobileDisplay text-gray-700">This experience is best on desktop. Please switch for full features.</div>
+    <!-- Navigation -->
+    <section class="card p-6 text-center">
+      <a href="./insertion-sort.html" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium transition-colors">
+        Next: Insertion Sort 
+        <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </a>
+    </section>
+  </main>
 
-  <!-- JavaScript -->
   <script>
     const visualizer = document.getElementById("visualizer");
     const playBtn = document.getElementById("playBtn");
@@ -187,28 +563,49 @@ function bubbleSort(arr) {
     const passDisplay = document.getElementById("pass");
 
     let values = [], bars = [], i = 0, j = 0, comparisons = 0, swaps = 0, pass = 0;
-    let isPlaying = false, isPaused = false;
+    let isPlaying = false, isPaused = false, isComplete = false;
     let startTime, elapsedTime = 0, timerInterval;
 
     function updateStats() {
-      comparisonsDisplay.innerText = `Comparisons: ${comparisons}`;
-      swapsDisplay.innerText = `Swaps: ${swaps}`;
-      passDisplay.innerText = `Pass: ${pass}`;
+      comparisonsDisplay.innerText = comparisons;
+      swapsDisplay.innerText = swaps;
+      passDisplay.innerText = pass;
+    }
+
+    function getOptimalArraySize() {
+      const isMobile = window.innerWidth <= 768;
+      return isMobile ? 18 : 25;
     }
 
     function generateBars(custom = null) {
-      values = custom || Array.from({ length: 30 }, () => Math.floor(Math.random() * 100) + 10);
+      const arraySize = getOptimalArraySize();
+      values = custom || Array.from({ length: arraySize }, () => Math.floor(Math.random() * 90) + 10);
+      
+      if (window.innerWidth <= 768 && values.length > 18) {
+        values = values.slice(0, 18);
+      }
+      
       visualizer.innerHTML = "";
       bars = values.map(value => {
         const bar = document.createElement("div");
         bar.classList.add("bar");
-        bar.style.height = `${value * 2}px`;
+        const maxHeight = window.innerWidth <= 768 ? 220 : 260;
+        const height = Math.min((value / 100) * maxHeight, maxHeight);
+        bar.style.height = `${height}px`;
         visualizer.appendChild(bar);
         return bar;
       });
-      i = 0; j = 0; comparisons = 0; swaps = 0; pass = 0; elapsedTime = 0;
-      timerDisplay.innerText = `Timer: 0.00s`;
+      
+      i = 0; j = 0; comparisons = 0; swaps = 0; pass = 0; elapsedTime = 0; isComplete = false;
+      timerDisplay.innerText = "0.00s";
       updateStats();
+      
+      // Reset button states
+      playBtn.disabled = false;
+      playBtn.textContent = "Play";
+      pauseBtn.textContent = "Pause";
+      isPaused = false;
+      isPlaying = false;
     }
 
     function startTimer() {
@@ -217,28 +614,60 @@ function bubbleSort(arr) {
       timerInterval = setInterval(() => {
         if (!isPaused) {
           elapsedTime = (Date.now() - startTime) / 1000;
-          timerDisplay.innerText = `Timer: ${elapsedTime.toFixed(2)}s`;
+          timerDisplay.innerText = `${elapsedTime.toFixed(2)}s`;
         }
       }, 10);
     }
 
+    function resetBarColors() {
+      bars.forEach(bar => {
+        bar.classList.remove('comparing', 'sorted');
+      });
+    }
+
     async function sortStep() {
-      if (i >= values.length - 1) return;
+      if (i >= values.length - 1) {
+        isComplete = true;
+        clearInterval(timerInterval);
+        bars.forEach(bar => bar.classList.add('sorted'));
+        playBtn.textContent = "Complete";
+        playBtn.disabled = true;
+        return;
+      }
+
       comparisons++;
-      bars[j].style.backgroundColor = "#888";
-      bars[j + 1].style.backgroundColor = "#888";
-      if (values[j] > values[j + 1]) {
+      
+      // Reset previous colors
+      resetBarColors();
+      
+      // Highlight comparing bars
+      if (j < values.length - i - 1) {
+        bars[j].classList.add('comparing');
+        bars[j + 1].classList.add('comparing');
+      }
+
+      if (j < values.length - i - 1 && values[j] > values[j + 1]) {
         swaps++;
         [values[j], values[j + 1]] = [values[j + 1], values[j]];
-        bars[j].style.height = `${values[j] * 2}px`;
-        bars[j + 1].style.height = `${values[j + 1] * 2}px`;
+        
+        const maxHeight = window.innerWidth <= 768 ? 220 : 260;
+        bars[j].style.height = `${Math.min((values[j] / 100) * maxHeight, maxHeight)}px`;
+        bars[j + 1].style.height = `${Math.min((values[j + 1] / 100) * maxHeight, maxHeight)}px`;
       }
-      await new Promise(r => setTimeout(r, 100));
-      bars[j].style.backgroundColor = "#444";
-      bars[j + 1].style.backgroundColor = "#444";
+
+      const delay = window.innerWidth <= 768 ? 200 : 150;
+      await new Promise(r => setTimeout(r, delay));
+      
+      // Remove comparing colors
+      if (j < values.length - i - 1) {
+        bars[j].classList.remove('comparing');
+        bars[j + 1].classList.remove('comparing');
+      }
 
       j++;
       if (j >= values.length - i - 1) {
+        // Mark the last element of this pass as sorted
+        bars[values.length - i - 1].classList.add('sorted');
         j = 0;
         i++;
         pass++;
@@ -248,71 +677,114 @@ function bubbleSort(arr) {
 
     async function bubbleSortLoop() {
       startTimer();
-      while (i < values.length - 1 && isPlaying && !isPaused) {
+      while (i < values.length - 1 && isPlaying && !isPaused && !isComplete) {
         await sortStep();
       }
-      clearInterval(timerInterval);
+      if (isComplete) {
+        clearInterval(timerInterval);
+      }
     }
 
     playBtn.onclick = () => {
-      if (!isPlaying) {
+      if (!isPlaying && !isComplete) {
         isPlaying = true;
         isPaused = false;
+        playBtn.textContent = "Playing...";
         bubbleSortLoop();
       }
     };
 
     pauseBtn.onclick = () => {
+      if (isComplete) return;
+      
       isPaused = !isPaused;
-      if (!isPaused) {
+      if (!isPaused && isPlaying) {
         bubbleSortLoop();
-        pauseBtn.innerText = "Pause";
+        pauseBtn.textContent = "Pause";
+        playBtn.textContent = "Playing...";
       } else {
-        pauseBtn.innerText = "Resume";
+        pauseBtn.textContent = "Resume";
+        playBtn.textContent = "Play";
       }
     };
 
-    stepBtn.onclick = async () => await sortStep();
+    stepBtn.onclick = async () => {
+      if (!isComplete) {
+        isPlaying = false;
+        isPaused = true;
+        playBtn.textContent = "Play";
+        pauseBtn.textContent = "Pause";
+        await sortStep();
+      }
+    };
 
     resetBtn.onclick = () => {
       isPaused = true;
       isPlaying = false;
+      isComplete = false;
       clearInterval(timerInterval);
       generateBars();
     };
 
     loadCustom.onclick = () => {
-      const nums = input.value.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n)).map(n => Math.min(n, 120));
-      if (nums.length > 1) generateBars(nums);
+      const nums = input.value.split(',')
+        .map(n => parseInt(n.trim()))
+        .filter(n => !isNaN(n) && n > 0)
+        .map(n => Math.min(n, 100));
+      
+      if (nums.length > 1) {
+        const maxSize = window.innerWidth <= 768 ? 18 : 35;
+        const limitedNums = nums.slice(0, maxSize);
+        generateBars(limitedNums);
+        input.value = '';
+      } else {
+        alert('Please enter at least 2 valid numbers separated by commas.');
+      }
     };
 
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      generateBars(values);
+    });
+
+    // Initialize
     generateBars();
 
     // Quiz logic
     const quizData = [
       {
-        question: "What’s the time complexity of Bubble Sort in the best case?",
-        options: ["O(n²)", "O(log n)", "O(n)"],
+        question: "What is the best-case time complexity of Bubble Sort?",
+        options: ["O(n²)", "O(n log n)", "O(n)", "O(log n)"],
         answer: "O(n)",
-        explanation: "Bubble Sort is O(n) best case when the list is already sorted."
+        explanation: "Best case occurs when the array is already sorted and the optimized version makes only one pass."
       },
       {
-        question: "What’s the worst-case time complexity of Bubble Sort?",
-        options: ["O(n)", "O(n²)", "O(n log n)"],
-        answer: "O(n²)",
-        explanation: "Worst case occurs when the list is in reverse order."
-      },
-      {
-        question: "What kind of algorithm is Bubble Sort?",
-        options: ["Divide and conquer", "Greedy", "Comparison-based"],
-        answer: "Comparison-based",
-        explanation: "Bubble Sort compares adjacent elements repeatedly."
+        question: "What makes Bubble Sort stable?",
+        options: [
+          "It uses constant extra space",
+          "Equal elements maintain their relative order", 
+          "It always runs in O(n²) time",
+          "It's an in-place algorithm"
+        ],
+        answer: "Equal elements maintain their relative order",
+        explanation: "Bubble Sort only swaps adjacent elements when the left element is strictly greater than the right, preserving the relative order of equal elements."
       },
       {
         question: "What is the space complexity of Bubble Sort?",
-        options: ["O(n)", "O(n²)", "O(1)"],
+        options: ["O(n)", "O(n²)", "O(log n)", "O(1)"],
         answer: "O(1)",
-        explanation: "Bubble Sort is in-place and doesn’t need extra space."
+        explanation: "Bubble Sort is an in-place algorithm that only uses a constant amount of extra space for temporary variables."
+      },
+      {
+        question: "In which scenario does Bubble Sort perform worst?",
+        options: [
+          "When the array is already sorted",
+          "When the array is reverse sorted",
+          "When the array has duplicate elements",
+          "When the array is randomly ordered"
+        ],
+        answer: "When the array is reverse sorted",
+        explanation: "Worst case occurs when the array is sorted in reverse order, requiring maximum comparisons and swaps."
       }
     ];
 
@@ -323,37 +795,75 @@ function bubbleSort(arr) {
     function renderQuestion() {
       const q = quizData[currentQuestion];
       quizContainer.innerHTML = `
-        <p class="mb-2 font-medium">${q.question}</p>
-        <ul class="mb-4 space-y-1">
-          ${q.options.map(opt => `
-            <li>
-              <label class="cursor-pointer">
-                <input type="radio" name="quiz" value="${opt}" class="mr-2"> ${opt}
+        <div class="mb-6">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-sm font-medium text-gray-500">Question ${currentQuestion + 1} of ${quizData.length}</span>
+            <div class="flex space-x-1">
+              ${quizData.map((_, index) => `
+                <div class="w-2 h-2 rounded-full ${index <= currentQuestion ? 'bg-blue-600' : 'bg-gray-300'}"></div>
+              `).join('')}
+            </div>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">${q.question}</h3>
+          <div class="space-y-3">
+            ${q.options.map(opt => `
+              <label class="quiz-option flex items-center cursor-pointer">
+                <input type="radio" name="quiz" value="${opt}" class="mr-3 text-blue-600"> 
+                <span class="text-gray-700">${opt}</span>
               </label>
-            </li>
-          `).join('')}
-        </ul>
-        <button id="submitQuiz" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">Submit</button>
+            `).join('')}
+          </div>
+          <button id="submitQuiz" class="btn btn-primary px-6 py-3 mt-6">Submit Answer</button>
+        </div>
       `;
     }
 
     function handleAnswer() {
       const selected = document.querySelector('input[name="quiz"]:checked');
-      if (!selected) return alert("Choose an answer first.");
+      if (!selected) {
+        alert("Please select an answer first.");
+        return;
+      }
+      
       const chosen = selected.value;
       const correct = quizData[currentQuestion].answer;
       const explanation = quizData[currentQuestion].explanation;
 
-      const feedback = document.createElement("p");
-      feedback.classList.add("mt-2", "text-sm", "font-medium");
+      const feedback = document.createElement("div");
+      feedback.className = "mt-4 p-4 rounded-lg border";
 
       if (chosen === correct) {
-        feedback.textContent = `✅ Correct! ${explanation}`;
-        feedback.classList.add("text-green-600");
+        feedback.innerHTML = `
+          <div class="flex items-start">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="ml-3">
+              <h4 class="text-sm font-medium text-green-800">Correct!</h4>
+              <p class="text-sm text-green-700 mt-1">${explanation}</p>
+            </div>
+          </div>
+        `;
+        feedback.classList.add("bg-green-50", "border-green-200");
         score++;
       } else {
-        feedback.textContent = `❌ Incorrect. ${explanation}`;
-        feedback.classList.add("text-red-600");
+        feedback.innerHTML = `
+          <div class="flex items-start">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="ml-3">
+              <h4 class="text-sm font-medium text-red-800">Incorrect</h4>
+              <p class="text-sm text-red-700 mt-1">The correct answer is: <strong>${correct}</strong></p>
+              <p class="text-sm text-red-700 mt-1">${explanation}</p>
+            </div>
+          </div>
+        `;
+        feedback.classList.add("bg-red-50", "border-red-200");
       }
 
       quizContainer.appendChild(feedback);
@@ -361,8 +871,8 @@ function bubbleSort(arr) {
       document.querySelectorAll('input[name="quiz"]').forEach(el => el.disabled = true);
 
       const nextBtn = document.createElement("button");
-      nextBtn.textContent = currentQuestion === quizData.length - 1 ? "See Result" : "Next";
-      nextBtn.className = "mt-2 bg-gray-800 text-white px-4 py-2 rounded hover:bg-black ml-2";
+      nextBtn.textContent = currentQuestion === quizData.length - 1 ? "View Results" : "Next Question";
+      nextBtn.className = "btn btn-primary px-6 py-3 mt-4";
       nextBtn.onclick = () => {
         currentQuestion++;
         if (currentQuestion < quizData.length) {
@@ -375,16 +885,60 @@ function bubbleSort(arr) {
     }
 
     function showFinalResult() {
+      const percentage = Math.round((score / quizData.length) * 100);
+      let resultColor, resultIcon, resultMessage;
+      
+      if (percentage >= 80) {
+        resultColor = "text-green-600";
+        resultIcon = `<svg class="h-8 w-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>`;
+        resultMessage = "Excellent work! You have a strong understanding of Bubble Sort.";
+      } else if (percentage >= 60) {
+        resultColor = "text-yellow-600";
+        resultIcon = `<svg class="h-8 w-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+        </svg>`;
+        resultMessage = "Good job! Review the concepts and try again to improve your score.";
+      } else {
+        resultColor = "text-red-600";
+        resultIcon = `<svg class="h-8 w-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>`;
+        resultMessage = "Keep learning! Review the algorithm explanation and try the quiz again.";
+      }
+
       quizContainer.innerHTML = `
-        <h3 class="text-lg font-bold mb-2">🎉 You finished the quiz!</h3>
-        <p class="text-sm">Your score: ${score} / ${quizData.length}</p>
-        <p class="text-sm mt-2">Refresh the page to try again.</p>
+        <div class="text-center py-8">
+          <div class="flex justify-center mb-4">
+            ${resultIcon}
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-2">Quiz Complete!</h3>
+          <div class="text-4xl font-bold ${resultColor} mb-4">${score}/${quizData.length}</div>
+          <div class="text-lg ${resultColor} font-semibold mb-3">${percentage}%</div>
+          <p class="text-gray-600 mb-6 max-w-md mx-auto">${resultMessage}</p>
+          <button onclick="location.reload()" class="btn btn-secondary px-6 py-3">
+            Try Again
+          </button>
+        </div>
       `;
     }
 
+    // Initialize quiz
     renderQuestion();
+    
+    // Handle quiz submission
     quizContainer.addEventListener('click', e => {
-      if (e.target && e.target.id === 'submitQuiz') handleAnswer();
+      if (e.target && e.target.id === 'submitQuiz') {
+        handleAnswer();
+      }
+    });
+
+    // Handle Enter key for input
+    input.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        loadCustom.click();
+      }
     });
   </script>
 </body>
