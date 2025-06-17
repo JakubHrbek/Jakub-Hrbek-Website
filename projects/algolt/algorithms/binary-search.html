@@ -28,7 +28,7 @@
   <header class="px-4 md:px-6 py-12 border-b border-gray-200 bg-white">
     <div class="max-w-7xl mx-auto">
       <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-        Binary Search Visualizer - Not Functional
+        Binary Search Visualizer
       </h1>
       <p class="text-lg text-gray-600 max-w-2xl">
         Interactive visualization of the binary search algorithm with step-by-step execution and performance metrics.
@@ -265,6 +265,7 @@ function binarySearch(arr, target) {
     let isPlaying = false, isPaused = false, isComplete = false, hasTarget = false;
     let startTime, elapsedTime = 0, timerInterval;
     let searchResult = -1;
+    let animationTimeout = null;
 
     const phases = ['Setup', 'Searching', 'Found', 'Not Found'];
 
@@ -354,11 +355,15 @@ function binarySearch(arr, target) {
       
       playBtn.disabled = true;
       updateStats();
-
-      
     }
 
     function resetSearch() {
+      // Clear any pending animations
+      if (animationTimeout) {
+        clearTimeout(animationTimeout);
+        animationTimeout = null;
+      }
+      
       currentStep = 0;
       comparisons = 0;
       left = 0;
@@ -366,7 +371,6 @@ function binarySearch(arr, target) {
       mid = 0;
       elapsedTime = 0;
       isComplete = false;
-      hasTarget = false;
       searchResult = -1;
       timerDisplay.innerText = "0.00s";
       resultDisplay.innerText = "Ready to search...";
@@ -378,19 +382,33 @@ function binarySearch(arr, target) {
       isPaused = false;
       isPlaying = false;
       
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      
       clearHighlights();
       updateStats();
     }
 
     function startTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+      }
       startTime = Date.now() - elapsedTime * 1000;
-      clearInterval(timerInterval);
       timerInterval = setInterval(() => {
-        if (!isPaused) {
+        if (!isPaused && isPlaying) {
           elapsedTime = (Date.now() - startTime) / 1000;
           timerDisplay.innerText = `${elapsedTime.toFixed(2)}s`;
         }
       }, 10);
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
     }
 
     function highlightElement(index, className = 'comparing') {
@@ -440,73 +458,89 @@ function binarySearch(arr, target) {
       }
     }
 
-    async function searchStep() {
-      mid = Math.floor((left + right) / 2);
-      comparisons++;
-      
-      // Highlight current search range
-      highlightRange();
-      
-      await new Promise(r => setTimeout(r, 1000));
-      
-      if (values[mid] === target) {
-        // Found target
-        searchResult = mid;
-        isComplete = true;
-        clearInterval(timerInterval);
-        highlightElement(mid, 'found');
-        resultDisplay.innerText = `Target ${target} found at index ${mid}`;
-        resultDisplay.className = "bg-green-50 p-4 rounded-lg text-center text-lg font-medium text-green-600";
-        playBtn.textContent = "Found!";
-        playBtn.disabled = true;
-      } else if (values[mid] < target) {
-        // Search right half
-        left = mid + 1;
-        await new Promise(r => setTimeout(r, 500));
-      } else {
-        // Search left half
-        right = mid - 1;
-        await new Promise(r => setTimeout(r, 500));
-      }
-      
-      // Check if search is complete (target not found)
-      if (left > right && !isComplete) {
-        searchResult = -1;
-        isComplete = true;
-        clearInterval(timerInterval);
-        resultDisplay.innerText = `Target ${target} not found in array`;
-        resultDisplay.className = "bg-red-50 p-4 rounded-lg text-center text-lg font-medium text-red-600";
-        playBtn.textContent = "Not Found";
-        playBtn.disabled = true;
-        clearHighlights();
-      }
-      
-      updateStats();
-    }
-
-    async function searchLoop() {
-      startTimer();
-      while (!isComplete && isPlaying && !isPaused) {
+    function performSearchStep() {
+      return new Promise((resolve) => {
         if (left > right) {
-          // Handle not found case
+          // Target not found
           searchResult = -1;
           isComplete = true;
-          clearInterval(timerInterval);
+          stopTimer();
           resultDisplay.innerText = `Target ${target} not found in array`;
           resultDisplay.className = "bg-red-50 p-4 rounded-lg text-center text-lg font-medium text-red-600";
           playBtn.textContent = "Not Found";
           playBtn.disabled = true;
           clearHighlights();
           updateStats();
-          break;
+          resolve();
+          return;
         }
-        await searchStep();
+        
+        mid = Math.floor((left + right) / 2);
+        comparisons++;
+        
+        // Highlight current search range
+        highlightRange();
+        updateStats();
+        
+        // Wait for animation
+        animationTimeout = setTimeout(() => {
+          if (values[mid] === target) {
+            // Found target
+            searchResult = mid;
+            isComplete = true;
+            stopTimer();
+            highlightElement(mid, 'found');
+            resultDisplay.innerText = `Target ${target} found at index ${mid}`;
+            resultDisplay.className = "bg-green-50 p-4 rounded-lg text-center text-lg font-medium text-green-600";
+            playBtn.textContent = "Found!";
+            playBtn.disabled = true;
+            updateStats();
+            resolve();
+          } else if (values[mid] < target) {
+            // Search right half
+            left = mid + 1;
+            resolve();
+          } else {
+            // Search left half
+            right = mid - 1;
+            resolve();
+          }
+        }, 1000);
+      });
+    }
+
+    async function runSearch() {
+      if (!hasTarget || isComplete) return;
+      
+      startTimer();
+      isPlaying = true;
+      playBtn.textContent = "Searching...";
+      playBtn.disabled = true;
+      
+      while (!isComplete && isPlaying && !isPaused) {
+        await performSearchStep();
       }
-      if (isComplete) {
-        clearInterval(timerInterval);
+      
+      if (isComplete || isPaused) {
+        isPlaying = false;
+        if (!isComplete) {
+          playBtn.textContent = "Play";
+          playBtn.disabled = false;
+        }
       }
     }
 
+    async function runSingleStep() {
+      if (!hasTarget || isComplete) return;
+      
+      if (!timerInterval) {
+        startTimer();
+      }
+      
+      await performSearchStep();
+    }
+
+    // Event Listeners
     setTargetBtn.onclick = () => {
       const targetValue = parseInt(targetInput.value);
       if (!isNaN(targetValue)) {
@@ -522,43 +556,73 @@ function binarySearch(arr, target) {
     };
 
     playBtn.onclick = () => {
-      if (!isPlaying && !isComplete && hasTarget) {
-        isPlaying = true;
+      if (!hasTarget) {
+        alert('Please set a target value first.');
+        return;
+      }
+      
+      if (isComplete) {
+        return;
+      }
+      
+      if (isPaused) {
         isPaused = false;
-        playBtn.textContent = "Searching...";
-        searchLoop();
+        pauseBtn.textContent = "Pause";
+        runSearch();
+      } else if (!isPlaying) {
+        runSearch();
       }
     };
 
     pauseBtn.onclick = () => {
       if (isComplete) return;
       
-      isPaused = !isPaused;
-      if (!isPaused && isPlaying) {
-        searchLoop();
-        pauseBtn.textContent = "Pause";
-        playBtn.textContent = "Searching...";
-      } else {
+      if (isPlaying) {
+        isPaused = true;
+        isPlaying = false;
         pauseBtn.textContent = "Resume";
         playBtn.textContent = "Play";
+        playBtn.disabled = false;
+        if (animationTimeout) {
+          clearTimeout(animationTimeout);
+          animationTimeout = null;
+        }
+      } else if (isPaused) {
+        isPaused = false;
+        pauseBtn.textContent = "Pause";
+        runSearch();
       }
     };
 
-    stepBtn.onclick = async () => {
-      if (!isComplete && hasTarget) {
+    stepBtn.onclick = () => {
+      if (!hasTarget) {
+        alert('Please set a target value first.');
+        return;
+      }
+      
+      if (isComplete) return;
+      
+      // Stop any running search
+      if (isPlaying) {
         isPlaying = false;
         isPaused = true;
         playBtn.textContent = "Play";
-        pauseBtn.textContent = "Pause";
-        await searchStep();
+        playBtn.disabled = false;
+        pauseBtn.textContent = "Resume";
       }
+      
+      runSingleStep();
     };
 
     resetBtn.onclick = () => {
-      isPaused = true;
+      isPaused = false;
       isPlaying = false;
       isComplete = false;
-      clearInterval(timerInterval);
+      if (animationTimeout) {
+        clearTimeout(animationTimeout);
+        animationTimeout = null;
+      }
+      stopTimer();
       resetSearch();
     };
 
@@ -584,6 +648,7 @@ function binarySearch(arr, target) {
       }
     };
 
+    // Keyboard event listeners
     targetInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
         setTargetBtn.click();
@@ -596,59 +661,13 @@ function binarySearch(arr, target) {
       }
     });
 
+    // Window resize handler
     window.addEventListener('resize', () => {
       generateBars(originalValues);
     });
 
     // Initialize the visualizer
     generateBars();
-
-    // Quiz Data for Binary Search
-    const binarySearchQuizData = [
-      {
-        question: "What is the time complexity of Binary Search?",
-        options: ["O(n)", "O(n log n)", "O(log n)", "O(1)"],
-        answer: "O(log n)",
-        explanation: "Binary Search eliminates half of the remaining elements with each comparison, resulting in O(log n) time complexity."
-      },
-      {
-        question: "What is the prerequisite for Binary Search to work?",
-        options: [
-          "Array must be sorted",
-          "Array must contain unique elements",
-          "Array must be of even length",
-          "Array must contain only positive numbers"
-        ],
-        answer: "Array must be sorted",
-        explanation: "Binary Search only works on sorted arrays because it relies on the ordering to decide which half to eliminate."
-      },
-      {
-        question: "In the worst case, how many comparisons does Binary Search make for an array of size n?",
-        options: ["n", "n/2", "log₂(n)", "√n"],
-        answer: "log₂(n)",
-        explanation: "In the worst case, Binary Search makes at most ⌊log₂(n)⌋ + 1 comparisons, which is O(log n)."
-      },
-      {
-        question: "What happens when the target is smaller than the middle element?",
-        options: [
-          "Search the right half",
-          "Search the left half",
-          "Element is not found",
-          "Start over from the beginning"
-        ],
-        answer: "Search the left half",
-        explanation: "If the target is smaller than the middle element, it can only be in the left half of the current search range."
-      },
-      {
-        question: "What is the space complexity of iterative Binary Search?",
-        options: ["O(n)", "O(log n)", "O(1)", "O(n log n)"],
-        answer: "O(1)",
-        explanation: "Iterative Binary Search uses only a constant amount of extra space for variables like left, right, and mid pointers."
-      }
-    ];
-
-    // Initialize the quiz
-    AlgorithmQuiz.create('quiz-container', binarySearchQuizData);
   </script>
 </body>
 </html>

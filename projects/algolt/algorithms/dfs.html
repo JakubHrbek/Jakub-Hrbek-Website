@@ -8,113 +8,196 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.css" />
-  <link rel="stylesheet" href="algorithm.css" />
   <style>
-    .graph-container {
+    .navbar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    .navbar-link {
+      transition: color 0.2s ease;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    .visualizer-card {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      border: 1px solid #e2e8f0;
+    }
+    .btn {
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #1a1a1a 0%, #1a1a1a 100%);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #1a1a1a 0%, #1a1a1a 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+    .btn-primary:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .btn-secondary {
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #d1d5db;
+    }
+    .btn-secondary:hover {
+      background: #e5e7eb;
+      transform: translateY(-1px);
+    }
+    .input-field {
+      padding: 12px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.2s ease;
+      width: 100%;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #1a1a1a;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #1f2937;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem;
+    }
+    .stat-item {
+      text-align: center;
+      padding: 1rem;
+      background: #f9fafb;
+      border-radius: 8px;
+      border: 1px solid #f3f4f6;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+    }
+    .stat-value {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #1f2937;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .code-block {
+      border-radius: 12px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      background: #fdfdfd; /* or white, or whatever light bg you want */
+      color: #1a1a1a;       /* adjust to readable text */
+
+    }
+    .code-block pre {
+      margin: 0;
+      padding: 1.5rem;
+      background: transparent;
+    }
+    .code-block code {
+
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+    #graph-container {
       position: relative;
       width: 100%;
       height: 400px;
-      background: #f8fafc;
+      background: white;
       border-radius: 8px;
       overflow: hidden;
     }
-    
     .node {
       position: absolute;
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      background: #e2e8f0;
-      border: 2px solid #cbd5e1;
+      background: #e5e7eb;
+      border: 2px solid #9ca3af;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 500;
+      font-weight: 600;
       font-size: 14px;
-      color: #334155;
+      color: #374151;
       transition: all 0.3s ease;
       cursor: pointer;
       z-index: 10;
     }
-    
     .node.current {
-      background: #3b82f6;
-      border-color: #2563eb;
+      background: #fbbf24;
+      border-color: #f59e0b;
       color: white;
       transform: scale(1.1);
-      box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
     }
-    
     .node.visited {
       background: #10b981;
       border-color: #059669;
       color: white;
     }
-    
-    .node.on-stack {
-      background: #f59e0b;
-      border-color: #d97706;
+    .node.in-stack {
+      background: #1a1a1a;
+      border-color: #1a1a1a;
       color: white;
     }
-    
     .edge {
       position: absolute;
+      background: #9ca3af;
       height: 2px;
-      background: #94a3b8;
       transform-origin: left center;
       z-index: 1;
       transition: all 0.3s ease;
     }
-    
     .edge.active {
-      background: #3b82f6;
-      height: 3px;
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
-    }
-    
-    .edge.traversed {
-      background: #10b981;
+      background: #f59e0b;
       height: 3px;
     }
-    
-    .traversal-path {
-      background: #f1f5f9;
-      border: 1px solid #e2e8f0;
-      border-radius: 6px;
-      padding: 12px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 16px;
-      min-height: 60px;
+    .quiz-card {
+      background: white;
+      border: 1px solid rgba(0,0,0, 0.1);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .traversal-order {
       display: flex;
-      align-items: center;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 0.5rem;
+      margin-top: 1rem;
     }
-    
-    .path-node {
-      background: #3b82f6;
+    .traversal-node {
+      background: #1a1a1a;
       color: white;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 14px;
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.875rem;
       font-weight: 500;
-    }
-    
-    .path-arrow {
-      color: #64748b;
-      font-weight: bold;
-    }
-    
-    @media (max-width: 768px) {
-      .graph-container {
-        height: 300px;
-      }
-      
-      .node {
-        width: 35px;
-        height: 35px;
-        font-size: 12px;
-      }
     }
   </style>
 </head>
@@ -136,10 +219,10 @@
   <header class="px-4 md:px-6 py-12 border-b border-gray-200 bg-white">
     <div class="max-w-7xl mx-auto">
       <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-        Depth-First Search Visualizer - Not Functional
+        Depth-First Search Visualizer
       </h1>
       <p class="text-lg text-gray-600 max-w-2xl">
-        Interactive visualization of the DFS algorithm with step-by-step traversal and graph exploration.
+        Interactive visualization of the depth-first search algorithm with step-by-step graph traversal and stack operations.
       </p>
     </div>
   </header>
@@ -148,23 +231,16 @@
     <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div class="lg:col-span-2 space-y-6">
         <div class="visualizer-card card p-6">
-          <div id="graph-visualizer" class="graph-container"></div>
-        </div>
-        
-        <div class="card p-6">
-          <h3 class="text-lg font-semibold mb-4">Traversal Path</h3>
-          <div id="traversal-path" class="traversal-path">
-            Click Play to start DFS traversal...
-          </div>
+          <div id="graph-container"></div>
         </div>
         
         <div class="card p-6">
           <div class="control-buttons flex flex-wrap gap-3 mb-6">
-            <button id="playBtn" class="btn btn-primary px-6 py-3">Play</button>
+            <button id="playBtn" class="btn btn-primary px-6 py-3">Start DFS</button>
             <button id="pauseBtn" class="btn btn-primary px-6 py-3">Pause</button>
             <button id="stepBtn" class="btn btn-primary px-6 py-3">Step</button>
             <button id="resetBtn" class="btn btn-secondary px-6 py-3">Reset</button>
-            <button id="generateBtn" class="btn btn-secondary px-6 py-3">New Graph</button>
+            <button id="newGraphBtn" class="btn btn-secondary px-6 py-3">New Graph</button>
           </div>
           
           <div class="stats-grid">
@@ -173,17 +249,22 @@
               <div id="timer" class="stat-value mono">0.00s</div>
             </div>
             <div class="stat-item">
-              <div class="stat-label">Nodes Visited</div>
-              <div id="visited-count" class="stat-value mono">0</div>
+              <div class="stat-label">Visited</div>
+              <div id="visitedCount" class="stat-value mono">0</div>
             </div>
             <div class="stat-item">
               <div class="stat-label">Stack Size</div>
-              <div id="stack-size" class="stat-value mono">0</div>
+              <div id="stackSize" class="stat-value mono">0</div>
             </div>
             <div class="stat-item">
               <div class="stat-label">Current Node</div>
-              <div id="current-node" class="stat-value mono">-</div>
+              <div id="currentNode" class="stat-value mono">-</div>
             </div>
+          </div>
+
+          <div class="mt-6">
+            <div class="stat-label mb-2">Traversal Order:</div>
+            <div id="traversalOrder" class="traversal-order"></div>
           </div>
         </div>
       </div>
@@ -191,20 +272,21 @@
       <div class="lg:col-span-1">
         <div class="code-block h-full">
           <pre><code class="language-js">// Depth-First Search Algorithm
-function dfs(graph, start, visited = new Set()) {
-  const stack = [start];
-  const path = [];
+function dfs(graph, startNode) {
+  const visited = new Set();
+  const stack = [startNode];
+  const result = [];
   
   while (stack.length > 0) {
-    const node = stack.pop();
+    const current = stack.pop();
     
-    if (!visited.has(node)) {
-      visited.add(node);
-      path.push(node);
+    if (!visited.has(current)) {
+      visited.add(current);
+      result.push(current);
       
       // Add neighbors to stack
-      // (in reverse order for left-to-right traversal)
-      const neighbors = graph[node] || [];
+      // (in reverse order for left-to-right)
+      const neighbors = graph[current];
       for (let i = neighbors.length - 1; i >= 0; i--) {
         if (!visited.has(neighbors[i])) {
           stack.push(neighbors[i]);
@@ -213,17 +295,26 @@ function dfs(graph, start, visited = new Set()) {
     }
   }
   
-  return path;
+  return result;
 }</code></pre>
         </div>
       </div>
     </section>
 
     <section class="card p-6">
-      <h2 class="section-title">Starting Node</h2>
-      <p class="text-gray-600 mb-4">Select which node to start the DFS traversal from.</p>
-      <div class="flex flex-wrap gap-2" id="node-selector">
-        <!-- Node buttons will be populated dynamically -->
+      <h2 class="section-title">Custom Graph</h2>
+      <p class="text-gray-600 mb-4">Define your own graph using adjacency list format. Each line should be: node:neighbor1,neighbor2,...</p>
+      <div class="space-y-3">
+        <textarea id="customGraph" class="input-field h-32 resize-none" placeholder="A:B,C&#10;B:A,D,E&#10;C:A,F&#10;D:B&#10;E:B,F&#10;F:C,E"></textarea>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <div class="flex-1">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Start Node:</label>
+            <input id="startNodeInput" class="input-field" placeholder="A" value="A" />
+          </div>
+          <div class="flex items-end">
+            <button id="loadCustomGraph" class="btn btn-primary px-6 py-3 whitespace-nowrap">Load Graph</button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -231,7 +322,7 @@ function dfs(graph, start, visited = new Set()) {
       <div class="card p-6">
         <h2 class="section-title">How It Works</h2>
         <p class="text-gray-700 leading-relaxed">
-          DFS explores as far as possible along each branch before backtracking. It uses a stack (LIFO) to keep track of nodes to visit, going deep into the graph before exploring siblings.
+          Depth-First Search explores a graph by going as deep as possible along each branch before backtracking. It uses a stack (either explicit or via recursion) to keep track of nodes to visit next.
         </p>
       </div>
       
@@ -240,15 +331,15 @@ function dfs(graph, start, visited = new Set()) {
         <ul class="space-y-2 text-gray-700">
           <li class="flex items-start">
             <span class="text-blue-600 mr-2">•</span>
-            <span><strong>Memory Efficient:</strong> Uses O(h) space where h is maximum depth</span>
+            <span><strong>Memory:</strong> Uses O(V) space for the stack</span>
           </li>
           <li class="flex items-start">
             <span class="text-blue-600 mr-2">•</span>
-            <span><strong>Path Finding:</strong> Good for finding paths and detecting cycles</span>
+            <span><strong>Complete:</strong> Finds a solution if one exists</span>
           </li>
           <li class="flex items-start">
             <span class="text-blue-600 mr-2">•</span>
-            <span><strong>Backtracking:</strong> Explores all possibilities systematically</span>
+            <span><strong>Applications:</strong> Topological sort, cycle detection</span>
           </li>
         </ul>
       </div>
@@ -265,42 +356,16 @@ function dfs(graph, start, visited = new Set()) {
               <span class="mono text-blue-600 font-semibold">O(V + E)</span>
             </div>
             <div class="flex justify-between items-center py-2 border-b border-gray-100">
-              <span class="font-medium text-gray-700">Space Complexity:</span>
-              <span class="mono text-green-600 font-semibold">O(h)</span>
+              <span class="font-medium text-gray-700">Space (Iterative):</span>
+              <span class="mono text-green-600 font-semibold">O(V)</span>
             </div>
             <div class="flex justify-between items-center py-2 border-b border-gray-100">
-              <span class="font-medium text-gray-700">Where V:</span>
-              <span class="text-gray-600">Number of vertices</span>
-            </div>
-            <div class="flex justify-between items-center py-2 border-b border-gray-100">
-              <span class="font-medium text-gray-700">Where E:</span>
-              <span class="text-gray-600">Number of edges</span>
+              <span class="font-medium text-gray-700">Space (Recursive):</span>
+              <span class="mono text-yellow-600 font-semibold">O(h)</span>
             </div>
             <div class="flex justify-between items-center py-2">
-              <span class="font-medium text-gray-700">Where h:</span>
-              <span class="text-gray-600">Maximum depth</span>
-            </div>
-          </div>
-        </div>
-        
-        <div>
-          <h3 class="text-lg font-semibold mb-4 text-gray-800">Legend</h3>
-          <div class="space-y-3">
-            <div class="flex items-center gap-3">
-              <div class="w-4 h-4 rounded-full bg-gray-300 border-2 border-gray-400"></div>
-              <span class="text-gray-700">Unvisited Node</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <div class="w-4 h-4 rounded-full bg-blue-500 border-2 border-blue-600"></div>
-              <span class="text-gray-700">Current Node</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <div class="w-4 h-4 rounded-full bg-amber-500 border-2 border-amber-600"></div>
-              <span class="text-gray-700">On Stack</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <div class="w-4 h-4 rounded-full bg-green-500 border-2 border-green-600"></div>
-              <span class="text-gray-700">Visited Node</span>
+              <span class="font-medium text-gray-700">Where:</span>
+              <span class="mono text-gray-600 font-semibold">V=vertices, E=edges, h=height</span>
             </div>
           </div>
         </div>
@@ -322,191 +387,172 @@ function dfs(graph, start, visited = new Set()) {
     </section>
   </main>
 
-  <!-- Include the external quiz system -->
-  <script src="quiz.js"></script>
-  
   <script>
     // DFS Visualizer Logic
-    const graphVisualizer = document.getElementById("graph-visualizer");
+    const graphContainer = document.getElementById("graph-container");
     const playBtn = document.getElementById("playBtn");
     const pauseBtn = document.getElementById("pauseBtn");
     const stepBtn = document.getElementById("stepBtn");
     const resetBtn = document.getElementById("resetBtn");
-    const generateBtn = document.getElementById("generateBtn");
+    const newGraphBtn = document.getElementById("newGraphBtn");
+    const loadCustomGraph = document.getElementById("loadCustomGraph");
+    const customGraphInput = document.getElementById("customGraph");
+    const startNodeInput = document.getElementById("startNodeInput");
     const timerDisplay = document.getElementById("timer");
-    const visitedCountDisplay = document.getElementById("visited-count");
-    const stackSizeDisplay = document.getElementById("stack-size");
-    const currentNodeDisplay = document.getElementById("current-node");
-    const traversalPathDisplay = document.getElementById("traversal-path");
-    const nodeSelector = document.getElementById("node-selector");
+    const visitedCountDisplay = document.getElementById("visitedCount");
+    const stackSizeDisplay = document.getElementById("stackSize");
+    const currentNodeDisplay = document.getElementById("currentNode");
+    const traversalOrderDisplay = document.getElementById("traversalOrder");
 
-    let graph = {};
-    let nodes = [];
-    let edges = [];
-    let visited = new Set();
-    let stack = [];
-    let traversalPath = [];
-    let currentNode = null;
-    let startNode = 0;
-    
+    let graph = {}, nodes = {}, edges = [], visited = new Set(), stack = [], traversalOrder = [];
     let isPlaying = false, isPaused = false, isComplete = false;
     let startTime, elapsedTime = 0, timerInterval;
-    let stepIndex = 0;
+    let currentStep = 0;
 
     function updateStats() {
       visitedCountDisplay.innerText = visited.size;
       stackSizeDisplay.innerText = stack.length;
-      currentNodeDisplay.innerText = currentNode !== null ? currentNode : '-';
+      currentNodeDisplay.innerText = stack.length > 0 ? stack[stack.length - 1] : '-';
+      
+      traversalOrderDisplay.innerHTML = '';
+      traversalOrder.forEach(node => {
+        const span = document.createElement('span');
+        span.className = 'traversal-node';
+        span.textContent = node;
+        traversalOrderDisplay.appendChild(span);
+      });
     }
 
-    function updateTraversalPath() {
-      if (traversalPath.length === 0) {
-        traversalPathDisplay.innerHTML = 'Click Play to start DFS traversal...';
-        return;
-      }
-      
-      traversalPathDisplay.innerHTML = traversalPath.map((node, index) => {
-        const isLast = index === traversalPath.length - 1;
-        return `<span class="path-node">${node}</span>${!isLast ? '<span class="path-arrow">→</span>' : ''}`;
-      }).join('');
-    }
-
-    function createGraph() {
-      const containerWidth = graphVisualizer.offsetWidth;
-      const containerHeight = graphVisualizer.offsetHeight;
-      
-      // Define a sample graph structure
-      const nodeCount = 8;
-      const nodePositions = [
-        { x: 0.2, y: 0.3 },  // 0
-        { x: 0.5, y: 0.1 },  // 1
-        { x: 0.8, y: 0.3 },  // 2
-        { x: 0.1, y: 0.6 },  // 3
-        { x: 0.4, y: 0.5 },  // 4
-        { x: 0.7, y: 0.6 },  // 5
-        { x: 0.3, y: 0.8 },  // 6
-        { x: 0.6, y: 0.9 }   // 7
-      ];
-      
-      // Sample adjacency list
+    function generateDefaultGraph() {
       graph = {
-        0: [1, 3],
-        1: [0, 2, 4],
-        2: [1, 5],
-        3: [0, 4, 6],
-        4: [1, 3, 5, 7],
-        5: [2, 4, 7],
-        6: [3, 7],
-        7: [4, 5, 6]
+        'A': ['B', 'C'],
+        'B': ['A', 'D', 'E'],
+        'C': ['A', 'F'],
+        'D': ['B'],
+        'E': ['B', 'F'],
+        'F': ['C', 'E']
       };
+      renderGraph();
+    }
+
+    function parseCustomGraph(input, startNode) {
+      const newGraph = {};
+      const lines = input.trim().split('\n');
       
-      // Clear existing elements
-      graphVisualizer.innerHTML = '';
-      nodes = [];
+      for (const line of lines) {
+        const [node, neighborsStr] = line.split(':');
+        if (node && neighborsStr) {
+          const neighbors = neighborsStr.split(',').map(n => n.trim()).filter(n => n);
+          newGraph[node.trim()] = neighbors;
+        }
+      }
+
+      if (Object.keys(newGraph).length === 0) {
+        throw new Error('Invalid graph format');
+      }
+
+      if (!newGraph[startNode]) {
+        throw new Error(`Start node '${startNode}' not found in graph`);
+      }
+
+      return newGraph;
+    }
+
+    function renderGraph() {
+      graphContainer.innerHTML = '';
+      nodes = {};
       edges = [];
+
+      const nodeNames = Object.keys(graph);
+      const containerWidth = graphContainer.clientWidth;
+      const containerHeight = graphContainer.clientHeight;
       
-      // Create edges first (so they appear behind nodes)
-      for (let nodeId in graph) {
-        const neighbors = graph[nodeId];
-        const fromPos = nodePositions[parseInt(nodeId)];
+      // Position nodes in a circle
+      const centerX = containerWidth / 2;
+      const centerY = containerHeight / 2;
+      const radius = Math.min(containerWidth, containerHeight) * 0.3;
+
+      nodeNames.forEach((name, index) => {
+        const angle = (index * 2 * Math.PI) / nodeNames.length;
+        const x = centerX + radius * Math.cos(angle) - 20;
+        const y = centerY + radius * Math.sin(angle) - 20;
+
+        const nodeElement = document.createElement('div');
+        nodeElement.className = 'node';
+        nodeElement.textContent = name;
+        nodeElement.style.left = `${x}px`;
+        nodeElement.style.top = `${y}px`;
         
-        neighbors.forEach(neighborId => {
-          if (parseInt(nodeId) < neighborId) { // Avoid duplicate edges
-            const toPos = nodePositions[neighborId];
-            const edge = createEdge(fromPos, toPos, containerWidth, containerHeight);
-            edge.dataset.from = nodeId;
-            edge.dataset.to = neighborId;
-            graphVisualizer.appendChild(edge);
-            edges.push(edge);
+        nodeElement.onclick = () => setStartNode(name);
+        
+        graphContainer.appendChild(nodeElement);
+        nodes[name] = { element: nodeElement, x: x + 20, y: y + 20 };
+      });
+
+      // Draw edges
+      const drawnEdges = new Set();
+      Object.keys(graph).forEach(node => {
+        graph[node].forEach(neighbor => {
+          const edgeKey = [node, neighbor].sort().join('-');
+          if (!drawnEdges.has(edgeKey)) {
+            drawEdge(node, neighbor);
+            drawnEdges.add(edgeKey);
           }
         });
-      }
-      
-      // Create nodes
-      for (let i = 0; i < nodeCount; i++) {
-        const pos = nodePositions[i];
-        const node = createNode(i, pos.x * containerWidth, pos.y * containerHeight);
-        graphVisualizer.appendChild(node);
-        nodes.push(node);
-      }
-      
-      updateNodeSelector();
+      });
+
+      resetDFS();
     }
 
-    function createNode(id, x, y) {
-      const node = document.createElement('div');
-      node.className = 'node';
-      node.textContent = id;
-      node.style.left = `${x - 20}px`;
-      node.style.top = `${y - 20}px`;
-      node.dataset.id = id;
-      return node;
-    }
+    function drawEdge(from, to) {
+      const fromNode = nodes[from];
+      const toNode = nodes[to];
+      
+      const dx = toNode.x - fromNode.x;
+      const dy = toNode.y - fromNode.y;
+      const length = Math.sqrt(dx * dx + dy * dy);
+      const angle = Math.atan2(dy, dx);
 
-    function createEdge(from, to, containerWidth, containerHeight) {
       const edge = document.createElement('div');
       edge.className = 'edge';
-      
-      const fromX = from.x * containerWidth;
-      const fromY = from.y * containerHeight;
-      const toX = to.x * containerWidth;
-      const toY = to.y * containerHeight;
-      
-      const length = Math.sqrt((toX - fromX) ** 2 + (toY - fromY) ** 2);
-      const angle = Math.atan2(toY - fromY, toX - fromX) * 180 / Math.PI;
-      
+      edge.style.left = `${fromNode.x}px`;
+      edge.style.top = `${fromNode.y}px`;
       edge.style.width = `${length}px`;
-      edge.style.left = `${fromX}px`;
-      edge.style.top = `${fromY}px`;
-      edge.style.transform = `rotate(${angle}deg)`;
+      edge.style.transform = `rotate(${angle}rad)`;
       
-      return edge;
+      graphContainer.appendChild(edge);
+      edges.push(edge);
     }
 
-    function updateNodeSelector() {
-      nodeSelector.innerHTML = '';
-      for (let i = 0; i < nodes.length; i++) {
-        const button = document.createElement('button');
-        button.className = `px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-          i === startNode ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-        }`;
-        button.textContent = `Node ${i}`;
-        button.onclick = () => {
-          startNode = i;
-          updateNodeSelector();
-          resetVisualization();
-        };
-        nodeSelector.appendChild(button);
-      }
+    function setStartNode(nodeName) {
+      startNodeInput.value = nodeName;
+      resetDFS();
     }
 
-    function resetVisualization() {
-      visited = new Set();
-      stack = [startNode];
-      traversalPath = [];
-      currentNode = null;
-      stepIndex = 0;
-      elapsedTime = 0;
-      isComplete = false;
-      isPaused = false;
+    function resetDFS() {
+      visited.clear();
+      stack = [];
+      traversalOrder = [];
+      currentStep = 0;
       isPlaying = false;
-      
+      isPaused = false;
+      isComplete = false;
+      elapsedTime = 0;
+      clearInterval(timerInterval);
+      timerDisplay.innerText = "0.00s";
+
       // Reset visual states
-      nodes.forEach(node => {
-        node.classList.remove('visited', 'current', 'on-stack');
+      Object.values(nodes).forEach(node => {
+        node.element.className = 'node';
       });
       edges.forEach(edge => {
-        edge.classList.remove('active', 'traversed');
+        edge.className = 'edge';
       });
-      
-      timerDisplay.innerText = "0.00s";
-      clearInterval(timerInterval);
-      updateStats();
-      updateTraversalPath();
-      
+
       playBtn.disabled = false;
-      playBtn.textContent = "Play";
+      playBtn.textContent = "Start DFS";
       pauseBtn.textContent = "Pause";
+      updateStats();
     }
 
     function startTimer() {
@@ -520,93 +566,87 @@ function dfs(graph, start, visited = new Set()) {
       }, 10);
     }
 
-    function highlightEdge(from, to) {
-      edges.forEach(edge => {
-        const edgeFrom = parseInt(edge.dataset.from);
-        const edgeTo = parseInt(edge.dataset.to);
-        
-        if ((edgeFrom === from && edgeTo === to) || (edgeFrom === to && edgeTo === from)) {
-          edge.classList.add('active');
-          setTimeout(() => {
-            edge.classList.remove('active');
-            edge.classList.add('traversed');
-          }, 800);
-        }
-      });
-    }
-
     async function dfsStep() {
+      if (stack.length === 0 && visited.size === 0) {
+        // Initialize
+        const startNode = startNodeInput.value || 'A';
+        if (!graph[startNode]) {
+          alert(`Start node '${startNode}' not found in graph`);
+          return false;
+        }
+        stack.push(startNode);
+        nodes[startNode].element.classList.add('in-stack');
+      }
+
       if (stack.length === 0) {
+        // DFS complete
         isComplete = true;
         clearInterval(timerInterval);
         playBtn.textContent = "Complete";
         playBtn.disabled = true;
-        currentNode = null;
-        updateStats();
-        return;
+        return false;
       }
 
-      const node = stack.pop();
+      const current = stack.pop();
       
-      // Update stack visualization
-      nodes.forEach(n => n.classList.remove('on-stack'));
-      stack.forEach(stackNode => {
-        nodes[stackNode].classList.add('on-stack');
-      });
-      
-      if (!visited.has(node)) {
-        // Mark as visited
-        visited.add(node);
-        traversalPath.push(node);
-        currentNode = node;
+      // Remove from stack visualization
+      if (nodes[current]) {
+        nodes[current].element.classList.remove('in-stack');
+      }
+
+      if (!visited.has(current)) {
+        // Visit the node
+        visited.add(current);
+        traversalOrder.push(current);
         
-        // Visual updates
-        nodes[node].classList.remove('on-stack');
-        nodes[node].classList.add('current');
-        
-        // Highlight edge from previous node
-        if (traversalPath.length > 1) {
-          const prevNode = traversalPath[traversalPath.length - 2];
-          highlightEdge(prevNode, node);
+        if (nodes[current]) {
+          nodes[current].element.classList.add('current');
+          
+          // Highlight edges to neighbors
+          edges.forEach(edge => edge.classList.remove('active'));
+          graph[current].forEach(neighbor => {
+            const edgeKey = [current, neighbor].sort().join('-');
+            edges.forEach(edge => {
+              if (edge.dataset.key === edgeKey) {
+                edge.classList.add('active');
+              }
+            });
+          });
         }
-        
+
         await new Promise(r => setTimeout(r, 800));
-        
-        // Mark as visited
-        nodes[node].classList.remove('current');
-        nodes[node].classList.add('visited');
-        
-        // Add neighbors to stack (in reverse order for left-to-right traversal)
-        const neighbors = graph[node] || [];
+
+        // Add unvisited neighbors to stack (in reverse order for left-to-right traversal)
+        const neighbors = graph[current] || [];
         for (let i = neighbors.length - 1; i >= 0; i--) {
           const neighbor = neighbors[i];
-          if (!visited.has(neighbor) && !stack.includes(neighbor)) {
+          if (!visited.has(neighbor)) {
             stack.push(neighbor);
+            if (nodes[neighbor]) {
+              nodes[neighbor].element.classList.add('in-stack');
+            }
           }
         }
-        
-        // Update stack visualization
-        nodes.forEach(n => n.classList.remove('on-stack'));
-        stack.forEach(stackNode => {
-          if (!visited.has(stackNode)) {
-            nodes[stackNode].classList.add('on-stack');
-          }
-        });
-        
-        updateStats();
-        updateTraversalPath();
+
+        // Mark as visited
+        if (nodes[current]) {
+          nodes[current].element.classList.remove('current');
+          nodes[current].element.classList.add('visited');
+        }
       }
+
+      updateStats();
+      return true;
     }
 
-    async function dfsLoop() {
+    async function runDFS() {
       startTimer();
-      while (stack.length > 0 && isPlaying && !isPaused && !isComplete) {
-        await dfsStep();
+      while (isPlaying && !isPaused && !isComplete) {
+        const canContinue = await dfsStep();
+        if (!canContinue) break;
       }
       if (isComplete) {
         clearInterval(timerInterval);
-        currentNode = null;
-        updateStats();
       }
     }
 
@@ -614,8 +654,8 @@ function dfs(graph, start, visited = new Set()) {
       if (!isPlaying && !isComplete) {
         isPlaying = true;
         isPaused = false;
-        playBtn.textContent = "Playing...";
-        dfsLoop();
+        playBtn.textContent = "Running...";
+        runDFS();
       }
     };
 
@@ -624,12 +664,12 @@ function dfs(graph, start, visited = new Set()) {
       
       isPaused = !isPaused;
       if (!isPaused && isPlaying) {
-        dfsLoop();
+        runDFS();
         pauseBtn.textContent = "Pause";
-        playBtn.textContent = "Playing...";
+        playBtn.textContent = "Running...";
       } else {
         pauseBtn.textContent = "Resume";
-        playBtn.textContent = "Play";
+        playBtn.textContent = "Start DFS";
       }
     };
 
@@ -637,75 +677,169 @@ function dfs(graph, start, visited = new Set()) {
       if (!isComplete) {
         isPlaying = false;
         isPaused = true;
-        playBtn.textContent = "Play";
+        playBtn.textContent = "Start DFS";
         pauseBtn.textContent = "Pause";
         await dfsStep();
       }
     };
 
     resetBtn.onclick = () => {
-      resetVisualization();
+      resetDFS();
     };
 
-    generateBtn.onclick = () => {
-      createGraph();
-      resetVisualization();
+    newGraphBtn.onclick = () => {
+      generateDefaultGraph();
     };
 
-    window.addEventListener('resize', () => {
-      createGraph();
-      resetVisualization();
+    loadCustomGraph.onclick = () => {
+      try {
+        const input = customGraphInput.value.trim();
+        const startNode = startNodeInput.value.trim() || 'A';
+        
+        if (!input) {
+          alert('Please enter a graph definition');
+          return;
+        }
+
+        graph = parseCustomGraph(input, startNode);
+        renderGraph();
+        customGraphInput.value = '';
+      } catch (error) {
+        alert(`Error loading graph: ${error.message}`);
+      }
+    };
+
+    customGraphInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && e.ctrlKey) {
+        loadCustomGraph.click();
+      }
     });
 
-    // Initialize the visualizer
-    createGraph();
-    resetVisualization();
+    // Initialize
+    generateDefaultGraph();
 
     // Quiz Data for DFS
     const dfsQuizData = [
       {
-        question: "What data structure does DFS use to keep track of nodes to visit?",
-        options: ["Queue", "Stack", "Priority Queue", "Hash Table"],
+        question: "What data structure does DFS primarily use?",
+        options: ["Queue", "Stack", "Heap", "Hash Table"],
         answer: "Stack",
-        explanation: "DFS uses a stack (LIFO - Last In, First Out) to maintain the order of nodes to visit, enabling the depth-first exploration pattern."
+        explanation: "DFS uses a stack (either explicit or implicit through recursion) to keep track of nodes to visit next."
       },
       {
-        question: "What is the time complexity of DFS for a graph with V vertices and E edges?",
-        options: ["O(V)", "O(E)", "O(V + E)", "O(V × E)"],
+        question: "What is the time complexity of DFS?",
+        options: ["O(V)", "O(E)", "O(V + E)", "O(V * E)"],
         answer: "O(V + E)",
-        explanation: "DFS visits each vertex once (O(V)) and examines each edge once (O(E)), resulting in O(V + E) time complexity."
+        explanation: "DFS visits each vertex once (O(V)) and examines each edge once (O(E)), giving O(V + E) total time complexity."
       },
       {
-        question: "What is the space complexity of DFS in terms of the graph's structure?",
-        options: ["O(V)", "O(E)", "O(h)", "O(V + E)"],
-        answer: "O(h)",
-        explanation: "DFS space complexity is O(h) where h is the maximum depth of the graph, due to the recursion stack or explicit stack used."
-      },
-      {
-        question: "Which of the following applications is DFS particularly well-suited for?",
+        question: "Which of these is NOT a typical application of DFS?",
         options: [
+          "Topological sorting",
+          "Cycle detection",
           "Finding shortest path in unweighted graphs",
-          "Detecting cycles in graphs",
-          "Finding minimum spanning tree",
-          "Level-order traversal"
+          "Connected components"
         ],
-        answer: "Detecting cycles in graphs",
-        explanation: "DFS is excellent for cycle detection because it can easily identify back edges, which indicate the presence of cycles in the graph."
+        answer: "Finding shortest path in unweighted graphs",
+        explanation: "BFS is better for finding shortest paths in unweighted graphs. DFS is used for topological sorting, cycle detection, and finding connected components."
+      },
+      {
+        question: "What is the space complexity of iterative DFS?",
+        options: ["O(1)", "O(V)", "O(E)", "O(V + E)"],
+        answer: "O(V)",
+        explanation: "Iterative DFS uses an explicit stack that can contain at most O(V) nodes in the worst case."
       }
     ];
 
-    // Mock quiz system for demonstration
-    const AlgorithmQuiz = {
-      create: function(containerId, questions) {
+    // Simple Quiz System
+    class AlgorithmQuiz {
+      static create(containerId, questions) {
         const container = document.getElementById(containerId);
-        container.innerHTML = `
-          <div class="bg-blue-50 p-4 rounded-lg">
-            <p class="text-blue-800 font-medium">Quiz functionality would be loaded from quiz.js</p>
-            <p class="text-blue-600 text-sm mt-2">${questions.length} questions about DFS concepts</p>
-          </div>
-        `;
+        let currentQuestion = 0;
+        let score = 0;
+
+        function renderQuestion() {
+          const q = questions[currentQuestion];
+          container.innerHTML = `
+            <div class="mb-4">
+              <h3 class="text-lg font-semibold mb-3">Question ${currentQuestion + 1} of ${questions.length}</h3>
+              <p class="text-gray-700 mb-4">${q.question}</p>
+              <div class="space-y-2">
+                ${q.options.map((option, i) => `
+                  <button class="quiz-option w-full text-left p-3 rounded-lg border border-gray-200 hover:bg-blue-50 transition-colors" data-answer="${option}">
+                    ${option}
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+          `;
+
+          container.querySelectorAll('.quiz-option').forEach(btn => {
+            btn.onclick = () => checkAnswer(btn.dataset.answer, q);
+          });
+        }
+
+        function checkAnswer(selected, question) {
+          const isCorrect = selected === question.answer;
+          if (isCorrect) score++;
+
+          container.innerHTML = `
+            <div class="mb-4">
+              <h3 class="text-lg font-semibold mb-3">Question ${currentQuestion + 1} of ${questions.length}</h3>
+              <p class="text-gray-700 mb-4">${question.question}</p>
+              <div class="space-y-2 mb-4">
+                ${question.options.map(option => `
+                  <div class="p-3 rounded-lg border ${
+                    option === question.answer ? 'bg-green-100 border-green-500' : 
+                    option === selected && !isCorrect ? 'bg-red-100 border-red-500' : 
+                    'border-gray-200'
+                  }">
+                    ${option}
+                  </div>
+                `).join('')}
+              </div>
+              <div class="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <p class="text-sm text-blue-800"><strong>Explanation:</strong> ${question.explanation}</p>
+              </div>
+              <div class="mt-4">
+                <button id="nextBtn" class="btn btn-primary px-4 py-2">
+                  ${currentQuestion < questions.length - 1 ? 'Next Question' : 'Show Results'}
+                </button>
+              </div>
+            </div>
+          `;
+
+          document.getElementById('nextBtn').onclick = () => {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+              renderQuestion();
+            } else {
+              showResults();
+            }
+          };
+        }
+
+        function showResults() {
+          const percentage = Math.round((score / questions.length) * 100);
+          container.innerHTML = `
+            <div class="text-center">
+              <h3 class="text-2xl font-bold mb-4">Quiz Complete!</h3>
+              <div class="text-4xl font-bold text-blue-600 mb-2">${score}/${questions.length}</div>
+              <div class="text-lg text-gray-600 mb-4">${percentage}% Correct</div>
+              <button id="retakeBtn" class="btn btn-primary px-6 py-3">Retake Quiz</button>
+            </div>
+          `;
+
+          document.getElementById('retakeBtn').onclick = () => {
+            currentQuestion = 0;
+            score = 0;
+            renderQuestion();
+          };
+        }
+
+        renderQuestion();
       }
-    };
+    }
 
     // Initialize the quiz
     AlgorithmQuiz.create('quiz-container', dfsQuizData);
