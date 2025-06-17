@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bubble Sort | Algolt</title>
+  <title>Heap Sort | Algolt</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
@@ -19,7 +19,7 @@
           <a href="../../algolt/index.html" class="navbar-link far-link text-sm font-medium text-gray-900 hover:text-blue-600">Home</a>
         </div>
         <div class="flex items-center">
-          <span class="text-sm font-medium text-gray-600">Bubble Sort</span>
+          <span class="text-sm font-medium text-gray-600">Heap Sort</span>
         </div>
       </div>
     </div>
@@ -28,10 +28,10 @@
   <header class="px-4 md:px-6 py-12 border-b border-gray-200 bg-white">
     <div class="max-w-7xl mx-auto">
       <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-        Bubble Sort Visualizer
+        Heap Sort Visualizer
       </h1>
       <p class="text-lg text-gray-600 max-w-2xl">
-        Interactive visualization of the bubble sort algorithm with step-by-step execution and performance metrics.
+        Interactive visualization of the heap sort algorithm with step-by-step execution and performance metrics.
       </p>
     </div>
   </header>
@@ -65,8 +65,8 @@
               <div id="swaps" class="stat-value mono">0</div>
             </div>
             <div class="stat-item">
-              <div class="stat-label">Pass</div>
-              <div id="pass" class="stat-value mono">0</div>
+              <div class="stat-label">Phase</div>
+              <div id="phase" class="stat-value mono">Build Heap</div>
             </div>
           </div>
         </div>
@@ -74,27 +74,43 @@
       
       <div class="lg:col-span-1">
         <div class="code-block h-full">
-          <pre><code class="language-js">// Bubble Sort Algorithm
-function bubbleSort(arr) {
+          <pre><code class="language-js">// Heap Sort Algorithm
+function heapSort(arr) {
   const n = arr.length;
   
-  for (let i = 0; i < n - 1; i++) {
-    let swapped = false;
+  // Build max heap
+  for (let i = Math.floor(n/2) - 1; i >= 0; i--) {
+    heapify(arr, n, i);
+  }
+  
+  // Extract elements one by one
+  for (let i = n - 1; i > 0; i--) {
+    // Move root to end
+    [arr[0], arr[i]] = [arr[i], arr[0]];
     
-    for (let j = 0; j < n - i - 1; j++) {
-      if (arr[j] > arr[j + 1]) {
-        // Swap elements
-        [arr[j], arr[j + 1]] = 
-          [arr[j + 1], arr[j]];
-        swapped = true;
-      }
-    }
-    
-    // Optimization: stop if no swaps
-    if (!swapped) break;
+    // Heapify reduced heap
+    heapify(arr, i, 0);
   }
   
   return arr;
+}
+
+function heapify(arr, n, i) {
+  let largest = i;
+  let left = 2 * i + 1;
+  let right = 2 * i + 2;
+  
+  if (left < n && arr[left] > arr[largest])
+    largest = left;
+  
+  if (right < n && arr[right] > arr[largest])
+    largest = right;
+  
+  if (largest !== i) {
+    [arr[i], arr[largest]] = 
+      [arr[largest], arr[i]];
+    heapify(arr, n, largest);
+  }
 }</code></pre>
         </div>
       </div>
@@ -115,7 +131,7 @@ function bubbleSort(arr) {
       <div class="card p-6">
         <h2 class="section-title">How It Works</h2>
         <p class="text-gray-700 leading-relaxed">
-          Bubble Sort repeatedly steps through the array, compares adjacent elements, and swaps them if they're in the wrong order. The largest elements "bubble" to the end with each pass through the array.
+          Heap Sort first builds a max heap where the largest element is at the root. It then repeatedly extracts the maximum element (root) and places it at the end of the array, then re-heapifies the remaining elements.
         </p>
       </div>
       
@@ -124,7 +140,7 @@ function bubbleSort(arr) {
         <ul class="space-y-2 text-gray-700">
           <li class="flex items-start">
             <span class="text-blue-600 mr-2">•</span>
-            <span><strong>Stable:</strong> Equal elements maintain relative order</span>
+            <span><strong>Unstable:</strong> Equal elements may change relative order</span>
           </li>
           <li class="flex items-start">
             <span class="text-blue-600 mr-2">•</span>
@@ -132,7 +148,7 @@ function bubbleSort(arr) {
           </li>
           <li class="flex items-start">
             <span class="text-blue-600 mr-2">•</span>
-            <span><strong>Adaptive:</strong> Performs better on partially sorted data</span>
+            <span><strong>Consistent:</strong> Always O(n log n) performance</span>
           </li>
         </ul>
       </div>
@@ -142,19 +158,19 @@ function bubbleSort(arr) {
       <h2 class="section-title">Time & Space Complexity</h2>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div>
-          <h3 class="text-lg font-semibold mb-4 text-gray-800">Bubble Sort Analysis</h3>
+          <h3 class="text-lg font-semibold mb-4 text-gray-800">Heap Sort Analysis</h3>
           <div class="space-y-3">
             <div class="flex justify-between items-center py-2 border-b border-gray-100">
               <span class="font-medium text-gray-700">Best Case:</span>
-              <span class="mono text-green-600 font-semibold">O(n)</span>
+              <span class="mono text-green-600 font-semibold">O(n log n)</span>
             </div>
             <div class="flex justify-between items-center py-2 border-b border-gray-100">
               <span class="font-medium text-gray-700">Average Case:</span>
-              <span class="mono text-yellow-600 font-semibold">O(n²)</span>
+              <span class="mono text-yellow-600 font-semibold">O(n log n)</span>
             </div>
             <div class="flex justify-between items-center py-2 border-b border-gray-100">
               <span class="font-medium text-gray-700">Worst Case:</span>
-              <span class="mono text-red-600 font-semibold">O(n²)</span>
+              <span class="mono text-red-600 font-semibold">O(n log n)</span>
             </div>
             <div class="flex justify-between items-center py-2">
               <span class="font-medium text-gray-700">Space:</span>
@@ -171,8 +187,8 @@ function bubbleSort(arr) {
     </section>
 
     <section class="card p-6 text-center">
-      <a href="./insertion-sort.html" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium transition-colors">
-        Next: Insertion Sort 
+      <a href="./quick-sort.html" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium transition-colors">
+        Next: Quick Sort 
         <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
         </svg>
@@ -184,7 +200,7 @@ function bubbleSort(arr) {
   <script src="quiz.js"></script>
   
   <script>
-    // Bubble Sort Visualizer Logic
+    // Heap Sort Visualizer Logic
     const visualizer = document.getElementById("visualizer");
     const playBtn = document.getElementById("playBtn");
     const pauseBtn = document.getElementById("pauseBtn");
@@ -195,29 +211,32 @@ function bubbleSort(arr) {
     const timerDisplay = document.getElementById("timer");
     const comparisonsDisplay = document.getElementById("comparisons");
     const swapsDisplay = document.getElementById("swaps");
-    const passDisplay = document.getElementById("pass");
+    const phaseDisplay = document.getElementById("phase");
 
-    let values = [], bars = [], i = 0, j = 0, comparisons = 0, swaps = 0, pass = 0;
+    let values = [], bars = [], comparisons = 0, swaps = 0;
     let isPlaying = false, isPaused = false, isComplete = false;
     let startTime, elapsedTime = 0, timerInterval;
+    let currentPhase = "Build Heap";
+    let sortingSteps = [];
+    let currentStep = 0;
 
     function updateStats() {
       comparisonsDisplay.innerText = comparisons;
       swapsDisplay.innerText = swaps;
-      passDisplay.innerText = pass;
+      phaseDisplay.innerText = currentPhase;
     }
 
     function getOptimalArraySize() {
       const isMobile = window.innerWidth <= 768;
-      return isMobile ? 18 : 25;
+      return isMobile ? 20 : 26;
     }
 
     function generateBars(custom = null) {
       const arraySize = getOptimalArraySize();
       values = custom || Array.from({ length: arraySize }, () => Math.floor(Math.random() * 90) + 10);
       
-      if (window.innerWidth <= 768 && values.length > 18) {
-        values = values.slice(0, 18);
+      if (window.innerWidth <= 768 && values.length > 15) {
+        values = values.slice(0, 15);
       }
       
       visualizer.innerHTML = "";
@@ -231,15 +250,87 @@ function bubbleSort(arr) {
         return bar;
       });
       
-      i = 0; j = 0; comparisons = 0; swaps = 0; pass = 0; elapsedTime = 0; isComplete = false;
+      comparisons = 0; swaps = 0; elapsedTime = 0; isComplete = false;
+      currentPhase = "Build Heap";
+      currentStep = 0;
       timerDisplay.innerText = "0.00s";
       updateStats();
+      
+      // Generate sorting steps
+      generateSortingSteps();
       
       playBtn.disabled = false;
       playBtn.textContent = "Play";
       pauseBtn.textContent = "Pause";
       isPaused = false;
       isPlaying = false;
+    }
+
+    function generateSortingSteps() {
+      sortingSteps = [];
+      const arr = [...values];
+      const n = arr.length;
+      
+      // Build heap phase
+      for (let i = Math.floor(n/2) - 1; i >= 0; i--) {
+        heapifySteps(arr, n, i, "Build Heap");
+      }
+      
+      // Sort phase
+      for (let i = n - 1; i > 0; i--) {
+        // Move root to end
+        sortingSteps.push({
+          type: 'swap',
+          indices: [0, i],
+          phase: 'Extract Max',
+          heapSize: i
+        });
+        [arr[0], arr[i]] = [arr[i], arr[0]];
+        
+        // Heapify reduced heap
+        heapifySteps(arr, i, 0, "Extract Max");
+      }
+    }
+
+    function heapifySteps(arr, n, i, phase) {
+      let largest = i;
+      let left = 2 * i + 1;
+      let right = 2 * i + 2;
+      
+      // Compare with left child
+      if (left < n) {
+        sortingSteps.push({
+          type: 'compare',
+          indices: [largest, left],
+          phase: phase
+        });
+        if (arr[left] > arr[largest]) {
+          largest = left;
+        }
+      }
+      
+      // Compare with right child
+      if (right < n) {
+        sortingSteps.push({
+          type: 'compare',
+          indices: [largest, right],
+          phase: phase
+        });
+        if (arr[right] > arr[largest]) {
+          largest = right;
+        }
+      }
+      
+      // If largest is not root, swap and continue heapifying
+      if (largest !== i) {
+        sortingSteps.push({
+          type: 'swap',
+          indices: [i, largest],
+          phase: phase
+        });
+        [arr[i], arr[largest]] = [arr[largest], arr[i]];
+        heapifySteps(arr, n, largest, phase);
+      }
     }
 
     function startTimer() {
@@ -254,60 +345,70 @@ function bubbleSort(arr) {
     }
 
     function resetBarColors() {
-      bars.forEach(bar => {
-        bar.classList.remove('comparing', 'sorted');
+      bars.forEach((bar, index) => {
+        bar.classList.remove('comparing', 'sorted', 'heap');
+        if (currentStep < sortingSteps.length) {
+          const step = sortingSteps[currentStep];
+          if (step.phase === 'Extract Max' && step.heapSize && index >= step.heapSize) {
+            bar.classList.add('sorted');
+          }
+        }
       });
     }
 
     async function sortStep() {
-      if (i >= values.length - 1) {
+      if (currentStep >= sortingSteps.length) {
         isComplete = true;
         clearInterval(timerInterval);
-        bars.forEach(bar => bar.classList.add('sorted'));
+        bars.forEach(bar => {
+          bar.classList.remove('comparing', 'heap');
+          bar.classList.add('sorted');
+        });
+        currentPhase = "Complete";
+        updateStats();
         playBtn.textContent = "Complete";
         playBtn.disabled = true;
         return;
       }
 
-      comparisons++;
+      const step = sortingSteps[currentStep];
+      currentPhase = step.phase;
       
       resetBarColors();
       
-      if (j < values.length - i - 1) {
-        bars[j].classList.add('comparing');
-        bars[j + 1].classList.add('comparing');
-      }
-
-      if (j < values.length - i - 1 && values[j] > values[j + 1]) {
+      if (step.type === 'compare') {
+        comparisons++;
+        step.indices.forEach(idx => {
+          bars[idx].classList.add('comparing');
+        });
+      } else if (step.type === 'swap') {
         swaps++;
-        [values[j], values[j + 1]] = [values[j + 1], values[j]];
+        const [i, j] = step.indices;
         
+        // Highlight swapping elements
+        bars[i].classList.add('comparing');
+        bars[j].classList.add('comparing');
+        
+        // Swap values
+        [values[i], values[j]] = [values[j], values[i]];
+        
+        // Update bar heights
         const maxHeight = window.innerWidth <= 768 ? 220 : 260;
+        bars[i].style.height = `${Math.min((values[i] / 100) * maxHeight, maxHeight)}px`;
         bars[j].style.height = `${Math.min((values[j] / 100) * maxHeight, maxHeight)}px`;
-        bars[j + 1].style.height = `${Math.min((values[j + 1] / 100) * maxHeight, maxHeight)}px`;
       }
 
-      const delay = window.innerWidth <= 768 ? 200 : 150;
+      updateStats();
+      
+      const delay = window.innerWidth <= 768 ? 300 : 250;
       await new Promise(r => setTimeout(r, delay));
       
-      if (j < values.length - i - 1) {
-        bars[j].classList.remove('comparing');
-        bars[j + 1].classList.remove('comparing');
-      }
-
-      j++;
-      if (j >= values.length - i - 1) {
-        bars[values.length - i - 1].classList.add('sorted');
-        j = 0;
-        i++;
-        pass++;
-      }
-      updateStats();
+      currentStep++;
     }
 
-    async function bubbleSortLoop() {
+    async function heapSortLoop() {
       startTimer();
-      while (i < values.length - 1 && isPlaying && !isPaused && !isComplete) {
+      while (currentStep < sortingSteps.length && isPlaying && !isPaused && !isComplete) {
         await sortStep();
       }
       if (isComplete) {
@@ -320,7 +421,7 @@ function bubbleSort(arr) {
         isPlaying = true;
         isPaused = false;
         playBtn.textContent = "Playing...";
-        bubbleSortLoop();
+        heapSortLoop();
       }
     };
 
@@ -329,7 +430,7 @@ function bubbleSort(arr) {
       
       isPaused = !isPaused;
       if (!isPaused && isPlaying) {
-        bubbleSortLoop();
+        heapSortLoop();
         pauseBtn.textContent = "Pause";
         playBtn.textContent = "Playing...";
       } else {
@@ -363,7 +464,7 @@ function bubbleSort(arr) {
         .map(n => Math.min(n, 100));
       
       if (nums.length > 1) {
-        const maxSize = window.innerWidth <= 768 ? 18 : 35;
+        const maxSize = window.innerWidth <= 768 ? 20 : 32;
         const limitedNums = nums.slice(0, maxSize);
         generateBars(limitedNums);
         input.value = '';
@@ -385,46 +486,46 @@ function bubbleSort(arr) {
     // Initialize the visualizer
     generateBars();
 
-    // Quiz Data for Bubble Sort
-    const bubbleSortQuizData = [
+    // Quiz Data for Heap Sort
+    const heapSortQuizData = [
       {
-        question: "What is the best-case time complexity of Bubble Sort?",
+        question: "What is the time complexity of Heap Sort in all cases?",
         options: ["O(n²)", "O(n log n)", "O(n)", "O(log n)"],
-        answer: "O(n)",
-        explanation: "Best case occurs when the array is already sorted and the optimized version makes only one pass."
+        answer: "O(n log n)",
+        explanation: "Heap Sort consistently performs in O(n log n) time for best, average, and worst cases due to the heap operations."
       },
       {
-        question: "What makes Bubble Sort stable?",
+        question: "What type of heap is used in Heap Sort?",
         options: [
-          "It uses constant extra space",
-          "Equal elements maintain their relative order", 
-          "It always runs in O(n²) time",
-          "It's an in-place algorithm"
+          "Min heap",
+          "Max heap", 
+          "Binary search tree",
+          "Balanced tree"
         ],
-        answer: "Equal elements maintain their relative order",
-        explanation: "Bubble Sort only swaps adjacent elements when the left element is strictly greater than the right, preserving the relative order of equal elements."
+        answer: "Max heap",
+        explanation: "Heap Sort uses a max heap where the largest element is at the root, making it easy to extract the maximum element repeatedly."
       },
       {
-        question: "What is the space complexity of Bubble Sort?",
-        options: ["O(n)", "O(n²)", "O(log n)", "O(1)"],
+        question: "What is the space complexity of Heap Sort?",
+        options: ["O(n)", "O(n log n)", "O(log n)", "O(1)"],
         answer: "O(1)",
-        explanation: "Bubble Sort is an in-place algorithm that only uses a constant amount of extra space for temporary variables."
+        explanation: "Heap Sort is an in-place algorithm that uses only a constant amount of extra space for variables."
       },
       {
-        question: "In which scenario does Bubble Sort perform worst?",
+        question: "Which phase comes first in Heap Sort?",
         options: [
-          "When the array is already sorted",
-          "When the array is reverse sorted",
-          "When the array has duplicate elements",
-          "When the array is randomly ordered"
+          "Extracting maximum elements",
+          "Building the max heap",
+          "Comparing adjacent elements",
+          "Partitioning the array"
         ],
-        answer: "When the array is reverse sorted",
-        explanation: "Worst case occurs when the array is sorted in reverse order, requiring maximum comparisons and swaps."
+        answer: "Building the max heap",
+        explanation: "Heap Sort first builds a max heap from the input array, then repeatedly extracts the maximum element and re-heapifies."
       }
     ];
 
     // Initialize the quiz
-    AlgorithmQuiz.create('quiz-container', bubbleSortQuizData);
+    AlgorithmQuiz.create('quiz-container', heapSortQuizData);
   </script>
 </body>
 </html>

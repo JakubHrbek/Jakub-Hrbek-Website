@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bubble Sort | Algolt</title>
+  <title>Selection Sort | Algolt</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
@@ -19,7 +19,7 @@
           <a href="../../algolt/index.html" class="navbar-link far-link text-sm font-medium text-gray-900 hover:text-blue-600">Home</a>
         </div>
         <div class="flex items-center">
-          <span class="text-sm font-medium text-gray-600">Bubble Sort</span>
+          <span class="text-sm font-medium text-gray-600">Selection Sort</span>
         </div>
       </div>
     </div>
@@ -28,10 +28,10 @@
   <header class="px-4 md:px-6 py-12 border-b border-gray-200 bg-white">
     <div class="max-w-7xl mx-auto">
       <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-        Bubble Sort Visualizer
+        Selection Sort Visualizer
       </h1>
       <p class="text-lg text-gray-600 max-w-2xl">
-        Interactive visualization of the bubble sort algorithm with step-by-step execution and performance metrics.
+        Interactive visualization of the selection sort algorithm with step-by-step execution and performance metrics.
       </p>
     </div>
   </header>
@@ -74,24 +74,25 @@
       
       <div class="lg:col-span-1">
         <div class="code-block h-full">
-          <pre><code class="language-js">// Bubble Sort Algorithm
-function bubbleSort(arr) {
+          <pre><code class="language-js">// Selection Sort Algorithm
+function selectionSort(arr) {
   const n = arr.length;
   
   for (let i = 0; i < n - 1; i++) {
-    let swapped = false;
+    let minIndex = i;
     
-    for (let j = 0; j < n - i - 1; j++) {
-      if (arr[j] > arr[j + 1]) {
-        // Swap elements
-        [arr[j], arr[j + 1]] = 
-          [arr[j + 1], arr[j]];
-        swapped = true;
+    // Find minimum element in remaining array
+    for (let j = i + 1; j < n; j++) {
+      if (arr[j] < arr[minIndex]) {
+        minIndex = j;
       }
     }
     
-    // Optimization: stop if no swaps
-    if (!swapped) break;
+    // Swap minimum with first element
+    if (minIndex !== i) {
+      [arr[i], arr[minIndex]] = 
+        [arr[minIndex], arr[i]];
+    }
   }
   
   return arr;
@@ -115,7 +116,7 @@ function bubbleSort(arr) {
       <div class="card p-6">
         <h2 class="section-title">How It Works</h2>
         <p class="text-gray-700 leading-relaxed">
-          Bubble Sort repeatedly steps through the array, compares adjacent elements, and swaps them if they're in the wrong order. The largest elements "bubble" to the end with each pass through the array.
+          Selection Sort divides the array into sorted and unsorted portions. It repeatedly finds the minimum element from the unsorted portion and swaps it with the first element of the unsorted portion.
         </p>
       </div>
       
@@ -124,7 +125,7 @@ function bubbleSort(arr) {
         <ul class="space-y-2 text-gray-700">
           <li class="flex items-start">
             <span class="text-blue-600 mr-2">•</span>
-            <span><strong>Stable:</strong> Equal elements maintain relative order</span>
+            <span><strong>Unstable:</strong> May change relative order of equal elements</span>
           </li>
           <li class="flex items-start">
             <span class="text-blue-600 mr-2">•</span>
@@ -132,7 +133,7 @@ function bubbleSort(arr) {
           </li>
           <li class="flex items-start">
             <span class="text-blue-600 mr-2">•</span>
-            <span><strong>Adaptive:</strong> Performs better on partially sorted data</span>
+            <span><strong>Not adaptive:</strong> Performance doesn't improve on sorted data</span>
           </li>
         </ul>
       </div>
@@ -142,11 +143,11 @@ function bubbleSort(arr) {
       <h2 class="section-title">Time & Space Complexity</h2>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div>
-          <h3 class="text-lg font-semibold mb-4 text-gray-800">Bubble Sort Analysis</h3>
+          <h3 class="text-lg font-semibold mb-4 text-gray-800">Selection Sort Analysis</h3>
           <div class="space-y-3">
             <div class="flex justify-between items-center py-2 border-b border-gray-100">
               <span class="font-medium text-gray-700">Best Case:</span>
-              <span class="mono text-green-600 font-semibold">O(n)</span>
+              <span class="mono text-yellow-600 font-semibold">O(n²)</span>
             </div>
             <div class="flex justify-between items-center py-2 border-b border-gray-100">
               <span class="font-medium text-gray-700">Average Case:</span>
@@ -171,8 +172,8 @@ function bubbleSort(arr) {
     </section>
 
     <section class="card p-6 text-center">
-      <a href="./insertion-sort.html" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium transition-colors">
-        Next: Insertion Sort 
+      <a href="./merge-sort.html" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium transition-colors">
+        Next: Merge Sort 
         <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
         </svg>
@@ -184,7 +185,7 @@ function bubbleSort(arr) {
   <script src="quiz.js"></script>
   
   <script>
-    // Bubble Sort Visualizer Logic
+    // Selection Sort Visualizer Logic
     const visualizer = document.getElementById("visualizer");
     const playBtn = document.getElementById("playBtn");
     const pauseBtn = document.getElementById("pauseBtn");
@@ -197,9 +198,10 @@ function bubbleSort(arr) {
     const swapsDisplay = document.getElementById("swaps");
     const passDisplay = document.getElementById("pass");
 
-    let values = [], bars = [], i = 0, j = 0, comparisons = 0, swaps = 0, pass = 0;
+    let values = [], bars = [], i = 0, j = 0, minIndex = 0, comparisons = 0, swaps = 0, pass = 0;
     let isPlaying = false, isPaused = false, isComplete = false;
     let startTime, elapsedTime = 0, timerInterval;
+    let searchingForMin = false;
 
     function updateStats() {
       comparisonsDisplay.innerText = comparisons;
@@ -231,7 +233,8 @@ function bubbleSort(arr) {
         return bar;
       });
       
-      i = 0; j = 0; comparisons = 0; swaps = 0; pass = 0; elapsedTime = 0; isComplete = false;
+      i = 0; j = 1; minIndex = 0; comparisons = 0; swaps = 0; pass = 0; elapsedTime = 0; isComplete = false;
+      searchingForMin = false;
       timerDisplay.innerText = "0.00s";
       updateStats();
       
@@ -255,7 +258,7 @@ function bubbleSort(arr) {
 
     function resetBarColors() {
       bars.forEach(bar => {
-        bar.classList.remove('comparing', 'sorted');
+        bar.classList.remove('comparing', 'sorted', 'minimum', 'current');
       });
     }
 
@@ -269,43 +272,72 @@ function bubbleSort(arr) {
         return;
       }
 
-      comparisons++;
-      
       resetBarColors();
       
-      if (j < values.length - i - 1) {
-        bars[j].classList.add('comparing');
-        bars[j + 1].classList.add('comparing');
+      // Mark sorted portion
+      for (let k = 0; k < i; k++) {
+        bars[k].classList.add('sorted');
       }
 
-      if (j < values.length - i - 1 && values[j] > values[j + 1]) {
-        swaps++;
-        [values[j], values[j + 1]] = [values[j + 1], values[j]];
-        
-        const maxHeight = window.innerWidth <= 768 ? 220 : 260;
-        bars[j].style.height = `${Math.min((values[j] / 100) * maxHeight, maxHeight)}px`;
-        bars[j + 1].style.height = `${Math.min((values[j + 1] / 100) * maxHeight, maxHeight)}px`;
-      }
-
-      const delay = window.innerWidth <= 768 ? 200 : 150;
-      await new Promise(r => setTimeout(r, delay));
-      
-      if (j < values.length - i - 1) {
-        bars[j].classList.remove('comparing');
-        bars[j + 1].classList.remove('comparing');
-      }
-
-      j++;
-      if (j >= values.length - i - 1) {
-        bars[values.length - i - 1].classList.add('sorted');
-        j = 0;
-        i++;
+      if (!searchingForMin) {
+        // Starting new pass - initialize
+        minIndex = i;
+        j = i + 1;
+        searchingForMin = true;
         pass++;
+        bars[i].classList.add('current');
+        bars[minIndex].classList.add('minimum');
       }
+
+      if (j < values.length) {
+        // Comparing current element with minimum
+        comparisons++;
+        bars[j].classList.add('comparing');
+        
+        if (values[j] < values[minIndex]) {
+          bars[minIndex].classList.remove('minimum');
+          minIndex = j;
+          bars[minIndex].classList.add('minimum');
+        }
+        
+        const delay = window.innerWidth <= 768 ? 250 : 200;
+        await new Promise(r => setTimeout(r, delay));
+        
+        bars[j].classList.remove('comparing');
+        j++;
+      } else {
+        // Finished searching for minimum, now swap if needed
+        searchingForMin = false;
+        
+        if (minIndex !== i) {
+          swaps++;
+          [values[i], values[minIndex]] = [values[minIndex], values[i]];
+          
+          const maxHeight = window.innerWidth <= 768 ? 220 : 260;
+          bars[i].style.height = `${Math.min((values[i] / 100) * maxHeight, maxHeight)}px`;
+          bars[minIndex].style.height = `${Math.min((values[minIndex] / 100) * maxHeight, maxHeight)}px`;
+          
+          // Visual feedback for swap
+          bars[i].classList.add('comparing');
+          bars[minIndex].classList.add('comparing');
+          
+          await new Promise(r => setTimeout(r, 300));
+          
+          bars[i].classList.remove('comparing');
+          bars[minIndex].classList.remove('comparing');
+        }
+        
+        bars[i].classList.remove('current');
+        bars[minIndex].classList.remove('minimum');
+        bars[i].classList.add('sorted');
+        
+        i++;
+      }
+      
       updateStats();
     }
 
-    async function bubbleSortLoop() {
+    async function selectionSortLoop() {
       startTimer();
       while (i < values.length - 1 && isPlaying && !isPaused && !isComplete) {
         await sortStep();
@@ -320,7 +352,7 @@ function bubbleSort(arr) {
         isPlaying = true;
         isPaused = false;
         playBtn.textContent = "Playing...";
-        bubbleSortLoop();
+        selectionSortLoop();
       }
     };
 
@@ -329,7 +361,7 @@ function bubbleSort(arr) {
       
       isPaused = !isPaused;
       if (!isPaused && isPlaying) {
-        bubbleSortLoop();
+        selectionSortLoop();
         pauseBtn.textContent = "Pause";
         playBtn.textContent = "Playing...";
       } else {
@@ -352,6 +384,7 @@ function bubbleSort(arr) {
       isPaused = true;
       isPlaying = false;
       isComplete = false;
+      searchingForMin = false;
       clearInterval(timerInterval);
       generateBars();
     };
@@ -385,46 +418,46 @@ function bubbleSort(arr) {
     // Initialize the visualizer
     generateBars();
 
-    // Quiz Data for Bubble Sort
-    const bubbleSortQuizData = [
+    // Quiz Data for Selection Sort
+    const selectionSortQuizData = [
       {
-        question: "What is the best-case time complexity of Bubble Sort?",
-        options: ["O(n²)", "O(n log n)", "O(n)", "O(log n)"],
-        answer: "O(n)",
-        explanation: "Best case occurs when the array is already sorted and the optimized version makes only one pass."
+        question: "What is the time complexity of Selection Sort in all cases?",
+        options: ["O(n)", "O(n log n)", "O(n²)", "O(log n)"],
+        answer: "O(n²)",
+        explanation: "Selection Sort always performs n-1 passes, and each pass requires comparing with all remaining elements, resulting in O(n²) time complexity regardless of input."
       },
       {
-        question: "What makes Bubble Sort stable?",
+        question: "How many swaps does Selection Sort perform in the worst case for n elements?",
+        options: ["O(n²)", "O(n)", "O(n-1)", "O(1)"],
+        answer: "O(n-1)",
+        explanation: "Selection Sort performs at most n-1 swaps, one per pass, regardless of the input arrangement. This is fewer swaps than most other O(n²) algorithms."
+      },
+      {
+        question: "What makes Selection Sort unstable?",
         options: [
-          "It uses constant extra space",
-          "Equal elements maintain their relative order", 
-          "It always runs in O(n²) time",
-          "It's an in-place algorithm"
+          "It uses extra memory",
+          "It may swap non-adjacent equal elements",
+          "It has quadratic time complexity",
+          "It's not an in-place algorithm"
         ],
-        answer: "Equal elements maintain their relative order",
-        explanation: "Bubble Sort only swaps adjacent elements when the left element is strictly greater than the right, preserving the relative order of equal elements."
+        answer: "It may swap non-adjacent equal elements",
+        explanation: "When swapping the minimum element with the first element of the unsorted portion, equal elements may be moved past each other, changing their relative order."
       },
       {
-        question: "What is the space complexity of Bubble Sort?",
-        options: ["O(n)", "O(n²)", "O(log n)", "O(1)"],
-        answer: "O(1)",
-        explanation: "Bubble Sort is an in-place algorithm that only uses a constant amount of extra space for temporary variables."
-      },
-      {
-        question: "In which scenario does Bubble Sort perform worst?",
+        question: "What is the main advantage of Selection Sort over other O(n²) algorithms?",
         options: [
-          "When the array is already sorted",
-          "When the array is reverse sorted",
-          "When the array has duplicate elements",
-          "When the array is randomly ordered"
+          "It's stable",
+          "It's adaptive",
+          "It minimizes the number of swaps",
+          "It has better best-case performance"
         ],
-        answer: "When the array is reverse sorted",
-        explanation: "Worst case occurs when the array is sorted in reverse order, requiring maximum comparisons and swaps."
+        answer: "It minimizes the number of swaps",
+        explanation: "Selection Sort performs at most n-1 swaps, which is optimal. This makes it useful when writing to memory is expensive."
       }
     ];
 
     // Initialize the quiz
-    AlgorithmQuiz.create('quiz-container', bubbleSortQuizData);
+    AlgorithmQuiz.create('quiz-container', selectionSortQuizData);
   </script>
 </body>
 </html>

@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Counting Sort | Algolt</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.css" />
+  <link rel="stylesheet" href="algorithm.css" />
+</head>
+<body>
+  <nav class="navbar sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center space-x-8">
+          <a href="../index.html" class="navbar-link text-sm font-medium text-gray-900 hover:text-blue-600">JH</a>
+          <a href="../../algolt/index.html" class="navbar-link far-link text-sm font-medium text-gray-900 hover:text-blue-600">Home</a>
+        </div>
+        <div class="flex items-center">
+          <span class="text-sm font-medium text-gray-600">Counting Sort</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="px-4 md:px-6 py-12 border-b border-gray-200 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+        Counting Sort Visualizer
+      </h1>
+      <p class="text-lg text-gray-600 max-w-2xl">
+        Interactive visualization of the counting sort algorithm with step-by-step execution and performance metrics.
+      </p>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto p-4 md:p-6 space-y-12">
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2 space-y-6">
+        <div class="visualizer-card card p-6">
+          <h3 class="text-lg font-semibold mb-4 text-gray-800">Input Array</h3>
+          <div id="input-visualizer" class="flex items-end justify-center h-[200px] md:h-[240px] overflow-hidden mb-6"></div>
+          
+          <h3 class="text-lg font-semibold mb-4 text-gray-800">Count Array</h3>
+          <div id="count-visualizer" class="flex items-end justify-center h-[200px] md:h-[240px] overflow-hidden mb-6"></div>
+          
+          <h3 class="text-lg font-semibold mb-4 text-gray-800">Output Array</h3>
+          <div id="output-visualizer" class="flex items-end justify-center h-[200px] md:h-[240px] overflow-hidden"></div>
+        </div>
+        
+        <div class="card p-6">
+          <div class="control-buttons flex flex-wrap gap-3 mb-6">
+            <button id="playBtn" class="btn btn-primary px-6 py-3">Play</button>
+            <button id="pauseBtn" class="btn btn-primary px-6 py-3">Pause</button>
+            <button id="stepBtn" class="btn btn-primary px-6 py-3">Step</button>
+            <button id="resetBtn" class="btn btn-secondary px-6 py-3">Reset</button>
+          </div>
+          
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-label">Timer</div>
+              <div id="timer" class="stat-value mono">0.00s</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Phase</div>
+              <div id="phase" class="stat-value mono">Setup</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Current Index</div>
+              <div id="currentIndex" class="stat-value mono">-</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Range</div>
+              <div id="range" class="stat-value mono">0-0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="lg:col-span-1">
+        <div class="code-block h-full">
+          <pre><code class="language-js">// Counting Sort Algorithm
+function countingSort(arr) {
+  const max = Math.max(...arr);
+  const min = Math.min(...arr);
+  const range = max - min + 1;
+  
+  // Initialize count array
+  const count = new Array(range).fill(0);
+  
+  // Count occurrences
+  for (let i = 0; i < arr.length; i++) {
+    count[arr[i] - min]++;
+  }
+  
+  // Transform to cumulative counts
+  for (let i = 1; i < count.length; i++) {
+    count[i] += count[i - 1];
+  }
+  
+  // Build output array
+  const output = new Array(arr.length);
+  for (let i = arr.length - 1; i >= 0; i--) {
+    output[count[arr[i] - min] - 1] = arr[i];
+    count[arr[i] - min]--;
+  }
+  
+  return output;
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="card p-6">
+      <h2 class="section-title">Custom Input</h2>
+      <p class="text-gray-600 mb-4">Enter your own array of small positive integers (0-50) to visualize the sorting process.</p>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <div class="input-group flex-1">
+          <input id="customInput" class="input-field" placeholder="Enter comma-separated numbers (e.g. 4,2,2,8,3,3,1)" />
+        </div>
+        <button id="loadCustom" class="btn btn-primary px-6 py-3 whitespace-nowrap">Load Array</button>
+      </div>
+    </section>
+
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="card p-6">
+        <h2 class="section-title">How It Works</h2>
+        <p class="text-gray-700 leading-relaxed">
+          Counting Sort works by counting the occurrences of each distinct element, then using arithmetic to determine the positions of each element in the sorted output array. It's particularly efficient for sorting integers within a small range.
+        </p>
+      </div>
+      
+      <div class="card p-6">
+        <h2 class="section-title">Key Characteristics</h2>
+        <ul class="space-y-2 text-gray-700">
+          <li class="flex items-start">
+            <span class="text-blue-600 mr-2">•</span>
+            <span><strong>Stable:</strong> Equal elements maintain relative order</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-blue-600 mr-2">•</span>
+            <span><strong>Non-comparative:</strong> Doesn't compare elements directly</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-blue-600 mr-2">•</span>
+            <span><strong>Range-dependent:</strong> Efficiency depends on value range</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+    
+    <section class="card p-6">
+      <h2 class="section-title">Time & Space Complexity</h2>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <h3 class="text-lg font-semibold mb-4 text-gray-800">Counting Sort Analysis</h3>
+          <div class="space-y-3">
+            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+              <span class="font-medium text-gray-700">Best Case:</span>
+              <span class="mono text-green-600 font-semibold">O(n + k)</span>
+            </div>
+            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+              <span class="font-medium text-gray-700">Average Case:</span>
+              <span class="mono text-green-600 font-semibold">O(n + k)</span>
+            </div>
+            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+              <span class="font-medium text-gray-700">Worst Case:</span>
+              <span class="mono text-green-600 font-semibold">O(n + k)</span>
+            </div>
+            <div class="flex justify-between items-center py-2">
+              <span class="font-medium text-gray-700">Space:</span>
+              <span class="mono text-yellow-600 font-semibold">O(k)</span>
+            </div>
+          </div>
+          <p class="text-sm text-gray-600 mt-4">
+            Where n = number of elements, k = range of input values
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="quiz-card" id="quiz-section">
+      <h2 class="section-title">Test Your Knowledge</h2>
+      <div id="quiz-container"></div>
+    </section>
+
+    <section class="card p-6 text-center">
+      <a href="./radix-sort.html" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium transition-colors">
+        Next: Radix Sort 
+        <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </a>
+    </section>
+  </main>
+
+  <!-- Include the external quiz system -->
+  <script src="quiz.js"></script>
+  
+  <script>
+    // Counting Sort Visualizer Logic
+    const inputVisualizer = document.getElementById("input-visualizer");
+    const countVisualizer = document.getElementById("count-visualizer");
+    const outputVisualizer = document.getElementById("output-visualizer");
+    const playBtn = document.getElementById("playBtn");
+    const pauseBtn = document.getElementById("pauseBtn");
+    const stepBtn = document.getElementById("stepBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const loadCustom = document.getElementById("loadCustom");
+    const input = document.getElementById("customInput");
+    const timerDisplay = document.getElementById("timer");
+    const phaseDisplay = document.getElementById("phase");
+    const currentIndexDisplay = document.getElementById("currentIndex");
+    const rangeDisplay = document.getElementById("range");
+
+    let inputArray = [], countArray = [], outputArray = [];
+    let inputBars = [], countBars = [], outputBars = [];
+    let currentStep = 0, currentIndex = -1, min = 0, max = 0, range = 0;
+    let isPlaying = false, isPaused = false, isComplete = false;
+    let startTime, elapsedTime = 0, timerInterval;
+    let phase = 'setup';
+
+    const phases = {
+      setup: 'Setup',
+      counting: 'Counting',
+      cumulative: 'Cumulative',
+      building: 'Building Output'
+    };
+
+    function updateStats() {
+      phaseDisplay.innerText = phases[phase];
+      currentIndexDisplay.innerText = currentIndex >= 0 ? currentIndex : '-';
+      rangeDisplay.innerText = `${min}-${max}`;
+    }
+
+    function getOptimalArraySize() {
+      const isMobile = window.innerWidth <= 768;
+      return isMobile ? 12 : 16;
+    }
+
+    function generateRandomArray() {
+      const arraySize = getOptimalArraySize();
+      const maxValue = Math.min(20, arraySize + 5); // Keep range small for better visualization
+      return Array.from({ length: arraySize }, () => Math.floor(Math.random() * maxValue));
+    }
+
+    function createBar(value, container, isCount = false, showValue = true) {
+      const bar = document.createElement("div");
+      bar.classList.add("bar");
+      
+      const maxHeight = window.innerWidth <= 768 ? 160 : 200;
+      const height = isCount ? 
+        Math.min((value / Math.max(...(isCount ? countArray : inputArray))) * maxHeight, maxHeight) :
+        Math.min((value / Math.max(...inputArray)) * maxHeight, maxHeight);
+      
+      bar.style.height = `${Math.max(height, 20)}px`;
+      bar.style.minWidth = window.innerWidth <= 768 ? "25px" : "35px";
+      bar.style.margin = "0 2px";
+      bar.style.position = "relative";
+      bar.style.backgroundColor = "#3b82f6";
+      bar.style.borderRadius = "4px 4px 0 0";
+      
+      if (showValue) {
+        const label = document.createElement("div");
+        label.style.position = "absolute";
+        label.style.bottom = "-25px";
+        label.style.left = "50%";
+        label.style.transform = "translateX(-50%)";
+        label.style.fontSize = "12px";
+        label.style.fontWeight = "500";
+        label.style.color = "#374151";
+        label.innerText = value;
+        bar.appendChild(label);
+      }
+      
+      container.appendChild(bar);
+      return bar;
+    }
+
+    function initializeVisualization(custom = null) {
+      inputArray = custom || generateRandomArray();
+      
+      // Ensure values are within reasonable range
+      inputArray = inputArray.map(v => Math.max(0, Math.min(50, v)));
+      
+      min = Math.min(...inputArray);
+      max = Math.max(...inputArray);
+      range = max - min + 1;
+      
+      countArray = new Array(range).fill(0);
+      outputArray = new Array(inputArray.length).fill(null);
+      
+      // Clear visualizers
+      inputVisualizer.innerHTML = "";
+      countVisualizer.innerHTML = "";
+      outputVisualizer.innerHTML = "";
+      
+      // Create input bars
+      inputBars = inputArray.map(value => createBar(value, inputVisualizer));
+      
+      // Create count bars (initially 0)
+      countBars = [];
+      for (let i = 0; i < range; i++) {
+        const bar = createBar(0, countVisualizer, true);
+        const indexLabel = document.createElement("div");
+        indexLabel.style.position = "absolute";
+        indexLabel.style.top = "-25px";
+        indexLabel.style.left = "50%";
+        indexLabel.style.transform = "translateX(-50%)";
+        indexLabel.style.fontSize = "10px";
+        indexLabel.style.color = "#6b7280";
+        indexLabel.innerText = min + i;
+        bar.appendChild(indexLabel);
+        countBars.push(bar);
+      }
+      
+      // Create output bars (initially empty)
+      outputBars = outputArray.map(() => {
+        const bar = document.createElement("div");
+        bar.classList.add("bar");
+        bar.style.height = "20px";
+        bar.style.minWidth = window.innerWidth <= 768 ? "25px" : "35px";
+        bar.style.margin = "0 2px";
+        bar.style.backgroundColor = "#e5e7eb";
+        bar.style.borderRadius = "4px 4px 0 0";
+        outputVisualizer.appendChild(bar);
+        return bar;
+      });
+      
+      // Reset state
+      currentStep = 0;
+      currentIndex = -1;
+      phase = 'setup';
+      elapsedTime = 0;
+      isComplete = false;
+      
+      timerDisplay.innerText = "0.00s";
+      updateStats();
+      
+      playBtn.disabled = false;
+      playBtn.textContent = "Play";
+      pauseBtn.textContent = "Pause";
+      isPaused = false;
+      isPlaying = false;
+    }
+
+    function startTimer() {
+      startTime = Date.now() - elapsedTime * 1000;
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if (!isPaused) {
+          elapsedTime = (Date.now() - startTime) / 1000;
+          timerDisplay.innerText = `${elapsedTime.toFixed(2)}s`;
+        }
+      }, 10);
+    }
+
+    function resetBarColors() {
+      [...inputBars, ...countBars, ...outputBars].forEach(bar => {
+        bar.classList.remove('comparing', 'sorted', 'active');
+        if (!bar.style.backgroundColor.includes('rgb')) {
+          bar.style.backgroundColor = "#3b82f6";
+        }
+      });
+    }
+
+    async function executeStep() {
+      resetBarColors();
+      
+      if (currentStep < inputArray.length) {
+        // Phase 1: Count occurrences
+        phase = 'counting';
+        currentIndex = currentStep;
+        const value = inputArray[currentStep];
+        const countIndex = value - min;
+        
+        inputBars[currentStep].classList.add('active');
+        inputBars[currentStep].style.backgroundColor = "#ef4444";
+        
+        countArray[countIndex]++;
+        
+        // Update count bar
+        const maxHeight = window.innerWidth <= 768 ? 160 : 200;
+        const newHeight = Math.min((countArray[countIndex] / Math.max(...inputArray)) * maxHeight, maxHeight);
+        countBars[countIndex].style.height = `${Math.max(newHeight, 20)}px`;
+        countBars[countIndex].style.backgroundColor = "#10b981";
+        
+        // Update label
+        const label = countBars[countIndex].querySelector('div');
+        if (label && label.style.bottom === "-25px") {
+          label.innerText = countArray[countIndex];
+        }
+        
+        currentStep++;
+        
+      } else if (currentStep < inputArray.length + range - 1) {
+        // Phase 2: Calculate cumulative counts
+        phase = 'cumulative';
+        const i = currentStep - inputArray.length + 1;
+        currentIndex = i;
+        
+        countArray[i] += countArray[i - 1];
+        
+        // Update count bar
+        const maxHeight = window.innerWidth <= 768 ? 160 : 200;
+        const maxCount = Math.max(...countArray);
+        const newHeight = Math.min((countArray[i] / maxCount) * maxHeight, maxHeight);
+        countBars[i].style.height = `${Math.max(newHeight, 20)}px`;
+        countBars[i].style.backgroundColor = "#f59e0b";
+        
+        // Update label
+        const label = countBars[i].querySelector('div');
+        if (label && label.style.bottom === "-25px") {
+          label.innerText = countArray[i];
+        }
+        
+        currentStep++;
+        
+      } else if (currentStep < inputArray.length * 2 + range - 1) {
+        // Phase 3: Build output array
+        phase = 'building';
+        const i = inputArray.length - 1 - (currentStep - inputArray.length - range + 1);
+        currentIndex = i;
+        
+        const value = inputArray[i];
+        const countIndex = value - min;
+        const outputPos = countArray[countIndex] - 1;
+        
+        inputBars[i].classList.add('active');
+        inputBars[i].style.backgroundColor = "#8b5cf6";
+        
+        outputArray[outputPos] = value;
+        countArray[countIndex]--;
+        
+        // Update output bar
+        const maxHeight = window.innerWidth <= 768 ? 160 : 200;
+        const height = Math.min((value / Math.max(...inputArray)) * maxHeight, maxHeight);
+        outputBars[outputPos].style.height = `${Math.max(height, 20)}px`;
+        outputBars[outputPos].style.backgroundColor = "#10b981";
+        
+        // Add value label to output bar
+        let label = outputBars[outputPos].querySelector('div');
+        if (!label) {
+          label = document.createElement("div");
+          label.style.position = "absolute";
+          label.style.bottom = "-25px";
+          label.style.left = "50%";
+          label.style.transform = "translateX(-50%)";
+          label.style.fontSize = "12px";
+          label.style.fontWeight = "500";
+          label.style.color = "#374151";
+          outputBars[outputPos].appendChild(label);
+        }
+        label.innerText = value;
+        
+        // Update count bar
+        const countHeight = Math.min((countArray[countIndex] / Math.max(...countArray.filter(c => c > 0))) * maxHeight, maxHeight);
+        countBars[countIndex].style.height = `${Math.max(countHeight, 20)}px`;
+        
+        const countLabel = countBars[countIndex].querySelector('div');
+        if (countLabel && countLabel.style.bottom === "-25px") {
+          countLabel.innerText = countArray[countIndex];
+        }
+        
+        currentStep++;
+        
+      } else {
+        // Complete
+        isComplete = true;
+        phase = 'complete';
+        currentIndex = -1;
+        clearInterval(timerInterval);
+        outputBars.forEach(bar => bar.classList.add('sorted'));
+        playBtn.textContent = "Complete";
+        playBtn.disabled = true;
+      }
+      
+      updateStats();
+      
+      const delay = window.innerWidth <= 768 ? 800 : 600;
+      await new Promise(r => setTimeout(r, delay));
+    }
+
+    async function sortingLoop() {
+      startTimer();
+      while (!isComplete && isPlaying && !isPaused) {
+        await executeStep();
+      }
+      if (isComplete) {
+        clearInterval(timerInterval);
+      }
+    }
+
+    playBtn.onclick = () => {
+      if (!isPlaying && !isComplete) {
+        isPlaying = true;
+        isPaused = false;
+        playBtn.textContent = "Playing...";
+        sortingLoop();
+      }
+    };
+
+    pauseBtn.onclick = () => {
+      if (isComplete) return;
+      
+      isPaused = !isPaused;
+      if (!isPaused && isPlaying) {
+        sortingLoop();
+        pauseBtn.textContent = "Pause";
+        playBtn.textContent = "Playing...";
+      } else {
+        pauseBtn.textContent = "Resume";
+        playBtn.textContent = "Play";
+      }
+    };
+
+    stepBtn.onclick = async () => {
+      if (!isComplete) {
+        isPlaying = false;
+        isPaused = true;
+        playBtn.textContent = "Play";
+        pauseBtn.textContent = "Pause";
+        await executeStep();
+      }
+    };
+
+    resetBtn.onclick = () => {
+      isPaused = true;
+      isPlaying = false;
+      isComplete = false;
+      clearInterval(timerInterval);
+      initializeVisualization(inputArray.slice());
+    };
+
+    loadCustom.onclick = () => {
+      const nums = input.value.split(',')
+        .map(n => parseInt(n.trim()))
+        .filter(n => !isNaN(n) && n >= 0 && n <= 50);
+      
+      if (nums.length > 1) {
+        const maxSize = window.innerWidth <= 768 ? 12 : 20;
+        const limitedNums = nums.slice(0, maxSize);
+        initializeVisualization(limitedNums);
+        input.value = '';
+      } else {
+        alert('Please enter at least 2 valid numbers (0-50) separated by commas.');
+      }
+    };
+
+    window.addEventListener('resize', () => {
+      initializeVisualization(inputArray.slice());
+    });
+
+    input.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        loadCustom.click();
+      }
+    });
+
+    // Initialize the visualizer
+    initializeVisualization();
+
+    // Quiz Data for Counting Sort
+    const countingSortQuizData = [
+      {
+        question: "What is the time complexity of Counting Sort?",
+        options: ["O(n²)", "O(n log n)", "O(n + k)", "O(k)"],
+        answer: "O(n + k)",
+        explanation: "Counting Sort runs in O(n + k) time where n is the number of elements and k is the range of input values."
+      },
+      {
+        question: "When is Counting Sort most efficient?",
+        options: [
+          "When the range of values is much larger than the number of elements",
+          "When the range of values is small compared to the number of elements", 
+          "When the array is already sorted",
+          "When the array contains only unique elements"
+        ],
+        answer: "When the range of values is small compared to the number of elements",
+        explanation: "Counting Sort is most efficient when k (range) is not significantly larger than n (number of elements), as it needs O(k) extra space."
+      },
+      {
+        question: "What type of sorting algorithm is Counting Sort?",
+        options: [
+          "Comparison-based",
+          "Non-comparison based",
+          "Divide and conquer",
+          "Greedy algorithm"
+        ],
+        answer: "Non-comparison based",
+        explanation: "Counting Sort doesn't compare elements directly. Instead, it counts occurrences and uses arithmetic to determine positions."
+      },
+      {
+        question: "What is the main limitation of Counting Sort?",
+        options: [
+          "It's not stable",
+          "It requires knowing the range of input values",
+          "It can't handle duplicate values",
+          "It's slower than comparison-based sorts"
+        ],
+        answer: "It requires knowing the range of input values",
+        explanation: "Counting Sort needs to know the range of possible values to create the counting array, and becomes inefficient with very large ranges."
+      }
+    ];
+
+    // Initialize the quiz
+    AlgorithmQuiz.create('quiz-container', countingSortQuizData);
+  </script>
+
+  <style>
+    .bar {
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: end;
+      justify-content: center;
+    }
+    
+    .bar.active {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .bar.sorted {
+      animation: sortedPulse 0.6s ease-in-out;
+    }
+    
+    @keyframes sortedPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    .visualizer-card {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      border: 1px solid #e2e8f0;
+    }
+    
+    #input-visualizer, #count-visualizer, #output-visualizer {
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      padding: 16px;
+      border: 1px solid #e5e7eb;
+    }
+  </style>
+</body>
+</html>

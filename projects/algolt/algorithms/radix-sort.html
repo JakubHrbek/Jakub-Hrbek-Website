@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Radix Sort | Algolt</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.css" />
+  <link rel="stylesheet" href="algorithm.css" />
+  <style>
+    .bucket {
+      min-height: 80px;
+      border: 2px dashed #e5e7eb;
+      border-radius: 8px;
+      padding: 8px;
+      margin: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      transition: all 0.3s ease;
+      background: #f9fafb;
+    }
+    .bucket.active {
+      border-color: #3b82f6;
+      background: #eff6ff;
+    }
+    .bucket-label {
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+    .bucket-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      justify-content: center;
+    }
+    .bucket-item {
+      background: #3b82f6;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    .bucket-item.highlighting {
+      background: #ef4444;
+      transform: scale(1.1);
+    }
+    .digits-display {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      margin: 16px 0;
+      padding: 16px;
+      background: #f3f4f6;
+      border-radius: 8px;
+    }
+    .current-digit {
+      font-size: 18px;
+      font-weight: 600;
+      color: #3b82f6;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center space-x-8">
+          <a href="../index.html" class="navbar-link text-sm font-medium text-gray-900 hover:text-blue-600">JH</a>
+          <a href="../../algolt/index.html" class="navbar-link far-link text-sm font-medium text-gray-900 hover:text-blue-600">Home</a>
+        </div>
+        <div class="flex items-center">
+          <span class="text-sm font-medium text-gray-600">Radix Sort</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="px-4 md:px-6 py-12 border-b border-gray-200 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+        Radix Sort Visualizer
+      </h1>
+      <p class="text-lg text-gray-600 max-w-2xl">
+        Interactive visualization of the radix sort algorithm with bucket-based digit sorting and step-by-step execution.
+      </p>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto p-4 md:p-6 space-y-12">
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2 space-y-6">
+        <div class="visualizer-card card p-6">
+          <div class="digits-display">
+            <span class="text-gray-600">Current Digit Position:</span>
+            <span id="currentDigit" class="current-digit">1's place</span>
+          </div>
+          <div id="visualizer" class="flex items-end justify-center h-[280px] md:h-[320px] overflow-hidden mb-6"></div>
+          <div id="bucketContainer" class="grid grid-cols-5 md:grid-cols-10 gap-2"></div>
+        </div>
+        
+        <div class="card p-6">
+          <div class="control-buttons flex flex-wrap gap-3 mb-6">
+            <button id="playBtn" class="btn btn-primary px-6 py-3">Play</button>
+            <button id="pauseBtn" class="btn btn-primary px-6 py-3">Pause</button>
+            <button id="stepBtn" class="btn btn-primary px-6 py-3">Step</button>
+            <button id="resetBtn" class="btn btn-secondary px-6 py-3">Reset</button>
+          </div>
+          
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-label">Timer</div>
+              <div id="timer" class="stat-value mono">0.00s</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Passes</div>
+              <div id="passes" class="stat-value mono">0</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Operations</div>
+              <div id="operations" class="stat-value mono">0</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Max Digits</div>
+              <div id="maxDigits" class="stat-value mono">0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="lg:col-span-1">
+        <div class="code-block h-full">
+          <pre><code class="language-js">// Radix Sort Algorithm
+function radixSort(arr) {
+  const max = Math.max(...arr);
+  const maxDigits = max.toString().length;
+  
+  for (let digit = 0; digit < maxDigits; digit++) {
+    const buckets = Array.from({length: 10}, 
+      () => []);
+    
+    // Distribute into buckets
+    for (let num of arr) {
+      const digitValue = getDigit(num, digit);
+      buckets[digitValue].push(num);
+    }
+    
+    // Collect from buckets
+    arr = [].concat(...buckets);
+  }
+  
+  return arr;
+}
+
+function getDigit(num, place) {
+  return Math.floor(Math.abs(num) / 
+    Math.pow(10, place)) % 10;
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="card p-6">
+      <h2 class="section-title">Custom Input</h2>
+      <p class="text-gray-600 mb-4">Enter your own array of positive integers to visualize the sorting process.</p>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <div class="input-group flex-1">
+          <input id="customInput" class="input-field" placeholder="Enter comma-separated positive numbers (e.g. 170,45,75,90,2,802,24,66)" />
+        </div>
+        <button id="loadCustom" class="btn btn-primary px-6 py-3 whitespace-nowrap">Load Array</button>
+      </div>
+    </section>
+
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="card p-6">
+        <h2 class="section-title">How It Works</h2>
+        <p class="text-gray-700 leading-relaxed">
+          Radix Sort processes numbers digit by digit, starting from the least significant digit. It uses counting sort as a subroutine, distributing numbers into buckets (0-9) based on each digit position, then collecting them back in order.
+        </p>
+      </div>
+      
+      <div class="card p-6">
+        <h2 class="section-title">Key Characteristics</h2>
+        <ul class="space-y-2 text-gray-700">
+          <li class="flex items-start">
+            <span class="text-blue-600 mr-2">•</span>
+            <span><strong>Non-comparative:</strong> Doesn't compare elements directly</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-blue-600 mr-2">•</span>
+            <span><strong>Stable:</strong> Equal elements maintain relative order</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-blue-600 mr-2">•</span>
+            <span><strong>Linear time:</strong> O(d×(n+k)) where d is digit count</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+    
+    <section class="card p-6">
+      <h2 class="section-title">Time & Space Complexity</h2>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <h3 class="text-lg font-semibold mb-4 text-gray-800">Radix Sort Analysis</h3>
+          <div class="space-y-3">
+            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+              <span class="font-medium text-gray-700">Best Case:</span>
+              <span class="mono text-green-600 font-semibold">O(d×(n+k))</span>
+            </div>
+            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+              <span class="font-medium text-gray-700">Average Case:</span>
+              <span class="mono text-yellow-600 font-semibold">O(d×(n+k))</span>
+            </div>
+            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+              <span class="font-medium text-gray-700">Worst Case:</span>
+              <span class="mono text-red-600 font-semibold">O(d×(n+k))</span>
+            </div>
+            <div class="flex justify-between items-center py-2">
+              <span class="font-medium text-gray-700">Space:</span>
+              <span class="mono text-blue-600 font-semibold">O(n+k)</span>
+            </div>
+          </div>
+          <p class="text-sm text-gray-600 mt-4">
+            Where d = number of digits, n = number of elements, k = range of digits (10 for decimal)
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="quiz-card" id="quiz-section">
+      <h2 class="section-title">Test Your Knowledge</h2>
+      <div id="quiz-container"></div>
+    </section>
+
+    <section class="card p-6 text-center">
+      <a href="./merge-sort.html" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium transition-colors">
+        Next: Merge Sort 
+        <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </a>
+    </section>
+  </main>
+
+  <!-- Include the external quiz system -->
+  <script src="quiz.js"></script>
+  
+  <script>
+    // Radix Sort Visualizer Logic
+    const visualizer = document.getElementById("visualizer");
+    const bucketContainer = document.getElementById("bucketContainer");
+    const playBtn = document.getElementById("playBtn");
+    const pauseBtn = document.getElementById("pauseBtn");
+    const stepBtn = document.getElementById("stepBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const loadCustom = document.getElementById("loadCustom");
+    const input = document.getElementById("customInput");
+    const timerDisplay = document.getElementById("timer");
+    const passesDisplay = document.getElementById("passes");
+    const operationsDisplay = document.getElementById("operations");
+    const maxDigitsDisplay = document.getElementById("maxDigits");
+    const currentDigitDisplay = document.getElementById("currentDigit");
+
+    let values = [], bars = [], buckets = [], currentDigitPos = 0, passes = 0, operations = 0;
+    let isPlaying = false, isPaused = false, isComplete = false;
+    let startTime, elapsedTime = 0, timerInterval;
+    let maxDigitCount = 0;
+
+    function updateStats() {
+      passesDisplay.innerText = passes;
+      operationsDisplay.innerText = operations;
+      maxDigitsDisplay.innerText = maxDigitCount;
+      const digitNames = ["1's place", "10's place", "100's place", "1000's place", "10000's place"];
+      currentDigitDisplay.innerText = digitNames[currentDigitPos] || `10^${currentDigitPos} place`;
+    }
+
+    function getDigit(num, place) {
+      return Math.floor(Math.abs(num) / Math.pow(10, place)) % 10;
+    }
+
+    function getOptimalArraySize() {
+      const isMobile = window.innerWidth <= 768;
+      return isMobile ? 12 : 16;
+    }
+
+    function generateBars(custom = null) {
+      const arraySize = getOptimalArraySize();
+      values = custom || Array.from({ length: arraySize }, () => Math.floor(Math.random() * 999) + 1);
+      
+      if (window.innerWidth <= 768 && values.length > 12) {
+        values = values.slice(0, 12);
+      }
+      
+      maxDigitCount = Math.max(...values).toString().length;
+      
+      visualizer.innerHTML = "";
+      bars = values.map(value => {
+        const bar = document.createElement("div");
+        bar.classList.add("bar");
+        const maxHeight = window.innerWidth <= 768 ? 220 : 260;
+        const height = Math.min((value / 1000) * maxHeight, maxHeight);
+        bar.style.height = `${height}px`;
+        bar.style.position = "relative";
+        
+        // Add number label on top of bar
+        const label = document.createElement("span");
+        label.textContent = value;
+        label.style.position = "absolute";
+        label.style.top = "-20px";
+        label.style.left = "50%";
+        label.style.transform = "translateX(-50%)";
+        label.style.fontSize = "12px";
+        label.style.fontWeight = "bold";
+        label.style.color = "#374151";
+        bar.appendChild(label);
+        
+        visualizer.appendChild(bar);
+        return bar;
+      });
+      
+      createBuckets();
+      
+      currentDigitPos = 0; passes = 0; operations = 0; elapsedTime = 0; isComplete = false;
+      timerDisplay.innerText = "0.00s";
+      updateStats();
+      
+      playBtn.disabled = false;
+      playBtn.textContent = "Play";
+      pauseBtn.textContent = "Pause";
+      isPaused = false;
+      isPlaying = false;
+    }
+
+    function createBuckets() {
+      bucketContainer.innerHTML = "";
+      buckets = [];
+      
+      for (let i = 0; i < 10; i++) {
+        const bucket = document.createElement("div");
+        bucket.classList.add("bucket");
+        
+        const label = document.createElement("div");
+        label.classList.add("bucket-label");
+        label.textContent = i;
+        
+        const items = document.createElement("div");
+        items.classList.add("bucket-items");
+        
+        bucket.appendChild(label);
+        bucket.appendChild(items);
+        bucketContainer.appendChild(bucket);
+        
+        buckets.push({ element: bucket, items: items, values: [] });
+      }
+    }
+
+    function startTimer() {
+      startTime = Date.now() - elapsedTime * 1000;
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if (!isPaused) {
+          elapsedTime = (Date.now() - startTime) / 1000;
+          timerDisplay.innerText = `${elapsedTime.toFixed(2)}s`;
+        }
+      }, 10);
+    }
+
+    function resetVisualization() {
+      bars.forEach(bar => {
+        bar.classList.remove('comparing', 'sorted');
+      });
+      buckets.forEach(bucket => {
+        bucket.element.classList.remove('active');
+        bucket.items.innerHTML = "";
+        bucket.values = [];
+      });
+    }
+
+    async function distributeToBuckets() {
+      resetVisualization();
+      
+      for (let i = 0; i < values.length; i++) {
+        const value = values[i];
+        const digit = getDigit(value, currentDigitPos);
+        
+        // Highlight current bar
+        bars[i].classList.add('comparing');
+        buckets[digit].element.classList.add('active');
+        
+        await new Promise(r => setTimeout(r, 300));
+        
+        // Add to bucket
+        const bucketItem = document.createElement("div");
+        bucketItem.classList.add("bucket-item");
+        bucketItem.textContent = value;
+        buckets[digit].items.appendChild(bucketItem);
+        buckets[digit].values.push(value);
+        
+        operations++;
+        updateStats();
+        
+        await new Promise(r => setTimeout(r, 200));
+        
+        bars[i].classList.remove('comparing');
+        buckets[digit].element.classList.remove('active');
+      }
+    }
+
+    async function collectFromBuckets() {
+      let index = 0;
+      
+      for (let i = 0; i < 10; i++) {
+        if (buckets[i].values.length > 0) {
+          buckets[i].element.classList.add('active');
+          
+          for (let j = 0; j < buckets[i].values.length; j++) {
+            const value = buckets[i].values[j];
+            values[index] = value;
+            
+            // Update bar height and label
+            const maxHeight = window.innerWidth <= 768 ? 220 : 260;
+            const height = Math.min((value / 1000) * maxHeight, maxHeight);
+            bars[index].style.height = `${height}px`;
+            bars[index].querySelector('span').textContent = value;
+            bars[index].classList.add('comparing');
+            
+            // Highlight bucket item
+            const bucketItems = buckets[i].items.children;
+            if (bucketItems[j]) {
+              bucketItems[j].classList.add('highlighting');
+            }
+            
+            await new Promise(r => setTimeout(r, 150));
+            
+            bars[index].classList.remove('comparing');
+            if (bucketItems[j]) {
+              bucketItems[j].classList.remove('highlighting');
+            }
+            
+            index++;
+            operations++;
+            updateStats();
+          }
+          
+          buckets[i].element.classList.remove('active');
+          buckets[i].items.innerHTML = "";
+          buckets[i].values = [];
+        }
+      }
+    }
+
+    async function sortStep() {
+      if (currentDigitPos >= maxDigitCount) {
+        isComplete = true;
+        clearInterval(timerInterval);
+        bars.forEach(bar => bar.classList.add('sorted'));
+        playBtn.textContent = "Complete";
+        playBtn.disabled = true;
+        return;
+      }
+
+      await distributeToBuckets();
+      await collectFromBuckets();
+      
+      currentDigitPos++;
+      passes++;
+      updateStats();
+    }
+
+    async function radixSortLoop() {
+      startTimer();
+      while (currentDigitPos < maxDigitCount && isPlaying && !isPaused && !isComplete) {
+        await sortStep();
+      }
+      if (isComplete) {
+        clearInterval(timerInterval);
+      }
+    }
+
+    playBtn.onclick = () => {
+      if (!isPlaying && !isComplete) {
+        isPlaying = true;
+        isPaused = false;
+        playBtn.textContent = "Playing...";
+        radixSortLoop();
+      }
+    };
+
+    pauseBtn.onclick = () => {
+      if (isComplete) return;
+      
+      isPaused = !isPaused;
+      if (!isPaused && isPlaying) {
+        radixSortLoop();
+        pauseBtn.textContent = "Pause";
+        playBtn.textContent = "Playing...";
+      } else {
+        pauseBtn.textContent = "Resume";
+        playBtn.textContent = "Play";
+      }
+    };
+
+    stepBtn.onclick = async () => {
+      if (!isComplete) {
+        isPlaying = false;
+        isPaused = true;
+        playBtn.textContent = "Play";
+        pauseBtn.textContent = "Pause";
+        await sortStep();
+      }
+    };
+
+    resetBtn.onclick = () => {
+      isPaused = true;
+      isPlaying = false;
+      isComplete = false;
+      clearInterval(timerInterval);
+      generateBars();
+    };
+
+    loadCustom.onclick = () => {
+      const nums = input.value.split(',')
+        .map(n => parseInt(n.trim()))
+        .filter(n => !isNaN(n) && n > 0)
+        .map(n => Math.min(n, 99999));
+      
+      if (nums.length > 1) {
+        const maxSize = window.innerWidth <= 768 ? 12 : 20;
+        const limitedNums = nums.slice(0, maxSize);
+        generateBars(limitedNums);
+        input.value = '';
+      } else {
+        alert('Please enter at least 2 valid positive numbers separated by commas.');
+      }
+    };
+
+    window.addEventListener('resize', () => {
+      generateBars(values);
+    });
+
+    input.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        loadCustom.click();
+      }
+    });
+
+    // Initialize the visualizer
+    generateBars();
+
+    // Quiz Data for Radix Sort
+    const radixSortQuizData = [
+      {
+        question: "What type of sorting algorithm is Radix Sort?",
+        options: ["Comparison-based", "Non-comparison based", "Hybrid", "Recursive"],
+        answer: "Non-comparison based",
+        explanation: "Radix Sort is a non-comparison sorting algorithm that sorts data by processing individual digits."
+      },
+      {
+        question: "What is the time complexity of Radix Sort?",
+        options: ["O(n²)", "O(n log n)", "O(d×(n+k))", "O(n)"],
+        answer: "O(d×(n+k))",
+        explanation: "Where d is the number of digits, n is the number of elements, and k is the range of each digit (10 for decimal)."
+      },
+      {
+        question: "Which digit does Radix Sort typically process first?",
+        options: [
+          "Most significant digit (leftmost)",
+          "Least significant digit (rightmost)", 
+          "Middle digit",
+          "Random digit"
+        ],
+        answer: "Least significant digit (rightmost)",
+        explanation: "LSD (Least Significant Digit) Radix Sort starts from the rightmost digit and works towards the left, which is more common and stable."
+      },
+      {
+        question: "What auxiliary algorithm does Radix Sort commonly use?",
+        options: ["Quick Sort", "Merge Sort", "Counting Sort", "Heap Sort"],
+        answer: "Counting Sort",
+        explanation: "Radix Sort uses Counting Sort as a subroutine to sort elements by each digit position, taking advantage of the limited range (0-9)."
+      }
+    ];
+
+    // Initialize the quiz
+    AlgorithmQuiz.create('quiz-container', radixSortQuizData);
+  </script>
+</body>
+</html>

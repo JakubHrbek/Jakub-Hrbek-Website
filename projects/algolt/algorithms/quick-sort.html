@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bubble Sort | Algolt</title>
+  <title>Quick Sort | Algolt</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
@@ -19,7 +19,7 @@
           <a href="../../algolt/index.html" class="navbar-link far-link text-sm font-medium text-gray-900 hover:text-blue-600">Home</a>
         </div>
         <div class="flex items-center">
-          <span class="text-sm font-medium text-gray-600">Bubble Sort</span>
+          <span class="text-sm font-medium text-gray-600">Quick Sort</span>
         </div>
       </div>
     </div>
@@ -28,10 +28,10 @@
   <header class="px-4 md:px-6 py-12 border-b border-gray-200 bg-white">
     <div class="max-w-7xl mx-auto">
       <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-        Bubble Sort Visualizer
+        Quick Sort Visualizer
       </h1>
       <p class="text-lg text-gray-600 max-w-2xl">
-        Interactive visualization of the bubble sort algorithm with step-by-step execution and performance metrics.
+        Interactive visualization of the quick sort algorithm with step-by-step execution and performance metrics.
       </p>
     </div>
   </header>
@@ -65,8 +65,8 @@
               <div id="swaps" class="stat-value mono">0</div>
             </div>
             <div class="stat-item">
-              <div class="stat-label">Pass</div>
-              <div id="pass" class="stat-value mono">0</div>
+              <div class="stat-label">Depth</div>
+              <div id="depth" class="stat-value mono">0</div>
             </div>
           </div>
         </div>
@@ -74,27 +74,30 @@
       
       <div class="lg:col-span-1">
         <div class="code-block h-full">
-          <pre><code class="language-js">// Bubble Sort Algorithm
-function bubbleSort(arr) {
-  const n = arr.length;
+          <pre><code class="language-js">// Quick Sort Algorithm
+function quickSort(arr, low = 0, high = arr.length - 1) {
+  if (low < high) {
+    const pivotIndex = partition(arr, low, high);
+    
+    quickSort(arr, low, pivotIndex - 1);
+    quickSort(arr, pivotIndex + 1, high);
+  }
+  return arr;
+}
+
+function partition(arr, low, high) {
+  const pivot = arr[high];
+  let i = low - 1;
   
-  for (let i = 0; i < n - 1; i++) {
-    let swapped = false;
-    
-    for (let j = 0; j < n - i - 1; j++) {
-      if (arr[j] > arr[j + 1]) {
-        // Swap elements
-        [arr[j], arr[j + 1]] = 
-          [arr[j + 1], arr[j]];
-        swapped = true;
-      }
+  for (let j = low; j < high; j++) {
+    if (arr[j] <= pivot) {
+      i++;
+      [arr[i], arr[j]] = [arr[j], arr[i]];
     }
-    
-    // Optimization: stop if no swaps
-    if (!swapped) break;
   }
   
-  return arr;
+  [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
+  return i + 1;
 }</code></pre>
         </div>
       </div>
@@ -115,7 +118,7 @@ function bubbleSort(arr) {
       <div class="card p-6">
         <h2 class="section-title">How It Works</h2>
         <p class="text-gray-700 leading-relaxed">
-          Bubble Sort repeatedly steps through the array, compares adjacent elements, and swaps them if they're in the wrong order. The largest elements "bubble" to the end with each pass through the array.
+          Quick Sort uses a divide-and-conquer strategy. It selects a 'pivot' element and partitions the array so that elements smaller than the pivot come before it, and elements greater come after. This process is recursively applied to sub-arrays.
         </p>
       </div>
       
@@ -124,15 +127,15 @@ function bubbleSort(arr) {
         <ul class="space-y-2 text-gray-700">
           <li class="flex items-start">
             <span class="text-blue-600 mr-2">•</span>
-            <span><strong>Stable:</strong> Equal elements maintain relative order</span>
+            <span><strong>Unstable:</strong> Equal elements may change relative order</span>
           </li>
           <li class="flex items-start">
             <span class="text-blue-600 mr-2">•</span>
-            <span><strong>In-place:</strong> Sorts with O(1) extra space</span>
+            <span><strong>In-place:</strong> Sorts with O(log n) extra space</span>
           </li>
           <li class="flex items-start">
             <span class="text-blue-600 mr-2">•</span>
-            <span><strong>Adaptive:</strong> Performs better on partially sorted data</span>
+            <span><strong>Divide & Conquer:</strong> Recursively partitions the array</span>
           </li>
         </ul>
       </div>
@@ -142,15 +145,15 @@ function bubbleSort(arr) {
       <h2 class="section-title">Time & Space Complexity</h2>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div>
-          <h3 class="text-lg font-semibold mb-4 text-gray-800">Bubble Sort Analysis</h3>
+          <h3 class="text-lg font-semibold mb-4 text-gray-800">Quick Sort Analysis</h3>
           <div class="space-y-3">
             <div class="flex justify-between items-center py-2 border-b border-gray-100">
               <span class="font-medium text-gray-700">Best Case:</span>
-              <span class="mono text-green-600 font-semibold">O(n)</span>
+              <span class="mono text-green-600 font-semibold">O(n log n)</span>
             </div>
             <div class="flex justify-between items-center py-2 border-b border-gray-100">
               <span class="font-medium text-gray-700">Average Case:</span>
-              <span class="mono text-yellow-600 font-semibold">O(n²)</span>
+              <span class="mono text-yellow-600 font-semibold">O(n log n)</span>
             </div>
             <div class="flex justify-between items-center py-2 border-b border-gray-100">
               <span class="font-medium text-gray-700">Worst Case:</span>
@@ -158,7 +161,7 @@ function bubbleSort(arr) {
             </div>
             <div class="flex justify-between items-center py-2">
               <span class="font-medium text-gray-700">Space:</span>
-              <span class="mono text-blue-600 font-semibold">O(1)</span>
+              <span class="mono text-blue-600 font-semibold">O(log n)</span>
             </div>
           </div>
         </div>
@@ -171,8 +174,8 @@ function bubbleSort(arr) {
     </section>
 
     <section class="card p-6 text-center">
-      <a href="./insertion-sort.html" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium transition-colors">
-        Next: Insertion Sort 
+      <a href="./merge-sort.html" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium transition-colors">
+        Next: Merge Sort 
         <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
         </svg>
@@ -184,7 +187,7 @@ function bubbleSort(arr) {
   <script src="quiz.js"></script>
   
   <script>
-    // Bubble Sort Visualizer Logic
+    // Quick Sort Visualizer Logic
     const visualizer = document.getElementById("visualizer");
     const playBtn = document.getElementById("playBtn");
     const pauseBtn = document.getElementById("pauseBtn");
@@ -195,51 +198,148 @@ function bubbleSort(arr) {
     const timerDisplay = document.getElementById("timer");
     const comparisonsDisplay = document.getElementById("comparisons");
     const swapsDisplay = document.getElementById("swaps");
-    const passDisplay = document.getElementById("pass");
+    const depthDisplay = document.getElementById("depth");
 
-    let values = [], bars = [], i = 0, j = 0, comparisons = 0, swaps = 0, pass = 0;
+    let values = [], bars = [], originalValues = [];
+    let comparisons = 0, swaps = 0, maxDepth = 0, currentDepth = 0;
     let isPlaying = false, isPaused = false, isComplete = false;
     let startTime, elapsedTime = 0, timerInterval;
+    let sortingSteps = [], currentStep = 0;
 
     function updateStats() {
       comparisonsDisplay.innerText = comparisons;
       swapsDisplay.innerText = swaps;
-      passDisplay.innerText = pass;
+      depthDisplay.innerText = maxDepth;
     }
 
     function getOptimalArraySize() {
       const isMobile = window.innerWidth <= 768;
-      return isMobile ? 18 : 25;
+      return isMobile ? 15 : 20;
     }
 
     function generateBars(custom = null) {
       const arraySize = getOptimalArraySize();
-      values = custom || Array.from({ length: arraySize }, () => Math.floor(Math.random() * 90) + 10);
+      originalValues = custom || Array.from({ length: arraySize }, () => Math.floor(Math.random() * 90) + 10);
+      values = [...originalValues];
       
-      if (window.innerWidth <= 768 && values.length > 18) {
-        values = values.slice(0, 18);
+      if (window.innerWidth <= 768 && values.length > 15) {
+        values = values.slice(0, 15);
+        originalValues = [...values];
       }
       
       visualizer.innerHTML = "";
-      bars = values.map(value => {
+      bars = values.map((value, index) => {
         const bar = document.createElement("div");
         bar.classList.add("bar");
+        bar.dataset.index = index;
         const maxHeight = window.innerWidth <= 768 ? 220 : 260;
         const height = Math.min((value / 100) * maxHeight, maxHeight);
         bar.style.height = `${height}px`;
+        bar.style.position = "relative";
         visualizer.appendChild(bar);
         return bar;
       });
       
-      i = 0; j = 0; comparisons = 0; swaps = 0; pass = 0; elapsedTime = 0; isComplete = false;
+      comparisons = 0; swaps = 0; maxDepth = 0; currentDepth = 0; elapsedTime = 0;
+      isComplete = false; currentStep = 0; sortingSteps = [];
       timerDisplay.innerText = "0.00s";
       updateStats();
+      
+      // Generate sorting steps
+      generateQuickSortSteps();
       
       playBtn.disabled = false;
       playBtn.textContent = "Play";
       pauseBtn.textContent = "Pause";
       isPaused = false;
       isPlaying = false;
+    }
+
+    function generateQuickSortSteps() {
+      const arr = [...values];
+      sortingSteps = [];
+      
+      function quickSortSteps(arr, low, high, depth = 0) {
+        if (low < high) {
+          maxDepth = Math.max(maxDepth, depth);
+          
+          // Partition step
+          const pivotIndex = partitionSteps(arr, low, high, depth);
+          
+          // Recursive calls
+          quickSortSteps(arr, low, pivotIndex - 1, depth + 1);
+          quickSortSteps(arr, pivotIndex + 1, high, depth + 1);
+        }
+      }
+      
+      function partitionSteps(arr, low, high, depth) {
+        const pivot = arr[high];
+        let i = low - 1;
+        
+        // Mark pivot
+        sortingSteps.push({
+          type: 'pivot',
+          pivot: high,
+          low: low,
+          high: high,
+          depth: depth,
+          array: [...arr]
+        });
+        
+        for (let j = low; j < high; j++) {
+          // Compare step
+          sortingSteps.push({
+            type: 'compare',
+            comparing: [j, high],
+            i: i,
+            j: j,
+            pivot: high,
+            low: low,
+            high: high,
+            depth: depth,
+            array: [...arr]
+          });
+          
+          if (arr[j] <= pivot) {
+            i++;
+            if (i !== j) {
+              // Swap step
+              [arr[i], arr[j]] = [arr[j], arr[i]];
+              sortingSteps.push({
+                type: 'swap',
+                swapping: [i, j],
+                pivot: high,
+                low: low,
+                high: high,
+                depth: depth,
+                array: [...arr]
+              });
+            }
+          }
+        }
+        
+        // Final pivot swap
+        [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
+        sortingSteps.push({
+          type: 'pivot_final',
+          swapping: [i + 1, high],
+          pivotIndex: i + 1,
+          low: low,
+          high: high,
+          depth: depth,
+          array: [...arr]
+        });
+        
+        return i + 1;
+      }
+      
+      quickSortSteps(arr, 0, arr.length - 1);
+      
+      // Add completion step
+      sortingSteps.push({
+        type: 'complete',
+        array: [...arr]
+      });
     }
 
     function startTimer() {
@@ -255,59 +355,83 @@ function bubbleSort(arr) {
 
     function resetBarColors() {
       bars.forEach(bar => {
-        bar.classList.remove('comparing', 'sorted');
+        bar.classList.remove('comparing', 'sorted', 'pivot', 'swapping');
+        bar.style.backgroundColor = '';
       });
     }
 
+    function updateVisualization(step) {
+      resetBarColors();
+      
+      // Update bar heights based on current array state
+      step.array.forEach((value, index) => {
+        const maxHeight = window.innerWidth <= 768 ? 220 : 260;
+        const height = Math.min((value / 100) * maxHeight, maxHeight);
+        bars[index].style.height = `${height}px`;
+      });
+      
+      switch (step.type) {
+        case 'pivot':
+          bars[step.pivot].classList.add('pivot');
+          if (step.low !== undefined && step.high !== undefined) {
+            for (let i = step.low; i <= step.high; i++) {
+              if (i !== step.pivot) {
+                bars[i].style.backgroundColor = 'rgba(59, 130, 246, 0.2)';
+              }
+            }
+          }
+          break;
+          
+        case 'compare':
+          step.comparing.forEach(index => {
+            bars[index].classList.add('comparing');
+          });
+          comparisons++;
+          break;
+          
+        case 'swap':
+        case 'pivot_final':
+          step.swapping.forEach(index => {
+            bars[index].classList.add('swapping');
+          });
+          swaps++;
+          break;
+          
+        case 'complete':
+          bars.forEach(bar => bar.classList.add('sorted'));
+          break;
+      }
+      
+      if (step.depth !== undefined) {
+        maxDepth = Math.max(maxDepth, step.depth);
+      }
+      
+      updateStats();
+    }
+
     async function sortStep() {
-      if (i >= values.length - 1) {
+      if (currentStep >= sortingSteps.length) {
         isComplete = true;
         clearInterval(timerInterval);
+        resetBarColors();
         bars.forEach(bar => bar.classList.add('sorted'));
         playBtn.textContent = "Complete";
         playBtn.disabled = true;
         return;
       }
 
-      comparisons++;
+      const step = sortingSteps[currentStep];
+      updateVisualization(step);
       
-      resetBarColors();
-      
-      if (j < values.length - i - 1) {
-        bars[j].classList.add('comparing');
-        bars[j + 1].classList.add('comparing');
-      }
-
-      if (j < values.length - i - 1 && values[j] > values[j + 1]) {
-        swaps++;
-        [values[j], values[j + 1]] = [values[j + 1], values[j]];
-        
-        const maxHeight = window.innerWidth <= 768 ? 220 : 260;
-        bars[j].style.height = `${Math.min((values[j] / 100) * maxHeight, maxHeight)}px`;
-        bars[j + 1].style.height = `${Math.min((values[j + 1] / 100) * maxHeight, maxHeight)}px`;
-      }
-
-      const delay = window.innerWidth <= 768 ? 200 : 150;
+      const delay = window.innerWidth <= 768 ? 300 : 200;
       await new Promise(r => setTimeout(r, delay));
       
-      if (j < values.length - i - 1) {
-        bars[j].classList.remove('comparing');
-        bars[j + 1].classList.remove('comparing');
-      }
-
-      j++;
-      if (j >= values.length - i - 1) {
-        bars[values.length - i - 1].classList.add('sorted');
-        j = 0;
-        i++;
-        pass++;
-      }
-      updateStats();
+      currentStep++;
     }
 
-    async function bubbleSortLoop() {
+    async function quickSortLoop() {
       startTimer();
-      while (i < values.length - 1 && isPlaying && !isPaused && !isComplete) {
+      while (currentStep < sortingSteps.length && isPlaying && !isPaused && !isComplete) {
         await sortStep();
       }
       if (isComplete) {
@@ -320,7 +444,7 @@ function bubbleSort(arr) {
         isPlaying = true;
         isPaused = false;
         playBtn.textContent = "Playing...";
-        bubbleSortLoop();
+        quickSortLoop();
       }
     };
 
@@ -329,7 +453,7 @@ function bubbleSort(arr) {
       
       isPaused = !isPaused;
       if (!isPaused && isPlaying) {
-        bubbleSortLoop();
+        quickSortLoop();
         pauseBtn.textContent = "Pause";
         playBtn.textContent = "Playing...";
       } else {
@@ -353,7 +477,7 @@ function bubbleSort(arr) {
       isPlaying = false;
       isComplete = false;
       clearInterval(timerInterval);
-      generateBars();
+      generateBars(originalValues);
     };
 
     loadCustom.onclick = () => {
@@ -363,7 +487,7 @@ function bubbleSort(arr) {
         .map(n => Math.min(n, 100));
       
       if (nums.length > 1) {
-        const maxSize = window.innerWidth <= 768 ? 18 : 35;
+        const maxSize = window.innerWidth <= 768 ? 15 : 25;
         const limitedNums = nums.slice(0, maxSize);
         generateBars(limitedNums);
         input.value = '';
@@ -373,7 +497,7 @@ function bubbleSort(arr) {
     };
 
     window.addEventListener('resize', () => {
-      generateBars(values);
+      generateBars(originalValues);
     });
 
     input.addEventListener('keypress', (e) => {
@@ -385,46 +509,46 @@ function bubbleSort(arr) {
     // Initialize the visualizer
     generateBars();
 
-    // Quiz Data for Bubble Sort
-    const bubbleSortQuizData = [
+    // Quiz Data for Quick Sort
+    const quickSortQuizData = [
       {
-        question: "What is the best-case time complexity of Bubble Sort?",
+        question: "What is the average-case time complexity of Quick Sort?",
         options: ["O(n²)", "O(n log n)", "O(n)", "O(log n)"],
-        answer: "O(n)",
-        explanation: "Best case occurs when the array is already sorted and the optimized version makes only one pass."
+        answer: "O(n log n)",
+        explanation: "On average, Quick Sort divides the array into roughly equal parts, leading to O(n log n) time complexity."
       },
       {
-        question: "What makes Bubble Sort stable?",
+        question: "What causes Quick Sort's worst-case performance?",
         options: [
-          "It uses constant extra space",
-          "Equal elements maintain their relative order", 
-          "It always runs in O(n²) time",
-          "It's an in-place algorithm"
+          "When the array contains duplicates",
+          "When the pivot is always the smallest or largest element", 
+          "When the array is randomly ordered",
+          "When the array size is too large"
         ],
-        answer: "Equal elements maintain their relative order",
-        explanation: "Bubble Sort only swaps adjacent elements when the left element is strictly greater than the right, preserving the relative order of equal elements."
+        answer: "When the pivot is always the smallest or largest element",
+        explanation: "Worst case occurs when the pivot consistently results in highly unbalanced partitions, such as when the array is already sorted and we always choose the first or last element as pivot."
       },
       {
-        question: "What is the space complexity of Bubble Sort?",
+        question: "What is the space complexity of Quick Sort?",
         options: ["O(n)", "O(n²)", "O(log n)", "O(1)"],
-        answer: "O(1)",
-        explanation: "Bubble Sort is an in-place algorithm that only uses a constant amount of extra space for temporary variables."
+        answer: "O(log n)",
+        explanation: "Quick Sort uses O(log n) space on average due to the recursive call stack, though in the worst case it can be O(n)."
       },
       {
-        question: "In which scenario does Bubble Sort perform worst?",
+        question: "Which pivot selection strategy helps avoid worst-case performance?",
         options: [
-          "When the array is already sorted",
-          "When the array is reverse sorted",
-          "When the array has duplicate elements",
-          "When the array is randomly ordered"
+          "Always choose the first element",
+          "Always choose the last element",
+          "Choose the median-of-three",
+          "Choose a random element"
         ],
-        answer: "When the array is reverse sorted",
-        explanation: "Worst case occurs when the array is sorted in reverse order, requiring maximum comparisons and swaps."
+        answer: "Choose the median-of-three",
+        explanation: "Median-of-three (choosing the median of first, middle, and last elements) helps avoid worst-case scenarios and generally provides better performance than fixed pivot selection."
       }
     ];
 
     // Initialize the quiz
-    AlgorithmQuiz.create('quiz-container', bubbleSortQuizData);
+    AlgorithmQuiz.create('quiz-container', quickSortQuizData);
   </script>
 </body>
 </html>
