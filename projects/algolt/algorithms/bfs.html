@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Breadth First Search | Algolt</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.css" />
+  <link rel="stylesheet" href="algorithm.css" />
+</head>
+<body>
+  <nav class="navbar sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center space-x-8">
+          <a href="../index.html" class="navbar-link text-sm font-medium text-gray-900 hover:text-blue-600">JH</a>
+          <a href="../../algolt/index.html" class="navbar-link far-link text-sm font-medium text-gray-900 hover:text-blue-600">Home</a>
+        </div>
+        <div class="flex items-center">
+          <span class="text-sm font-medium text-gray-600">Breadth First Search</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="px-4 md:px-6 py-12 border-b border-gray-200 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+        Breadth First Search Visualizer
+      </h1>
+      <p class="text-lg text-gray-600 max-w-2xl">
+        Interactive visualization of the breadth-first search algorithm with step-by-step graph traversal and queue operations.
+      </p>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto p-4 md:p-6 space-y-12">
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2 space-y-6">
+        <div class="visualizer-card card p-6">
+          <canvas id="graphCanvas" width="800" height="400" class="w-full h-auto border border-gray-200 rounded-lg bg-white"></canvas>
+        </div>
+
+    <div class="card p-6">
+      <div class="control-buttons flex flex-wrap gap-3 mb-6">
+        <button id="playBtn" class="btn btn-primary px-6 py-3">Play</button>
+        <button id="pauseBtn" class="btn btn-primary px-6 py-3">Pause</button>
+        <button id="stepBtn" class="btn btn-primary px-6 py-3">Step</button>
+        <button id="resetBtn" class="btn btn-secondary px-6 py-3">Reset</button>
+        <button id="newGraphBtn" class="btn btn-secondary px-6 py-3">New Graph</button>
+      </div>
+      
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-label">Timer</div>
+          <div id="timer" class="stat-value mono">0.00s</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Nodes Visited</div>
+          <div id="nodesVisited" class="stat-value mono">0</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Queue Size</div>
+          <div id="queueSize" class="stat-value mono">0</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Current Node</div>
+          <div id="currentNode" class="stat-value mono">-</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card p-6">
+      <h3 class="text-lg font-semibold mb-3">Queue State</h3>
+      <div id="queueVisualization" class="flex flex-wrap gap-2 p-4 bg-gray-50 rounded-lg min-h-[60px] items-center">
+        <span class="text-gray-500">Queue will appear here during traversal</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="lg:col-span-1">
+    <div class="code-block h-full">
+      <pre><code class="language-js">// Breadth First Search Algorithm
+
+function BFS(graph, startNode) {
+const visited = new Set();
+const queue = [startNode];
+const result = [];
+
+visited.add(startNode);
+
+while (queue.length > 0) {
+const current = queue.shift();
+result.push(current);
+
+// Visit all neighbors
+for (const neighbor of graph[current]) {
+  if (!visited.has(neighbor)) {
+    visited.add(neighbor);
+    queue.push(neighbor);
+  }
+}
+
+}
+
+return result;
+}</code></pre>
+</div>
+</div>
+</section>
+
+<section class="card p-6">
+  <h2 class="section-title">Graph Controls</h2>
+  <p class="text-gray-600 mb-4">Click on any node to start BFS from that position, or generate a new random graph.</p>
+  <div class="flex flex-col sm:flex-row gap-3">
+    <div class="input-group flex-1">
+      <label class="block text-sm font-medium text-gray-700 mb-2">Start Node (0-based index):</label>
+      <input id="startNodeInput" type="number" min="0" max="9" value="0" class="input-field" />
+    </div>
+    <div class="flex items-end">
+      <button id="setStartNode" class="btn btn-primary px-6 py-3 whitespace-nowrap">Set Start</button>
+    </div>
+  </div>
+</section>
+
+<section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+  <div class="card p-6">
+    <h2 class="section-title">How It Works</h2>
+    <p class="text-gray-700 leading-relaxed">
+      BFS explores nodes level by level, visiting all nodes at distance 1 before moving to distance 2, and so on. It uses a queue to maintain the order of exploration, ensuring the shortest path in unweighted graphs.
+    </p>
+  </div>
+  
+  <div class="card p-6">
+    <h2 class="section-title">Key Characteristics</h2>
+    <ul class="space-y-2 text-gray-700">
+      <li class="flex items-start">
+        <span class="text-blue-600 mr-2">•</span>
+        <span><strong>Complete:</strong> Finds a solution if one exists</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-blue-600 mr-2">•</span>
+        <span><strong>Optimal:</strong> Finds shortest path in unweighted graphs</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-blue-600 mr-2">•</span>
+        <span><strong>Queue-based:</strong> Uses FIFO data structure</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section class="card p-6">
+  <h2 class="section-title">Time & Space Complexity</h2>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div>
+      <h3 class="text-lg font-semibold mb-4 text-gray-800">BFS Analysis</h3>
+      <div class="space-y-3">
+        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+          <span class="font-medium text-gray-700">Time Complexity:</span>
+          <span class="mono text-blue-600 font-semibold">O(V + E)</span>
+        </div>
+        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+          <span class="font-medium text-gray-700">Space Complexity:</span>
+          <span class="mono text-blue-600 font-semibold">O(V)</span>
+        </div>
+        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+          <span class="font-medium text-gray-700">V (Vertices):</span>
+          <span class="mono text-gray-600 font-semibold">Number of nodes</span>
+        </div>
+        <div class="flex justify-between items-center py-2">
+          <span class="font-medium text-gray-700">E (Edges):</span>
+          <span class="mono text-gray-600 font-semibold">Number of connections</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3 class="text-lg font-semibold mb-4 text-gray-800">Use Cases</h3>
+      <ul class="space-y-2 text-gray-700">
+        <li class="flex items-start">
+          <span class="text-green-600 mr-2">✓</span>
+          <span>Shortest path in unweighted graphs</span>
+        </li>
+        <li class="flex items-start">
+          <span class="text-green-600 mr-2">✓</span>
+          <span>Level-order tree traversal</span>
+        </li>
+        <li class="flex items-start">
+          <span class="text-green-600 mr-2">✓</span>
+          <span>Finding connected components</span>
+        </li>
+        <li class="flex items-start">
+          <span class="text-green-600 mr-2">✓</span>
+          <span>Web crawling algorithms</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="quiz-card" id="quiz-section">
+  <h2 class="section-title">Test Your Knowledge</h2>
+  <div id="quiz-container"></div>
+</section>
+
+<section class="card p-6 text-center">
+  <a href="./depth-first-search.html" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium transition-colors">
+    Next: Depth First Search 
+    <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+    </svg>
+  </a>
+</section>
+
+  </main>
+
+  <!-- Include the external quiz system -->
+
+  <script src="quiz.js"></script>
+
+  <script>
+    // BFS Visualizer Logic
+    const canvas = document.getElementById("graphCanvas");
+    const ctx = canvas.getContext('2d');
+    const playBtn = document.getElementById("playBtn");
+    const pauseBtn = document.getElementById("pauseBtn");
+    const stepBtn = document.getElementById("stepBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const newGraphBtn = document.getElementById("newGraphBtn");
+    const setStartNodeBtn = document.getElementById("setStartNode");
+    const startNodeInput = document.getElementById("startNodeInput");
+    const timerDisplay = document.getElementById("timer");
+    const nodesVisitedDisplay = document.getElementById("nodesVisited");
+    const queueSizeDisplay = document.getElementById("queueSize");
+    const currentNodeDisplay = document.getElementById("currentNode");
+    const queueVisualization = document.getElementById("queueVisualization");
+
+    let graph = {}, nodes = [], edges = [], visited = new Set(), queue = [], 
+        currentNode = null, startNode = 0, nodesVisited = 0, stepIndex = 0;
+    let isPlaying = false, isPaused = false, isComplete = false;
+    let startTime, elapsedTime = 0, timerInterval;
+
+    // Graph generation and drawing
+    function generateRandomGraph() {
+      nodes = [];
+      edges = [];
+      graph = {};
+      
+      const numNodes = 8;
+      const canvasWidth = canvas.width;
+      const canvasHeight = canvas.height;
+      const padding = 60;
+      
+      // Generate nodes in a circular layout
+      for (let i = 0; i < numNodes; i++) {
+        const angle = (i / numNodes) * 2 * Math.PI;
+        const centerX = canvasWidth / 2;
+        const centerY = canvasHeight / 2;
+        const radius = Math.min(canvasWidth, canvasHeight) / 3;
+        
+        nodes.push({
+          id: i,
+          x: centerX + radius * Math.cos(angle),
+          y: centerY + radius * Math.sin(angle),
+          visited: false,
+          current: false,
+          inQueue: false
+        });
+        graph[i] = [];
+      }
+      
+      // Generate random edges (ensure connectivity)
+      const edgeCount = Math.floor(Math.random() * 5) + numNodes;
+      const edgeSet = new Set();
+      
+      // Ensure the graph is connected by creating a spanning tree
+      for (let i = 1; i < numNodes; i++) {
+        const parent = Math.floor(Math.random() * i);
+        addEdge(parent, i, edgeSet);
+      }
+      
+      // Add additional random edges
+      while (edges.length < edgeCount) {
+        const from = Math.floor(Math.random() * numNodes);
+        const to = Math.floor(Math.random() * numNodes);
+        if (from !== to) {
+          addEdge(from, to, edgeSet);
+        }
+      }
+      
+      startNodeInput.max = numNodes - 1;
+    }
+    
+    function addEdge(from, to, edgeSet) {
+      const edgeKey = `${Math.min(from, to)}-${Math.max(from, to)}`;
+      if (!edgeSet.has(edgeKey)) {
+        edgeSet.add(edgeKey);
+        edges.push({ from, to });
+        graph[from].push(to);
+        graph[to].push(from);
+      }
+    }
+
+    function drawGraph() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw edges
+      ctx.strokeStyle = '#e5e7eb';
+      ctx.lineWidth = 2;
+      edges.forEach(edge => {
+        const fromNode = nodes[edge.from];
+        const toNode = nodes[edge.to];
+        
+        ctx.beginPath();
+        ctx.moveTo(fromNode.x, fromNode.y);
+        ctx.lineTo(toNode.x, toNode.y);
+        ctx.stroke();
+      });
+      
+      // Draw nodes
+      nodes.forEach(node => {
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, 25, 0, 2 * Math.PI);
+        
+        if (node.current) {
+          ctx.fillStyle = '#dc2626'; // Red for current
+        } else if (node.visited) {
+          ctx.fillStyle = '#059669'; // Green for visited
+        } else if (node.inQueue) {
+          ctx.fillStyle = '#2563eb'; // Blue for in queue
+        } else {
+          ctx.fillStyle = '#f3f4f6'; // Gray for unvisited
+        }
+        
+        ctx.fill();
+        ctx.strokeStyle = '#374151';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        
+        // Draw node label
+        ctx.fillStyle = node.visited || node.current || node.inQueue ? '#ffffff' : '#374151';
+        ctx.font = 'bold 16px Inter';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(node.id.toString(), node.x, node.y);
+      });
+      
+      // Draw start node indicator
+      if (startNode < nodes.length) {
+        const node = nodes[startNode];
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, 35, 0, 2 * Math.PI);
+        ctx.strokeStyle = '#059669';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      }
+    }
+
+    function updateQueueVisualization() {
+      queueVisualization.innerHTML = '';
+      
+      if (queue.length === 0) {
+        queueVisualization.innerHTML = '<span class="text-gray-500">Queue is empty</span>';
+        return;
+      }
+      
+      queue.forEach((nodeId, index) => {
+        const queueItem = document.createElement('div');
+        queueItem.className = 'px-3 py-2 bg-blue-100 text-blue-800 rounded-lg font-mono font-semibold';
+        queueItem.textContent = nodeId;
+        queueVisualization.appendChild(queueItem);
+        
+        if (index < queue.length - 1) {
+          const arrow = document.createElement('span');
+          arrow.className = 'text-gray-400';
+          arrow.textContent = '→';
+          queueVisualization.appendChild(arrow);
+        }
+      });
+    }
+
+    function updateStats() {
+      nodesVisitedDisplay.innerText = nodesVisited;
+      queueSizeDisplay.innerText = queue.length;
+      currentNodeDisplay.innerText = currentNode !== null ? currentNode : '-';
+      updateQueueVisualization();
+    }
+
+    function startTimer() {
+      startTime = Date.now() - elapsedTime * 1000;
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if (!isPaused) {
+          elapsedTime = (Date.now() - startTime) / 1000;
+          timerDisplay.innerText = `${elapsedTime.toFixed(2)}s`;
+        }
+      }, 10);
+    }
+
+    function resetVisualization() {
+      visited.clear();
+      queue = [];
+      currentNode = null;
+      nodesVisited = 0;
+      stepIndex = 0;
+      elapsedTime = 0;
+      isComplete = false;
+      isPaused = false;
+      isPlaying = false;
+      
+      nodes.forEach(node => {
+        node.visited = false;
+        node.current = false;
+        node.inQueue = false;
+      });
+      
+      clearInterval(timerInterval);
+      timerDisplay.innerText = "0.00s";
+      updateStats();
+      drawGraph();
+      
+      playBtn.disabled = false;
+      playBtn.textContent = "Play";
+      pauseBtn.textContent = "Pause";
+    }
+
+    async function bfsStep() {
+      if (stepIndex === 0) {
+        // Initialize BFS
+        queue.push(startNode);
+        visited.add(startNode);
+        nodes[startNode].inQueue = true;
+        stepIndex++;
+        updateStats();
+        drawGraph();
+        return;
+      }
+      
+      if (queue.length === 0) {
+        // BFS complete
+        isComplete = true;
+        clearInterval(timerInterval);
+        playBtn.textContent = "Complete";
+        playBtn.disabled = true;
+        
+        // Mark current node as no longer current
+        if (currentNode !== null) {
+          nodes[currentNode].current = false;
+        }
+        drawGraph();
+        return;
+      }
+      
+      // Process next node from queue
+      const nodeId = queue.shift();
+      currentNode = nodeId;
+      nodesVisited++;
+      
+      // Update node states
+      nodes[nodeId].inQueue = false;
+      nodes[nodeId].visited = true;
+      nodes[nodeId].current = true;
+      
+      // Clear previous current node
+      nodes.forEach((node, index) => {
+        if (index !== nodeId) {
+          node.current = false;
+        }
+      });
+      
+      // Add neighbors to queue
+      for (const neighbor of graph[nodeId]) {
+        if (!visited.has(neighbor)) {
+          visited.add(neighbor);
+          queue.push(neighbor);
+          nodes[neighbor].inQueue = true;
+        }
+      }
+      
+      updateStats();
+      drawGraph();
+    }
+
+    async function bfsLoop() {
+      startTimer();
+      while (!isComplete && isPlaying && !isPaused) {
+        await bfsStep();
+        await new Promise(r => setTimeout(r, 1000)); // 1 second delay
+      }
+      if (isComplete) {
+        clearInterval(timerInterval);
+      }
+    }
+
+    // Event handlers
+    playBtn.onclick = () => {
+      if (!isPlaying && !isComplete) {
+        isPlaying = true;
+        isPaused = false;
+        playBtn.textContent = "Playing...";
+        bfsLoop();
+      }
+    };
+
+    pauseBtn.onclick = () => {
+      if (isComplete) return;
+      
+      isPaused = !isPaused;
+      if (!isPaused && isPlaying) {
+        bfsLoop();
+        pauseBtn.textContent = "Pause";
+        playBtn.textContent = "Playing...";
+      } else {
+        pauseBtn.textContent = "Resume";
+        playBtn.textContent = "Play";
+      }
+    };
+
+    stepBtn.onclick = async () => {
+      if (!isComplete) {
+        isPlaying = false;
+        isPaused = true;
+        playBtn.textContent = "Play";
+        pauseBtn.textContent = "Pause";
+        await bfsStep();
+      }
+    };
+
+    resetBtn.onclick = () => {
+      resetVisualization();
+    };
+
+    newGraphBtn.onclick = () => {
+      generateRandomGraph();
+      resetVisualization();
+    };
+
+    setStartNodeBtn.onclick = () => {
+      const newStart = parseInt(startNodeInput.value);
+      if (newStart >= 0 && newStart < nodes.length) {
+        startNode = newStart;
+        resetVisualization();
+      }
+    };
+
+    // Canvas click handler
+    canvas.onclick = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+      const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+      
+      nodes.forEach((node, index) => {
+        const distance = Math.sqrt((x - node.x) ** 2 + (y - node.y) ** 2);
+        if (distance <= 25) {
+          startNode = index;
+          startNodeInput.value = index;
+          resetVisualization();
+        }
+      });
+    };
+
+    startNodeInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        setStartNodeBtn.click();
+      }
+    });
+
+    // Initialize
+    function resizeCanvas() {
+      const container = canvas.parentElement;
+      const rect = container.getBoundingClientRect();
+      canvas.style.width = '100%';
+      canvas.style.height = 'auto';
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    generateRandomGraph();
+    resetVisualization();
+
+    // Quiz Data for BFS
+    const bfsQuizData = [
+      {
+        question: "What data structure does BFS use to keep track of nodes to visit?",
+        options: ["Stack", "Queue", "Priority Queue", "Array"],
+        answer: "Queue",
+        explanation: "BFS uses a queue (FIFO) to ensure nodes are visited level by level, maintaining the breadth-first order."
+      },
+      {
+        question: "What is the time complexity of BFS for a graph with V vertices and E edges?",
+        options: ["O(V)", "O(E)", "O(V + E)", "O(V × E)"],
+        answer: "O(V + E)",
+        explanation: "BFS visits each vertex once (O(V)) and examines each edge once (O(E)), resulting in O(V + E) time complexity."
+      },
+      {
+        question: "In an unweighted graph, what does BFS guarantee?",
+        options: [
+          "It finds the longest path",
+          "It finds the shortest path",
+          "It visits nodes in alphabetical order",
+          "It uses minimal memory"
+        ],
+        answer: "It finds the shortest path",
+        explanation: "BFS explores nodes level by level, guaranteeing that the first time a node is reached, it's via the shortest path in an unweighted graph."
+      },
+      {
+        question: "What is the space complexity of BFS in the worst case?",
+        options: ["O(1)", "O(log V)", "O(V)", "O(V²)"],
+        answer: "O(V)",
+        explanation: "In the worst case, BFS might need to store all vertices in the queue (like in a complete graph), requiring O(V) space."
+      }
+    ];
+
+    // Initialize the quiz
+    AlgorithmQuiz.create('quiz-container', bfsQuizData);
+  </script>
+
+</body>
+</html>

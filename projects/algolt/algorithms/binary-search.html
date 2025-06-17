@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Binary Search | Algolt</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.css" />
+  <link rel="stylesheet" href="algorithm.css" />
+</head>
+<body>
+  <nav class="navbar sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center space-x-8">
+          <a href="../index.html" class="navbar-link text-sm font-medium text-gray-900 hover:text-blue-600">JH</a>
+          <a href="../../algolt/index.html" class="navbar-link far-link text-sm font-medium text-gray-900 hover:text-blue-600">Home</a>
+        </div>
+        <div class="flex items-center">
+          <span class="text-sm font-medium text-gray-600">Binary Search</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="px-4 md:px-6 py-12 border-b border-gray-200 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+        Binary Search Visualizer - Not Functional
+      </h1>
+      <p class="text-lg text-gray-600 max-w-2xl">
+        Interactive visualization of the binary search algorithm with step-by-step execution and performance metrics.
+      </p>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto p-4 md:p-6 space-y-12">
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2 space-y-6">
+        <div class="visualizer-card card p-6">
+          <div class="mb-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Sorted Array</h3>
+            <div id="arrayContainer" class="flex items-end justify-center min-h-[100px] overflow-x-auto p-2"></div>
+          </div>
+          <div class="mb-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Search Progress</h3>
+            <div id="searchInfo" class="bg-gray-50 p-4 rounded-lg">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                <div class="flex justify-between">
+                  <span class="font-medium">Left:</span>
+                  <span id="leftPointer" class="mono font-bold">-</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="font-medium">Mid:</span>
+                  <span id="midPointer" class="mono font-bold">-</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="font-medium">Right:</span>
+                  <span id="rightPointer" class="mono font-bold">-</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Result</h3>
+            <div id="result" class="bg-gray-50 p-4 rounded-lg text-center text-lg font-medium text-gray-600">
+              Ready to search...
+            </div>
+          </div>
+        </div>
+        
+        <div class="card p-6">
+          <div class="mb-6">
+            <div class="flex flex-col sm:flex-row gap-3 mb-4">
+              <div class="input-group flex-1">
+                <input id="targetInput" class="input-field" type="number" placeholder="Enter target value to search for" />
+              </div>
+              <button id="setTargetBtn" class="btn btn-primary px-6 py-3 whitespace-nowrap">Set Target</button>
+            </div>
+            <div class="flex flex-wrap gap-3">
+              <button id="playBtn" class="btn btn-primary px-6 py-3">Play</button>
+              <button id="pauseBtn" class="btn btn-primary px-6 py-3">Pause</button>
+              <button id="stepBtn" class="btn btn-primary px-6 py-3">Step</button>
+              <button id="resetBtn" class="btn btn-secondary px-6 py-3">Reset</button>
+            </div>
+          </div>
+          
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-label">Timer</div>
+              <div id="timer" class="stat-value mono">0.00s</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Comparisons</div>
+              <div id="comparisons" class="stat-value mono">0</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Target</div>
+              <div id="currentTarget" class="stat-value mono">-</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Phase</div>
+              <div id="phase" class="stat-value mono">Setup</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="lg:col-span-1">
+        <div class="code-block h-full">
+          <pre><code class="language-js">// Binary Search Algorithm
+function binarySearch(arr, target) {
+  let left = 0;
+  let right = arr.length - 1;
+  
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    
+    if (arr[mid] === target) {
+      return mid; // Found target
+    } else if (arr[mid] < target) {
+      left = mid + 1; // Search right half
+    } else {
+      right = mid - 1; // Search left half
+    }
+  }
+  
+  return -1; // Target not found
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="card p-6">
+      <h2 class="section-title">Custom Input</h2>
+      <p class="text-gray-600 mb-4">Enter your own sorted array of numbers to visualize the search process.</p>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <div class="input-group flex-1">
+          <input id="customInput" class="input-field" placeholder="Enter comma-separated numbers (e.g. 1,3,5,7,9,12,15,18,20)" />
+        </div>
+        <button id="loadCustom" class="btn btn-primary px-6 py-3 whitespace-nowrap">Load Array</button>
+      </div>
+      <p class="text-sm text-yellow-600 mt-2">
+        <strong>Note:</strong> Array must be sorted in ascending order for binary search to work correctly.
+      </p>
+    </section>
+
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="card p-6">
+        <h2 class="section-title">How It Works</h2>
+        <p class="text-gray-700 leading-relaxed">
+          Binary Search efficiently finds a target value in a sorted array by repeatedly dividing the search interval in half. If the target is less than the middle element, it searches the left half; otherwise, it searches the right half.
+        </p>
+      </div>
+      
+      <div class="card p-6">
+        <h2 class="section-title">Key Characteristics</h2>
+        <ul class="space-y-2 text-gray-700">
+          <li class="flex items-start">
+            <span class="text-blue-600 mr-2">•</span>
+            <span><strong>Prerequisite:</strong> Array must be sorted</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-blue-600 mr-2">•</span>
+            <span><strong>Divide & Conquer:</strong> Eliminates half the search space each iteration</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-blue-600 mr-2">•</span>
+            <span><strong>Space Efficient:</strong> Uses O(1) extra space (iterative version)</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+    
+    <section class="card p-6">
+      <h2 class="section-title">Time & Space Complexity</h2>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <h3 class="text-lg font-semibold mb-4 text-gray-800">Binary Search Analysis</h3>
+          <div class="space-y-3">
+            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+              <span class="font-medium text-gray-700">Best Case:</span>
+              <span class="mono text-green-600 font-semibold">O(1)</span>
+            </div>
+            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+              <span class="font-medium text-gray-700">Average Case:</span>
+              <span class="mono text-yellow-600 font-semibold">O(log n)</span>
+            </div>
+            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+              <span class="font-medium text-gray-700">Worst Case:</span>
+              <span class="mono text-red-600 font-semibold">O(log n)</span>
+            </div>
+            <div class="flex justify-between items-center py-2">
+              <span class="font-medium text-gray-700">Space:</span>
+              <span class="mono text-blue-600 font-semibold">O(1)</span>
+            </div>
+          </div>
+          <p class="text-sm text-gray-600 mt-4">
+            <em>n = number of elements in array</em>
+          </p>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4 text-gray-800">Search Scenarios</h3>
+          <div class="space-y-3">
+            <div class="p-3 bg-green-50 rounded-lg">
+              <div class="font-medium text-green-800">Best Case</div>
+              <div class="text-sm text-green-600">Target is the middle element</div>
+            </div>
+            <div class="p-3 bg-yellow-50 rounded-lg">
+              <div class="font-medium text-yellow-800">Average Case</div>
+              <div class="text-sm text-yellow-600">Target requires log₂(n) comparisons</div>
+            </div>
+            <div class="p-3 bg-red-50 rounded-lg">
+              <div class="font-medium text-red-800">Worst Case</div>
+              <div class="text-sm text-red-600">Target at the ends or not found</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="quiz-card" id="quiz-section">
+      <h2 class="section-title">Test Your Knowledge</h2>
+      <div id="quiz-container"></div>
+    </section>
+
+    <section class="card p-6 text-center">
+      <a href="./linear-search.html" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium transition-colors">
+        Compare: Linear Search 
+        <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </a>
+    </section>
+  </main>
+
+  <!-- Include the external quiz system -->
+  <script src="quiz.js"></script>
+  
+  <script>
+    // Binary Search Visualizer Logic
+    const arrayContainer = document.getElementById("arrayContainer");
+    const playBtn = document.getElementById("playBtn");
+    const pauseBtn = document.getElementById("pauseBtn");
+    const stepBtn = document.getElementById("stepBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const setTargetBtn = document.getElementById("setTargetBtn");
+    const loadCustom = document.getElementById("loadCustom");
+    const targetInput = document.getElementById("targetInput");
+    const customInput = document.getElementById("customInput");
+    const timerDisplay = document.getElementById("timer");
+    const comparisonsDisplay = document.getElementById("comparisons");
+    const currentTargetDisplay = document.getElementById("currentTarget");
+    const phaseDisplay = document.getElementById("phase");
+    const leftPointerDisplay = document.getElementById("leftPointer");
+    const midPointerDisplay = document.getElementById("midPointer");
+    const rightPointerDisplay = document.getElementById("rightPointer");
+    const resultDisplay = document.getElementById("result");
+
+    let values = [], originalValues = [];
+    let target = null, left = 0, right = 0, mid = 0;
+    let currentStep = 0, comparisons = 0;
+    let isPlaying = false, isPaused = false, isComplete = false, hasTarget = false;
+    let startTime, elapsedTime = 0, timerInterval;
+    let searchResult = -1;
+
+    const phases = ['Setup', 'Searching', 'Found', 'Not Found'];
+
+    function updateStats() {
+      comparisonsDisplay.innerText = comparisons;
+      currentTargetDisplay.innerText = target !== null ? target : '-';
+      leftPointerDisplay.innerText = hasTarget ? left : '-';
+      midPointerDisplay.innerText = hasTarget ? mid : '-';
+      rightPointerDisplay.innerText = hasTarget ? right : '-';
+      
+      let phase = 'Setup';
+      if (hasTarget && !isComplete) phase = 'Searching';
+      else if (isComplete && searchResult !== -1) phase = 'Found';
+      else if (isComplete && searchResult === -1) phase = 'Not Found';
+      
+      phaseDisplay.innerText = phase;
+    }
+
+    function getOptimalArraySize() {
+      const isMobile = window.innerWidth <= 768;
+      return isMobile ? 12 : 16;
+    }
+
+    function createBar(value, index, container) {
+      const bar = document.createElement("div");
+      bar.classList.add("bar");
+      bar.style.backgroundColor = "#3b82f6";
+      bar.style.margin = "0 1px";
+      bar.style.position = "relative";
+      bar.style.borderRadius = "3px";
+      bar.style.minWidth = "24px";
+      bar.style.display = "flex";
+      bar.style.flexDirection = "column";
+      bar.style.alignItems = "center";
+      bar.style.justifyContent = "end";
+      bar.style.transition = "all 0.3s ease";
+      
+      const maxHeight = 60;
+      const height = Math.max((value / Math.max(...values)) * maxHeight, 20);
+      bar.style.height = `${height}px`;
+      
+      // Add value label
+      const label = document.createElement("span");
+      label.textContent = value;
+      label.style.fontSize = "12px";
+      label.style.color = "white";
+      label.style.fontWeight = "bold";
+      label.style.position = "absolute";
+      label.style.bottom = "4px";
+      bar.appendChild(label);
+      
+      // Add index label
+      const indexLabel = document.createElement("span");
+      indexLabel.textContent = index;
+      indexLabel.style.fontSize = "10px";
+      indexLabel.style.color = "#6b7280";
+      indexLabel.style.fontWeight = "bold";
+      indexLabel.style.position = "absolute";
+      indexLabel.style.top = "-20px";
+      bar.appendChild(indexLabel);
+      
+      container.appendChild(bar);
+      return bar;
+    }
+
+    function generateBars(custom = null) {
+      const arraySize = getOptimalArraySize();
+      
+      if (custom) {
+        originalValues = [...custom];
+      } else {
+        // Generate a sorted array
+        const randomValues = Array.from({ length: arraySize }, () => Math.floor(Math.random() * 99) + 1);
+        originalValues = randomValues.sort((a, b) => a - b);
+      }
+      
+      values = [...originalValues];
+      
+      // Clear containers
+      arrayContainer.innerHTML = "";
+      
+      // Create array visualization
+      values.forEach((value, index) => createBar(value, index, arrayContainer));
+      
+      // Reset state
+      resetSearch();
+      
+      playBtn.disabled = true;
+      updateStats();
+
+      
+    }
+
+    function resetSearch() {
+      currentStep = 0;
+      comparisons = 0;
+      left = 0;
+      right = values.length - 1;
+      mid = 0;
+      elapsedTime = 0;
+      isComplete = false;
+      hasTarget = false;
+      searchResult = -1;
+      timerDisplay.innerText = "0.00s";
+      resultDisplay.innerText = "Ready to search...";
+      resultDisplay.className = "bg-gray-50 p-4 rounded-lg text-center text-lg font-medium text-gray-600";
+      
+      playBtn.disabled = !hasTarget;
+      playBtn.textContent = "Play";
+      pauseBtn.textContent = "Pause";
+      isPaused = false;
+      isPlaying = false;
+      
+      clearHighlights();
+      updateStats();
+    }
+
+    function startTimer() {
+      startTime = Date.now() - elapsedTime * 1000;
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if (!isPaused) {
+          elapsedTime = (Date.now() - startTime) / 1000;
+          timerDisplay.innerText = `${elapsedTime.toFixed(2)}s`;
+        }
+      }, 10);
+    }
+
+    function highlightElement(index, className = 'comparing') {
+      const bars = arrayContainer.children;
+      if (bars[index]) {
+        bars[index].classList.add(className);
+        if (className === 'comparing') {
+          bars[index].style.backgroundColor = '#ef4444';
+        } else if (className === 'found') {
+          bars[index].style.backgroundColor = '#10b981';
+        } else if (className === 'left') {
+          bars[index].style.backgroundColor = '#8b5cf6';
+        } else if (className === 'right') {
+          bars[index].style.backgroundColor = '#f59e0b';
+        } else if (className === 'eliminated') {
+          bars[index].style.backgroundColor = '#9ca3af';
+          bars[index].style.opacity = '0.5';
+        }
+      }
+    }
+
+    function clearHighlights() {
+      const bars = arrayContainer.children;
+      Array.from(bars).forEach((bar, index) => {
+        bar.classList.remove('comparing', 'found', 'left', 'right', 'eliminated');
+        bar.style.backgroundColor = '#3b82f6';
+        bar.style.opacity = '1';
+      });
+    }
+
+    function highlightRange() {
+      clearHighlights();
+      
+      // Highlight eliminated ranges
+      for (let i = 0; i < left; i++) {
+        highlightElement(i, 'eliminated');
+      }
+      for (let i = right + 1; i < values.length; i++) {
+        highlightElement(i, 'eliminated');
+      }
+      
+      // Highlight current pointers
+      if (left <= right) {
+        highlightElement(left, 'left');
+        highlightElement(right, 'right');
+        highlightElement(mid, 'comparing');
+      }
+    }
+
+    async function searchStep() {
+      mid = Math.floor((left + right) / 2);
+      comparisons++;
+      
+      // Highlight current search range
+      highlightRange();
+      
+      await new Promise(r => setTimeout(r, 1000));
+      
+      if (values[mid] === target) {
+        // Found target
+        searchResult = mid;
+        isComplete = true;
+        clearInterval(timerInterval);
+        highlightElement(mid, 'found');
+        resultDisplay.innerText = `Target ${target} found at index ${mid}`;
+        resultDisplay.className = "bg-green-50 p-4 rounded-lg text-center text-lg font-medium text-green-600";
+        playBtn.textContent = "Found!";
+        playBtn.disabled = true;
+      } else if (values[mid] < target) {
+        // Search right half
+        left = mid + 1;
+        await new Promise(r => setTimeout(r, 500));
+      } else {
+        // Search left half
+        right = mid - 1;
+        await new Promise(r => setTimeout(r, 500));
+      }
+      
+      // Check if search is complete (target not found)
+      if (left > right && !isComplete) {
+        searchResult = -1;
+        isComplete = true;
+        clearInterval(timerInterval);
+        resultDisplay.innerText = `Target ${target} not found in array`;
+        resultDisplay.className = "bg-red-50 p-4 rounded-lg text-center text-lg font-medium text-red-600";
+        playBtn.textContent = "Not Found";
+        playBtn.disabled = true;
+        clearHighlights();
+      }
+      
+      updateStats();
+    }
+
+    async function searchLoop() {
+      startTimer();
+      while (!isComplete && isPlaying && !isPaused) {
+        if (left > right) {
+          // Handle not found case
+          searchResult = -1;
+          isComplete = true;
+          clearInterval(timerInterval);
+          resultDisplay.innerText = `Target ${target} not found in array`;
+          resultDisplay.className = "bg-red-50 p-4 rounded-lg text-center text-lg font-medium text-red-600";
+          playBtn.textContent = "Not Found";
+          playBtn.disabled = true;
+          clearHighlights();
+          updateStats();
+          break;
+        }
+        await searchStep();
+      }
+      if (isComplete) {
+        clearInterval(timerInterval);
+      }
+    }
+
+    setTargetBtn.onclick = () => {
+      const targetValue = parseInt(targetInput.value);
+      if (!isNaN(targetValue)) {
+        target = targetValue;
+        hasTarget = true;
+        resetSearch();
+        playBtn.disabled = false;
+        targetInput.value = '';
+        updateStats();
+      } else {
+        alert('Please enter a valid number to search for.');
+      }
+    };
+
+    playBtn.onclick = () => {
+      if (!isPlaying && !isComplete && hasTarget) {
+        isPlaying = true;
+        isPaused = false;
+        playBtn.textContent = "Searching...";
+        searchLoop();
+      }
+    };
+
+    pauseBtn.onclick = () => {
+      if (isComplete) return;
+      
+      isPaused = !isPaused;
+      if (!isPaused && isPlaying) {
+        searchLoop();
+        pauseBtn.textContent = "Pause";
+        playBtn.textContent = "Searching...";
+      } else {
+        pauseBtn.textContent = "Resume";
+        playBtn.textContent = "Play";
+      }
+    };
+
+    stepBtn.onclick = async () => {
+      if (!isComplete && hasTarget) {
+        isPlaying = false;
+        isPaused = true;
+        playBtn.textContent = "Play";
+        pauseBtn.textContent = "Pause";
+        await searchStep();
+      }
+    };
+
+    resetBtn.onclick = () => {
+      isPaused = true;
+      isPlaying = false;
+      isComplete = false;
+      clearInterval(timerInterval);
+      resetSearch();
+    };
+
+    loadCustom.onclick = () => {
+      const nums = customInput.value.split(',')
+        .map(n => parseInt(n.trim()))
+        .filter(n => !isNaN(n));
+      
+      if (nums.length > 1) {
+        // Check if array is sorted
+        const isSorted = nums.every((val, i) => i === 0 || nums[i - 1] <= val);
+        if (!isSorted) {
+          alert('Array must be sorted in ascending order for binary search. Sorting automatically...');
+          nums.sort((a, b) => a - b);
+        }
+        
+        const maxSize = window.innerWidth <= 768 ? 12 : 20;
+        const limitedNums = nums.slice(0, maxSize);
+        generateBars(limitedNums);
+        customInput.value = '';
+      } else {
+        alert('Please enter at least 2 valid numbers separated by commas.');
+      }
+    };
+
+    targetInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        setTargetBtn.click();
+      }
+    });
+
+    customInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        loadCustom.click();
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      generateBars(originalValues);
+    });
+
+    // Initialize the visualizer
+    generateBars();
+
+    // Quiz Data for Binary Search
+    const binarySearchQuizData = [
+      {
+        question: "What is the time complexity of Binary Search?",
+        options: ["O(n)", "O(n log n)", "O(log n)", "O(1)"],
+        answer: "O(log n)",
+        explanation: "Binary Search eliminates half of the remaining elements with each comparison, resulting in O(log n) time complexity."
+      },
+      {
+        question: "What is the prerequisite for Binary Search to work?",
+        options: [
+          "Array must be sorted",
+          "Array must contain unique elements",
+          "Array must be of even length",
+          "Array must contain only positive numbers"
+        ],
+        answer: "Array must be sorted",
+        explanation: "Binary Search only works on sorted arrays because it relies on the ordering to decide which half to eliminate."
+      },
+      {
+        question: "In the worst case, how many comparisons does Binary Search make for an array of size n?",
+        options: ["n", "n/2", "log₂(n)", "√n"],
+        answer: "log₂(n)",
+        explanation: "In the worst case, Binary Search makes at most ⌊log₂(n)⌋ + 1 comparisons, which is O(log n)."
+      },
+      {
+        question: "What happens when the target is smaller than the middle element?",
+        options: [
+          "Search the right half",
+          "Search the left half",
+          "Element is not found",
+          "Start over from the beginning"
+        ],
+        answer: "Search the left half",
+        explanation: "If the target is smaller than the middle element, it can only be in the left half of the current search range."
+      },
+      {
+        question: "What is the space complexity of iterative Binary Search?",
+        options: ["O(n)", "O(log n)", "O(1)", "O(n log n)"],
+        answer: "O(1)",
+        explanation: "Iterative Binary Search uses only a constant amount of extra space for variables like left, right, and mid pointers."
+      }
+    ];
+
+    // Initialize the quiz
+    AlgorithmQuiz.create('quiz-container', binarySearchQuizData);
+  </script>
+</body>
+</html>
