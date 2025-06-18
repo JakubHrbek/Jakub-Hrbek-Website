@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Country Guessing Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    body { margin: 0; font-family: sans-serif; background: #222; color: #eee; }
+    #map { height: 90vh; pointer-events: none; }
+    #input { padding: 1em; text-align: center; }
+    input { padding: 0.5em; font-size: 1.2em; width: 300px; }
+  </style>
+</head>
+<body>
+  <div id="input">
+    <input type="text" id="guess" placeholder="Enter a country...">
+    <p id="progress">0 / ???</p>
+  </div>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map', {
+      doubleClickZoom: false,
+      keyboard: false,
+      tap: false,
+      worldCopyJump: false,
+      maxBounds: [[-85, -180], [85, 180]],
+      maxBoundsViscosity: 1.0,
+      inertia: false
+    }).setView([20, 0], 2)
+
+    L.tileLayer('https://basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
+    noWrap: true
+    }).addTo(map)
+
+
+    let guessed = new Set()
+    let geojsonLayer
+    let countryFeatures = []
+
+    function normalize(str) {
+      return str.trim().toLowerCase()
+    }
+
+    function updateProgress() {
+      document.getElementById('progress').textContent = `${guessed.size} / ${countryFeatures.length}`
+    }
+
+    function highlightFeature(name) {
+      geojsonLayer.eachLayer(layer => {
+        const layerName = normalize(layer.feature.properties.ADMIN || layer.feature.properties.name)
+        if (layerName === name) {
+          layer.setStyle({ fillColor: '#00ff88', fillOpacity: 0.7, color: '#00ff88' })
+        }
+      })
+    }
+
+    fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json')
+      .then(res => res.json())
+      .then(data => {
+        data.features = data.features.filter(f =>
+        (f.properties.ADMIN || f.properties.name).toLowerCase() !== 'antarctica'
+        )
+
+
+        countryFeatures = data.features
+
+        geojsonLayer = L.geoJSON(data, {
+          style: {
+            fillColor: '#444',
+            weight: 1,
+            opacity: 1,
+            color: '#222',
+            fillOpacity: 0.3
+          }
+        }).addTo(map)
+
+        updateProgress()
+      })
+
+    document.getElementById('guess').addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const input = normalize(e.target.value)
+        for (let f of countryFeatures) {
+          const name = normalize(f.properties.ADMIN || f.properties.name)
+          if (name === input && !guessed.has(name)) {
+            guessed.add(name)
+            highlightFeature(name)
+            updateProgress()
+            break
+          }
+        }
+        e.target.value = ''
+      }
+    })
+  </script>
+</body>
+</html>
