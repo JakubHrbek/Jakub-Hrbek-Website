@@ -9,17 +9,8 @@
   <link rel="stylesheet" href="../css/project-styling.css">
   <style>
     .project-block {
-      background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
-      border-radius: 20px;
-      padding: 40px;
-      margin: 30px 0;
-      border: 1px solid rgba(255,255,255,0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .project-block:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px rgba(255,255,255,0.15);
+      padding: 40px 0;
+      margin: 50px 0;
     }
 
     .block-with-image {
@@ -59,10 +50,6 @@
       cursor: zoom-in;
     }
 
-    .image-content img:hover {
-      transform: scale(1.05);
-    }
-
     .final-gallery {
       margin: 50px 0;
     }
@@ -83,15 +70,17 @@
 
     .gallery-grid img {
       width: 100%;
+      height: 180px;
+      object-fit: cover;
       border-radius: 15px;
       box-shadow: 0 10px 25px rgba(255,255,255,0.1);
-      transition: all 0.3s ease;
+      transition: all 0.1s ease;
       cursor: zoom-in;
     }
 
     .gallery-grid img:hover {
-      transform: scale(1.03);
-      box-shadow: 0 15px 35px rgba(232,232,232,0.6);
+      transform: scale(1.02);
+      box-shadow: 0 15px 35px rgba(232,232,232,0.1);
     }
 
     #lightbox {
@@ -132,8 +121,8 @@
       }
 
       .project-block {
-        padding: 25px;
-        margin: 20px 0;
+        padding: 25px 0;
+        margin: 30px 0;
       }
 
       .gallery-grid {
@@ -161,10 +150,10 @@
   </nav>
 
   <div class="container">
-    <h1 class="projectTitle">Ray Tracer Development</h1>
+    <h1 class="projectTitle">CPU Path Tracer</h1>
     <img src="../assets/images/Raytracer/raytraced_scene-min.png" alt="Stunning ray traced scene with realistic lighting and reflections" class="banner" />
 
-    <p class="tagline">Photorealistic rendering engine built from scratch. Advanced lighting models. Real-time optimizations. Bringing 3D worlds to life.</p>
+    <p class="tagline">High-performance CPU-based path tracer written in modern C++. Global illumination. Physically-based materials. Multi-threaded rendering pipeline.</p>
 
     <!-- Block 1: Image Left, Text Right -->
     <div class="project-block">
@@ -173,16 +162,16 @@
           <img src="../assets/images/Raytracer/raytraced_scene copy 2.png" alt="Ray tracer architecture diagram showing light paths" />
         </div>
         <div class="text-content">
-          <h2>Project Overview</h2>
+          <h2>CPU Path Tracing Engine</h2>
           <p>
-            I built a comprehensive ray tracing engine from the ground up, implementing advanced rendering techniques
-            to create photorealistic 3D scenes. This project showcases my understanding of computer graphics,
-            mathematical algorithms, and performance optimization.
+            This is a comprehensive <span class="tech-highlight">CPU-based path tracer</span> written in modern C++17 that 
+            simulates global illumination by tracing rays recursively through scenes composed of geometry, materials, and light sources.
+            Built from the ground up without GPU acceleration, it showcases pure computational power and algorithmic efficiency.
           </p>
           <p>
-            The engine supports multiple lighting models, material properties, geometric primitives, and 
-            advanced effects like reflections, refractions, and global illumination. Every pixel is 
-            calculated with precision to achieve stunning visual fidelity.
+            The engine uses <span class="tech-highlight">std::thread</span> for parallelism with tiled rendering, 
+            BVH acceleration structures for fast ray traversal, and outputs high-quality PNG images via stb_image_write. 
+            Every pixel is calculated through Monte Carlo sampling to achieve photorealistic results.
           </p>
         </div>
       </div>
@@ -192,16 +181,16 @@
     <div class="project-block">
       <div class="block-with-image reverse">
         <div class="text-content">
-          <h2>Advanced Lighting System</h2>
+          <h2>Advanced Material System</h2>
           <p>
-            The ray tracer implements a sophisticated lighting pipeline that accurately simulates how light
-            behaves in the real world. Multiple light sources can be positioned throughout the scene,
-            each contributing to the final illumination through <span class="tech-highlight">physically-based calculations</span>.
+            The renderer features a sophisticated material pipeline supporting <span class="tech-highlight">physically-based rendering (PBR)</span> 
+            with metallic/roughness workflows. Materials include dielectric refraction for glass, procedural textures 
+            like marble and plasma, and specialized materials including iridescent, chrome, titanium, ice, and concrete surfaces.
           </p>
           <p>
-            Point lights, directional lights, and area lights are all supported, with each type offering
-            unique characteristics for different lighting scenarios. The system handles color bleeding,
-            light falloff, and complex shadow interactions seamlessly.
+            Each material implements custom scatter() and emitted() functions with BRDF approximations. The system handles 
+            complex lighting interactions including colored lighting, soft shadows from area lights, and realistic 
+            surface properties with proper energy conservation.
           </p>
         </div>
         <div class="image-content">
@@ -217,16 +206,16 @@
           <img src="../assets/images/Raytracer/raytraced_scene copy 4.png" alt="Performance benchmarks and optimization results" />
         </div>
         <div class="text-content">
-          <h2>Performance Optimizations</h2>
+          <h2>Performance & Architecture</h2>
           <p>
-            Ray tracing is computationally intensive, so I implemented several optimization techniques
-            to achieve reasonable render times. <span class="tech-highlight">Spatial partitioning</span> with BVH (Bounding Volume Hierarchy)
-            reduces the number of intersection tests by up to 90%.
+            The core rendering loop builds scenes with camera setup, geometry definition, and <span class="tech-highlight">BVH construction</span> 
+            for spatial acceleration. Multi-threaded tile rendering distributes work across CPU cores, with each pixel 
+            receiving stratified sampling and recursive ray bouncing up to maximum depth limits.
           </p>
           <p>
-            Multi-threading support allows the renderer to utilize all available CPU cores,
-            with each thread handling a portion of the image. Memory management optimizations
-            and efficient data structures ensure smooth performance even with complex scenes.
+            Advanced sampling techniques reduce noise while maintaining efficiency. The light manager handles direct lighting 
+            queries with shadow rays and BRDF sampling. A procedural skybox provides environmental lighting fallback 
+            for rays that miss geometry, creating realistic ambient illumination.
           </p>
         </div>
       </div>
@@ -236,16 +225,16 @@
     <div class="project-block">
       <div class="block-with-image reverse">
         <div class="text-content">
-          <h2>Material System</h2>
+          <h2>Geometry & Acceleration</h2>
           <p>
-            A flexible material system allows for diverse surface properties including metallic,
-            dielectric, and emissive materials. Each material can have custom <span class="tech-highlight">reflection coefficients</span>,
-            roughness values, and refractive indices for realistic appearance.
+            The engine supports diverse geometric primitives including spheres, boxes, cylinders, cones, planes, and rectangles, 
+            all implementing the hittable interface with bounding box support. A <span class="tech-highlight">Bounding Volume Hierarchy (BVH)</span> 
+            provides logarithmic-time ray intersection testing for complex scenes.
           </p>
           <p>
-            Texture mapping support enables complex surface details, while procedural textures
-            generate infinite detail without memory overhead. The system handles transparency,
-            subsurface scattering, and volume rendering for advanced effects.
+            The modular architecture separates concerns with dedicated classes for cameras, rays, materials, lights, and geometry. 
+            Custom 3D vector math handles all point, color, and direction calculations. Gamma correction and color clamping 
+            ensure proper image output with support for both PNG and PPM formats.
           </p>
         </div>
         <div class="image-content">
@@ -254,24 +243,30 @@
       </div>
     </div>
 
-    <!-- Final Gallery -->
+    <div class="newest-render" style="margin-top: 80px; text-align: center;margin-bottom: 50px;">
+      <h2 style="color: #f1f1f1; font-size: 2.2em; margin-bottom: 20px;">Newest Render</h2>
+      <p style="color: #b0b0b0; margin-bottom: 30px;">This is the newest render. 6000 x 3000 px, 500 samples per pixel, 20 max bounces.</p>
+      <div class="image-content"><img src="../assets/images/Raytracer/raytraced_scene-min.png" alt="Newest high-quality render" style="width: 100%; max-width: 800px; border-radius: 15px; box-shadow: 0 10px 30px rgba(255,255,255,0.1); transition: transform 0.3s ease; cursor: zoom-in;" /></div>
+    </div>
+    
     <div class="final-gallery">
-      <h2>Rendered Gallery</h2>
+      <h2>Render Gallery</h2>
       <p style="text-align: center; color: #b0b0b0; margin-bottom: 30px;">
-        A collection of scenes rendered with the ray tracer, showcasing different lighting conditions, materials, and geometric complexity.
+        A collection of scenes rendered with the CPU path tracer, showcasing different lighting conditions, materials, and geometric complexity.
       </p>
       <div class="gallery-grid">
         <img src="../assets/images/Raytracer/raytraced_scene_with_skybox.png" alt="Cornell box scene with colored walls and reflective spheres" loading="lazy" />
+        <img src="../assets/images/Raytracer/output.jpeg" alt="Metallic and glass materials showcase" loading="lazy" />
         <img src="../assets/images/Raytracer/raytraced_sunset_scene.png" alt="Complex geometry scene with multiple light sources" loading="lazy" />
-        <img src="../assets/images/Raytracer/Render - V10.1.ppm" alt="Metallic and glass materials showcase" loading="lazy" />
-        <img src="../assets/images/Raytracer/sunset_raytraced_scene.png" alt="Soft shadows and area lighting demonstration" loading="lazy" />
-        <img src="assets/images/raytracer-scene5.png" alt="High-resolution detailed scene with textures" loading="lazy" />
-        <img src="assets/images/raytracer-scene6.png" alt="Refractive materials and caustics effects" loading="lazy" />
-        <img src="assets/images/raytracer-scene7.png" alt="Global illumination and color bleeding example" loading="lazy" />
-        <img src="assets/images/raytracer-scene8.png" alt="Complex mesh rendering with smooth surfaces" loading="lazy" />
-        <img src="assets/images/raytracer-scene9.png" alt="Volumetric rendering and atmospheric effects" loading="lazy" />
+        <img src="../assets/images/Raytracer/output5.jpeg" alt="High-resolution detailed scene with textures" loading="lazy" />
+        <img src="../assets/images/Raytracer/output6.jpeg" alt="Refractive materials and caustics effects" loading="lazy" />
+        <img src="../assets/images/Raytracer/output7.jpeg" alt="Global illumination and color bleeding example" loading="lazy" />
+        <img src="../assets/images/Raytracer/outputBA.jpeg" alt="Complex mesh rendering with smooth surfaces" loading="lazy" />
+        <img src="../assets/images/Raytracer/output2.jpeg" alt="Soft shadows and area lighting demonstration" loading="lazy" />
+        <img src="../assets/images/Raytracer/outputW.jpeg" alt="Volumetric rendering and atmospheric effects" loading="lazy" />
       </div>
     </div>
+    
 
     <a href="projects.html" class="btn">Explore other projects</a>
   </div>

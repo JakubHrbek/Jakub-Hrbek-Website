@@ -225,10 +225,6 @@ footer {
     transition: transform 0.5s ease;
   }
   
-  .profile-photo:hover {
-    transform: scale(1.05);
-  }
-  
   .text-content {
     max-width: 500px;
   }
