@@ -362,7 +362,7 @@ footer {
     }
   
     .nav-links.active {
-      max-height: 300px;
+      max-height: 450px;
       backdrop-filter: blur(15px);
       background: rgba(20, 20, 20, 0.4);
     }
@@ -371,5 +371,9 @@ footer {
     body.fade {
       opacity: 1 !important;
       transition: none !important;
+    }
+
+    .profile-photo {
+      margin-top: 20%;
     }
   }  
