@@ -22,6 +22,8 @@
     .search-bar, .filter-bar { margin-top: 2rem; text-align: center; }
     .search-bar input {
       padding: 10px 20px;
+      padding-right: 20px;
+      padding-left: 20px;
       font-size: 1rem;
       border: none;
       border-radius: 8px;
@@ -63,25 +65,29 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 2rem;
-      padding: 6rem 5rem;
+      gap: 4rem; /* Increased from 2rem to 4rem */
+      padding: 6rem 2rem; /* Reduced horizontal padding from 5rem to 2rem */
+      max-width: 95%; /* Added max-width container */
+      margin: 0 auto;
       border-bottom: 1px solid rgba(255,255,255,0.1);
       flex-wrap: wrap;
     }
     .project-section img {
-      max-width: 400px;
+      max-width: 500px; /* Increased from 400px to 500px */
       width: 100%;
       border-radius: 8px;
       box-shadow: 0 0 20px rgba(255,255,255,0.1);
       transition: transform 0.5s ease, box-shadow 0.5s ease;
     }
     .project-section img:hover {
-      transform: scale(1.03);
-      box-shadow: 0 0 25px rgba(255,255,255,0.2);
+      transform: none !important;
+      box-shadow: none !important;
     }
+
     .project-info {
       flex: 1;
-      max-width: 600px;
+      max-width: 700px; /* Increased from 600px to 700px */
+      min-width: 350px; /* Added minimum width */
     }
     .project-info h3 { margin-top: 0; }
     .project-info p { margin-bottom: 1rem; }
@@ -135,6 +141,22 @@
       0 0 15px var(--accent),
       0 0 20px rgba(232, 232, 232, 0.2),
       0 0 35px rgba(232, 232, 232, 0.1);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .project-section {
+      gap: 2rem;
+      padding: 4rem 1rem;
+      flex-direction: column;
+    }
+    .project-section img {
+      max-width: 100%;
+    }
+    .project-info {
+      max-width: 100%;
+      min-width: auto;
+    }
   }
   </style>
   <script>
@@ -250,19 +272,9 @@
       <img src="assets/images/Project-2.png" alt="Preview of custom ray tracing engine in C++" loading="lazy" />
       <div class="project-info">
         <h3>Ray Tracer (C++)</h3>
-        <p>Custom-built ray tracing engine with real-time rendering. Built in C++ from scratch, inspired by Peter Shirley’s series.</p>
+        <p>Custom-built ray tracing engine with real-time rendering. Built in C++ from scratch, inspired by Peter Shirley's series.</p>
         <p class="tags">C++ · Custom Engine · Rendering</p>
         <a href="projects/raytracer.html">Explore Ray Tracer</a>
-      </div>
-    </section>
-
-    <section class="project-section">
-      <img src="assets/images/Project-4.png" alt="Visual of DroneBAT simulation framework" loading="lazy" />
-      <div class="project-info">
-        <h3>DroneBAT <span style="font-size: 0.8rem; font-weight: normal; color: #aaa;">(Coming Soon)</span></h3>
-        <p>A simulator for autonomous drone swarm behavior. Rule-based coordination in Python using simple algorithms and visual feedback.</p>
-        <p class="tags">Python · Pygame · Simulation</p>
-        <p style="font-size: 0.85rem; color: #777; margin-top: 0.5rem;">Detailed page launching soon</p>
       </div>
     </section>
 
@@ -277,7 +289,17 @@
     </section>
 
     <section class="project-section">
-      <img style="filter: blur(10px);" src="assets/images/Project-5.png" alt="Cybersecurity awareness platform screenshot" loading="lazy" />
+      <img style="filter: blur(20px);" src="assets/images/Project-4.png" alt="Visual of DroneBAT simulation framework" loading="lazy" />
+      <div class="project-info">
+        <h3>DroneBAT <span style="font-size: 0.8rem; font-weight: normal; color: #aaa;">(Coming Soon)</span></h3>
+        <p>A simulator for autonomous drone swarm behavior. Rule-based coordination in Python using simple algorithms and visual feedback.</p>
+        <p class="tags">Python · Pygame · Simulation</p>
+        <p style="font-size: 0.85rem; color: #777; margin-top: 0.5rem;">Detailed page launching soon</p>
+      </div>
+    </section>
+
+    <section class="project-section">
+      <img style="filter: blur(20px);" src="assets/images/Project-5.png" alt="Cybersecurity awareness platform screenshot" loading="lazy" />
       <div class="project-info">
         <h3>CSF <span style="font-size: 0.8rem; font-weight: normal; color: #aaa;">(Coming Soon)</span></h3>
         <p>End-to-end design and implementation of a cyber awareness site offering webinars, blogs, and resources for general public education.</p>
@@ -287,7 +309,7 @@
     </section>
 
     <section class="project-section">
-      <img style="filter: blur(10px);" src="assets/images/Project-6.png" alt="Redesigned ALEF website with glassmorphism UI" loading="lazy" />
+      <img style="filter: blur(20px);" src="assets/images/Project-6.png" alt="Redesigned ALEF website with glassmorphism UI" loading="lazy" />
       <div class="project-info">
         <h3>ALEF Website Redesign <span style="font-size: 0.8rem; font-weight: normal; color: #aaa;">(Coming Soon)</span></h3>
         <p>Redesigned the ALEF website with a sleek, glassmorphism-based UI, improving clarity and visual hierarchy across their service offerings.</p>
@@ -301,11 +323,9 @@
         <h3>Earlier Work Coming Soon</h3>
         <p>
           Many of my earlier projects, especially those in web development, Python tools, and game development haven't yet been added here. Most were built before 2025 and are being selected for this site.
-          <br><br>
-          If you'd like to see something specific in the meantime, feel free to <a href="index.html#contact">reach out</a>.
         </p>
         <p>Pre-2025 project focus areas:</p>
-        <p class="tags">Web Dev · Game Dev · Python · More</p>
+        <p class="tags">Web Dev · Game Dev · Python · And more</p>
       </div>
     </section>
     
