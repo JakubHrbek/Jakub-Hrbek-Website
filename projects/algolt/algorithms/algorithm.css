@@ -105,14 +105,12 @@
     box-shadow: 0 1px 3px rgba(16, 185, 129, 0.2);
   }
 
-  /* Desktop bars */
   @media (min-width: 769px) {
     .bar {
       width: 20px;
     }
   }
 
-  /* Mobile bars */
   @media (max-width: 768px) {
     .bar {
       width: 14px;

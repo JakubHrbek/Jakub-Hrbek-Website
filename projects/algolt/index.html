@@ -42,7 +42,6 @@
         display: none;
       }
       
-      /* Mobile-specific styles */
       @media (max-width: 768px) {
         .button-grid {
           grid-template-columns: 1fr;
@@ -54,7 +53,6 @@
           border: 2px solid black;
         }
         
-        /* Mobile navigation */
         .mobile-nav {
           display: none;
           position: fixed;
@@ -138,7 +136,6 @@
     <header class="w-full px-4 md:px-6 py-4 border-b-4 border-black flex justify-between items-center uppercase text-sm">
       <h1 class="text-xl md:text-2xl font-black tracking-tight border-2 border-black px-2">ALGOLT</h1>
       
-      <!-- Desktop Navigation -->
       <nav class="desktop-nav">
         <ul class="flex gap-4 font-bold">
           <li><a href="#" class="border-2 border-black px-2 py-1 block">Home</a></li>
@@ -147,7 +144,6 @@
         </ul>
       </nav>
       
-      <!-- Mobile Hamburger -->
       <div class="hamburger" id="hamburger">
         <span></span>
         <span></span>
@@ -155,7 +151,6 @@
       </div>
     </header>
 
-    <!-- Mobile Navigation Menu -->
     <nav class="mobile-nav" id="mobileNav">
       <ul class="font-bold">
         <li><a href="#" onclick="closeMobileNav()">Home</a></li>
@@ -179,7 +174,6 @@
       </a>
 
       <div id="buttonGrid" class="button-grid w-full max-w-4xl px-4">
-        <!-- List of algorithm buttons with onclick navigation -->
         <button onclick="window.location.href='algorithms/bubble-sort.html'">Bubble Sort</button>
         <button onclick="window.location.href='algorithms/quick-sort.html'">Quick Sort</button>
         <button onclick="window.location.href='algorithms/merge-sort.html'">Merge Sort</button>
@@ -206,12 +200,10 @@
       const mobileNav = document.getElementById('mobileNav');
 
       getStartedBtn.addEventListener('click', () => {
-        // Hide the "Get Started" button and show the grid
         getStartedBtn.style.display = 'none';
         buttonGrid.style.display = 'grid';
       });
 
-      // Mobile navigation toggle
       hamburger.addEventListener('click', () => {
         hamburger.classList.toggle('active');
         mobileNav.classList.toggle('active');
@@ -224,14 +216,12 @@
         document.body.style.overflow = 'auto';
       }
 
-      // Close mobile nav when clicking outside
       mobileNav.addEventListener('click', (e) => {
         if (e.target === mobileNav) {
           closeMobileNav();
         }
       });
 
-      // Handle escape key to close mobile nav
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
           closeMobileNav();
