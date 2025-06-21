@@ -74,8 +74,7 @@
       
       <div class="lg:col-span-1">
         <div class="code-block h-full">
-          <pre><code class="language-js">// Bubble Sort Algorithm
-function bubbleSort(arr) {
+          <pre><code class="language-js">function bubbleSort(arr) {
   const n = arr.length;
   
   for (let i = 0; i < n - 1; i++) {
@@ -83,14 +82,12 @@ function bubbleSort(arr) {
     
     for (let j = 0; j < n - i - 1; j++) {
       if (arr[j] > arr[j + 1]) {
-        // Swap elements
         [arr[j], arr[j + 1]] = 
           [arr[j + 1], arr[j]];
         swapped = true;
       }
     }
     
-    // Optimization: stop if no swaps
     if (!swapped) break;
   }
   
@@ -180,11 +177,9 @@ function bubbleSort(arr) {
     </section>
   </main>
 
-  <!-- Include the external quiz system -->
   <script src="quiz.js"></script>
   
   <script>
-    // Bubble Sort Visualizer Logic
     const visualizer = document.getElementById("visualizer");
     const playBtn = document.getElementById("playBtn");
     const pauseBtn = document.getElementById("pauseBtn");
@@ -382,10 +377,8 @@ function bubbleSort(arr) {
       }
     });
 
-    // Initialize the visualizer
     generateBars();
 
-    // Quiz Data for Bubble Sort
     const bubbleSortQuizData = [
       {
         question: "What is the best-case time complexity of Bubble Sort?",
@@ -423,7 +416,6 @@ function bubbleSort(arr) {
       }
     ];
 
-    // Initialize the quiz
     AlgorithmQuiz.create('quiz-container', bubbleSortQuizData);
   </script>
 </body>

@@ -138,8 +138,7 @@
       
       <div class="lg:col-span-1">
         <div class="code-block h-full">
-          <pre><code class="language-js">// Radix Sort Algorithm
-function radixSort(arr) {
+          <pre><code class="language-js">function radixSort(arr) {
   const max = Math.max(...arr);
   const maxDigits = max.toString().length;
   
@@ -147,13 +146,11 @@ function radixSort(arr) {
     const buckets = Array.from({length: 10}, 
       () => []);
     
-    // Distribute into buckets
     for (let num of arr) {
       const digitValue = getDigit(num, digit);
       buckets[digitValue].push(num);
     }
     
-    // Collect from buckets
     arr = [].concat(...buckets);
   }
   
@@ -251,11 +248,9 @@ function getDigit(num, place) {
     </section>
   </main>
 
-  <!-- Include the external quiz system -->
   <script src="quiz.js"></script>
   
   <script>
-    // Radix Sort Visualizer Logic
     const visualizer = document.getElementById("visualizer");
     const bucketContainer = document.getElementById("bucketContainer");
     const playBtn = document.getElementById("playBtn");
@@ -311,7 +306,6 @@ function getDigit(num, place) {
         bar.style.height = `${height}px`;
         bar.style.position = "relative";
         
-        // Add number label on top of bar
         const label = document.createElement("span");
         label.textContent = value;
         label.style.position = "absolute";
@@ -392,13 +386,11 @@ function getDigit(num, place) {
         const value = values[i];
         const digit = getDigit(value, currentDigitPos);
         
-        // Highlight current bar
         bars[i].classList.add('comparing');
         buckets[digit].element.classList.add('active');
         
         await new Promise(r => setTimeout(r, 300));
         
-        // Add to bucket
         const bucketItem = document.createElement("div");
         bucketItem.classList.add("bucket-item");
         bucketItem.textContent = value;
@@ -426,14 +418,12 @@ function getDigit(num, place) {
             const value = buckets[i].values[j];
             values[index] = value;
             
-            // Update bar height and label
             const maxHeight = window.innerWidth <= 768 ? 220 : 260;
             const height = Math.min((value / 1000) * maxHeight, maxHeight);
             bars[index].style.height = `${height}px`;
             bars[index].querySelector('span').textContent = value;
             bars[index].classList.add('comparing');
             
-            // Highlight bucket item
             const bucketItems = buckets[i].items.children;
             if (bucketItems[j]) {
               bucketItems[j].classList.add('highlighting');
@@ -553,10 +543,8 @@ function getDigit(num, place) {
       }
     });
 
-    // Initialize the visualizer
     generateBars();
 
-    // Quiz Data for Radix Sort
     const radixSortQuizData = [
       {
         question: "What type of sorting algorithm is Radix Sort?",
@@ -589,7 +577,6 @@ function getDigit(num, place) {
       }
     ];
 
-    // Initialize the quiz
     AlgorithmQuiz.create('quiz-container', radixSortQuizData);
   </script>
 </body>

@@ -110,8 +110,8 @@
       border: 1px solid rgba(0, 0, 0, 0.05);
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       overflow: hidden;
-      background: #fdfdfd; /* or white, or whatever light bg you want */
-      color: #1a1a1a;       /* adjust to readable text */
+      background: #fdfdfd;
+      color: #1a1a1a;
 
     }
     .code-block pre {
@@ -271,7 +271,7 @@
       
       <div class="lg:col-span-1">
         <div class="code-block h-full">
-          <pre><code class="language-js">// Depth-First Search Algorithm
+          <pre><code class="language-js">
 function dfs(graph, startNode) {
   const visited = new Set();
   const stack = [startNode];
@@ -284,8 +284,6 @@ function dfs(graph, startNode) {
       visited.add(current);
       result.push(current);
       
-      // Add neighbors to stack
-      // (in reverse order for left-to-right)
       const neighbors = graph[current];
       for (let i = neighbors.length - 1; i >= 0; i--) {
         if (!visited.has(neighbors[i])) {
@@ -388,7 +386,6 @@ function dfs(graph, startNode) {
   </main>
 
   <script>
-    // DFS Visualizer Logic
     const graphContainer = document.getElementById("graph-container");
     const playBtn = document.getElementById("playBtn");
     const pauseBtn = document.getElementById("pauseBtn");
@@ -467,7 +464,6 @@ function dfs(graph, startNode) {
       const containerWidth = graphContainer.clientWidth;
       const containerHeight = graphContainer.clientHeight;
       
-      // Position nodes in a circle
       const centerX = containerWidth / 2;
       const centerY = containerHeight / 2;
       const radius = Math.min(containerWidth, containerHeight) * 0.3;
@@ -489,7 +485,6 @@ function dfs(graph, startNode) {
         nodes[name] = { element: nodeElement, x: x + 20, y: y + 20 };
       });
 
-      // Draw edges
       const drawnEdges = new Set();
       Object.keys(graph).forEach(node => {
         graph[node].forEach(neighbor => {
@@ -541,7 +536,6 @@ function dfs(graph, startNode) {
       clearInterval(timerInterval);
       timerDisplay.innerText = "0.00s";
 
-      // Reset visual states
       Object.values(nodes).forEach(node => {
         node.element.className = 'node';
       });
@@ -568,7 +562,6 @@ function dfs(graph, startNode) {
 
     async function dfsStep() {
       if (stack.length === 0 && visited.size === 0) {
-        // Initialize
         const startNode = startNodeInput.value || 'A';
         if (!graph[startNode]) {
           alert(`Start node '${startNode}' not found in graph`);
@@ -579,7 +572,6 @@ function dfs(graph, startNode) {
       }
 
       if (stack.length === 0) {
-        // DFS complete
         isComplete = true;
         clearInterval(timerInterval);
         playBtn.textContent = "Complete";
@@ -589,20 +581,17 @@ function dfs(graph, startNode) {
 
       const current = stack.pop();
       
-      // Remove from stack visualization
       if (nodes[current]) {
         nodes[current].element.classList.remove('in-stack');
       }
 
       if (!visited.has(current)) {
-        // Visit the node
         visited.add(current);
         traversalOrder.push(current);
         
         if (nodes[current]) {
           nodes[current].element.classList.add('current');
           
-          // Highlight edges to neighbors
           edges.forEach(edge => edge.classList.remove('active'));
           graph[current].forEach(neighbor => {
             const edgeKey = [current, neighbor].sort().join('-');
@@ -616,7 +605,6 @@ function dfs(graph, startNode) {
 
         await new Promise(r => setTimeout(r, 800));
 
-        // Add unvisited neighbors to stack (in reverse order for left-to-right traversal)
         const neighbors = graph[current] || [];
         for (let i = neighbors.length - 1; i >= 0; i--) {
           const neighbor = neighbors[i];
@@ -628,7 +616,6 @@ function dfs(graph, startNode) {
           }
         }
 
-        // Mark as visited
         if (nodes[current]) {
           nodes[current].element.classList.remove('current');
           nodes[current].element.classList.add('visited');
@@ -715,10 +702,8 @@ function dfs(graph, startNode) {
       }
     });
 
-    // Initialize
     generateDefaultGraph();
 
-    // Quiz Data for DFS
     const dfsQuizData = [
       {
         question: "What data structure does DFS primarily use?",
@@ -751,7 +736,6 @@ function dfs(graph, startNode) {
       }
     ];
 
-    // Simple Quiz System
     class AlgorithmQuiz {
       static create(containerId, questions) {
         const container = document.getElementById(containerId);
@@ -841,7 +825,6 @@ function dfs(graph, startNode) {
       }
     }
 
-    // Initialize the quiz
     AlgorithmQuiz.create('quiz-container', dfsQuizData);
   </script>
 </body>

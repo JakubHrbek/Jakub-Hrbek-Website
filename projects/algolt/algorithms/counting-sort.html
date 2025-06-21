@@ -81,26 +81,21 @@
       
       <div class="lg:col-span-1">
         <div class="code-block h-full">
-          <pre><code class="language-js">// Counting Sort Algorithm
-function countingSort(arr) {
+          <pre><code class="language-js">function countingSort(arr) {
   const max = Math.max(...arr);
   const min = Math.min(...arr);
   const range = max - min + 1;
   
-  // Initialize count array
   const count = new Array(range).fill(0);
   
-  // Count occurrences
   for (let i = 0; i < arr.length; i++) {
     count[arr[i] - min]++;
   }
   
-  // Transform to cumulative counts
   for (let i = 1; i < count.length; i++) {
     count[i] += count[i - 1];
   }
   
-  // Build output array
   const output = new Array(arr.length);
   for (let i = arr.length - 1; i >= 0; i--) {
     output[count[arr[i] - min] - 1] = arr[i];
@@ -196,11 +191,9 @@ function countingSort(arr) {
     </section>
   </main>
 
-  <!-- Include the external quiz system -->
   <script src="quiz.js"></script>
   
   <script>
-    // Counting Sort Visualizer Logic
     const inputVisualizer = document.getElementById("input-visualizer");
     const countVisualizer = document.getElementById("count-visualizer");
     const outputVisualizer = document.getElementById("output-visualizer");
@@ -242,7 +235,7 @@ function countingSort(arr) {
 
     function generateRandomArray() {
       const arraySize = getOptimalArraySize();
-      const maxValue = Math.min(20, arraySize + 5); // Keep range small for better visualization
+      const maxValue = Math.min(20, arraySize + 5);
       return Array.from({ length: arraySize }, () => Math.floor(Math.random() * maxValue));
     }
 
@@ -282,7 +275,6 @@ function countingSort(arr) {
     function initializeVisualization(custom = null) {
       inputArray = custom || generateRandomArray();
       
-      // Ensure values are within reasonable range
       inputArray = inputArray.map(v => Math.max(0, Math.min(50, v)));
       
       min = Math.min(...inputArray);
@@ -292,15 +284,12 @@ function countingSort(arr) {
       countArray = new Array(range).fill(0);
       outputArray = new Array(inputArray.length).fill(null);
       
-      // Clear visualizers
       inputVisualizer.innerHTML = "";
       countVisualizer.innerHTML = "";
       outputVisualizer.innerHTML = "";
       
-      // Create input bars
       inputBars = inputArray.map(value => createBar(value, inputVisualizer));
       
-      // Create count bars (initially 0)
       countBars = [];
       for (let i = 0; i < range; i++) {
         const bar = createBar(0, countVisualizer, true);
@@ -316,7 +305,6 @@ function countingSort(arr) {
         countBars.push(bar);
       }
       
-      // Create output bars (initially empty)
       outputBars = outputArray.map(() => {
         const bar = document.createElement("div");
         bar.classList.add("bar");
@@ -329,7 +317,6 @@ function countingSort(arr) {
         return bar;
       });
       
-      // Reset state
       currentStep = 0;
       currentIndex = -1;
       phase = 'setup';
@@ -370,7 +357,6 @@ function countingSort(arr) {
       resetBarColors();
       
       if (currentStep < inputArray.length) {
-        // Phase 1: Count occurrences
         phase = 'counting';
         currentIndex = currentStep;
         const value = inputArray[currentStep];
@@ -381,13 +367,11 @@ function countingSort(arr) {
         
         countArray[countIndex]++;
         
-        // Update count bar
         const maxHeight = window.innerWidth <= 768 ? 160 : 200;
         const newHeight = Math.min((countArray[countIndex] / Math.max(...inputArray)) * maxHeight, maxHeight);
         countBars[countIndex].style.height = `${Math.max(newHeight, 20)}px`;
         countBars[countIndex].style.backgroundColor = "#10b981";
         
-        // Update label
         const label = countBars[countIndex].querySelector('div');
         if (label && label.style.bottom === "-25px") {
           label.innerText = countArray[countIndex];
@@ -396,21 +380,18 @@ function countingSort(arr) {
         currentStep++;
         
       } else if (currentStep < inputArray.length + range - 1) {
-        // Phase 2: Calculate cumulative counts
         phase = 'cumulative';
         const i = currentStep - inputArray.length + 1;
         currentIndex = i;
         
         countArray[i] += countArray[i - 1];
         
-        // Update count bar
         const maxHeight = window.innerWidth <= 768 ? 160 : 200;
         const maxCount = Math.max(...countArray);
         const newHeight = Math.min((countArray[i] / maxCount) * maxHeight, maxHeight);
         countBars[i].style.height = `${Math.max(newHeight, 20)}px`;
         countBars[i].style.backgroundColor = "#f59e0b";
         
-        // Update label
         const label = countBars[i].querySelector('div');
         if (label && label.style.bottom === "-25px") {
           label.innerText = countArray[i];
@@ -419,7 +400,6 @@ function countingSort(arr) {
         currentStep++;
         
       } else if (currentStep < inputArray.length * 2 + range - 1) {
-        // Phase 3: Build output array
         phase = 'building';
         const i = inputArray.length - 1 - (currentStep - inputArray.length - range + 1);
         currentIndex = i;
@@ -434,13 +414,11 @@ function countingSort(arr) {
         outputArray[outputPos] = value;
         countArray[countIndex]--;
         
-        // Update output bar
         const maxHeight = window.innerWidth <= 768 ? 160 : 200;
         const height = Math.min((value / Math.max(...inputArray)) * maxHeight, maxHeight);
         outputBars[outputPos].style.height = `${Math.max(height, 20)}px`;
         outputBars[outputPos].style.backgroundColor = "#10b981";
         
-        // Add value label to output bar
         let label = outputBars[outputPos].querySelector('div');
         if (!label) {
           label = document.createElement("div");
@@ -455,7 +433,6 @@ function countingSort(arr) {
         }
         label.innerText = value;
         
-        // Update count bar
         const countHeight = Math.min((countArray[countIndex] / Math.max(...countArray.filter(c => c > 0))) * maxHeight, maxHeight);
         countBars[countIndex].style.height = `${Math.max(countHeight, 20)}px`;
         
@@ -467,7 +444,6 @@ function countingSort(arr) {
         currentStep++;
         
       } else {
-        // Complete
         isComplete = true;
         phase = 'complete';
         currentIndex = -1;
@@ -559,10 +535,8 @@ function countingSort(arr) {
       }
     });
 
-    // Initialize the visualizer
     initializeVisualization();
 
-    // Quiz Data for Counting Sort
     const countingSortQuizData = [
       {
         question: "What is the time complexity of Counting Sort?",
@@ -605,7 +579,6 @@ function countingSort(arr) {
       }
     ];
 
-    // Initialize the quiz
     AlgorithmQuiz.create('quiz-container', countingSortQuizData);
   </script>
 

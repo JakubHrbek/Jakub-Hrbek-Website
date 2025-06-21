@@ -85,13 +85,11 @@
       
       <div class="lg:col-span-1">
         <div class="code-block h-full">
-          <pre><code class="language-js">// Bucket Sort Algorithm
-function bucketSort(arr) {
+          <pre><code class="language-js">function bucketSort(arr) {
   const n = arr.length;
   const buckets = Array(n).fill(null)
     .map(() => []);
   
-  // Distribute elements into buckets
   for (let i = 0; i < n; i++) {
     const bucketIndex = Math.floor(
       (arr[i] / 100) * n
@@ -100,12 +98,10 @@ function bucketSort(arr) {
       .push(arr[i]);
   }
   
-  // Sort individual buckets
   for (let i = 0; i < n; i++) {
     buckets[i].sort((a, b) => a - b);
   }
   
-  // Concatenate sorted buckets
   let result = [];
   for (let i = 0; i < n; i++) {
     result = result.concat(buckets[i]);
@@ -200,11 +196,9 @@ function bucketSort(arr) {
     </section>
   </main>
 
-  <!-- Include the external quiz system -->
   <script src="quiz.js"></script>
   
   <script>
-    // Bucket Sort Visualizer Logic
     const originalArray = document.getElementById("originalArray");
     const bucketsContainer = document.getElementById("buckets");
     const sortedArray = document.getElementById("sortedArray");
@@ -254,7 +248,6 @@ function bucketSort(arr) {
       const height = Math.max((value / 100) * maxHeight, 8);
       bar.style.height = `${height}px`;
       
-      // Add value label
       const label = document.createElement("span");
       label.textContent = value;
       label.style.fontSize = "10px";
@@ -306,24 +299,19 @@ function bucketSort(arr) {
       originalValues = custom || Array.from({ length: arraySize }, () => Math.floor(Math.random() * 99) + 1);
       values = [...originalValues];
       
-      // Adjust number of buckets based on array size
       numBuckets = Math.min(5, Math.max(3, Math.floor(values.length / 3)));
       
-      // Clear containers
       originalArray.innerHTML = "";
       bucketsContainer.innerHTML = "";
       sortedArray.innerHTML = "";
       
-      // Create original array visualization
       values.forEach(value => createBar(value, originalArray));
       
-      // Create buckets
       buckets = [];
       for (let i = 0; i < numBuckets; i++) {
         buckets.push(createBucket(i));
       }
       
-      // Reset state
       currentStep = 0;
       distributions = 0;
       bucketSorts = 0;
@@ -371,22 +359,18 @@ function bucketSort(arr) {
       const value = values[elementIndex];
       const bucketIndex = Math.min(Math.floor((value / 100) * numBuckets), numBuckets - 1);
       
-      // Highlight the element being distributed
       highlightElement(originalArray, elementIndex, 'comparing');
       
       await new Promise(r => setTimeout(r, 800));
       
-      // Add to bucket
       createBar(value, buckets[bucketIndex].content, true);
       distributions++;
       
-      // Highlight the target bucket
       buckets[bucketIndex].bucket.style.borderColor = '#3b82f6';
       buckets[bucketIndex].bucket.style.backgroundColor = '#dbeafe';
       
       await new Promise(r => setTimeout(r, 400));
       
-      // Reset bucket highlight
       buckets[bucketIndex].bucket.style.borderColor = '#e5e7eb';
       buckets[bucketIndex].bucket.style.backgroundColor = '#f9fafb';
       
@@ -405,21 +389,17 @@ function bucketSort(arr) {
       
       if (bucketValues.length <= 1) return true;
       
-      // Highlight bucket being sorted
       buckets[bucketIndex].bucket.style.borderColor = '#10b981';
       buckets[bucketIndex].bucket.style.backgroundColor = '#d1fae5';
       
-      // Sort the bucket (using insertion sort visualization)
       bucketValues.sort((a, b) => a - b);
       
-      // Clear and rebuild bucket content
       bucketContent.innerHTML = '';
       bucketValues.forEach(value => createBar(value, bucketContent, true));
       
       bucketSorts++;
       await new Promise(r => setTimeout(r, 600));
       
-      // Reset bucket highlight
       buckets[bucketIndex].bucket.style.borderColor = '#e5e7eb';
       buckets[bucketIndex].bucket.style.backgroundColor = '#f9fafb';
       
@@ -430,7 +410,6 @@ function bucketSort(arr) {
     async function concatenateStep() {
       const sortedValues = [];
       
-      // Collect all values from buckets
       for (let i = 0; i < numBuckets; i++) {
         const bucketContent = buckets[i].content;
         const bucketValues = Array.from(bucketContent.children).map(bar => 
@@ -438,7 +417,6 @@ function bucketSort(arr) {
         );
         sortedValues.push(...bucketValues);
         
-        // Highlight bucket being concatenated
         buckets[i].bucket.style.borderColor = '#8b5cf6';
         buckets[i].bucket.style.backgroundColor = '#ede9fe';
         
@@ -448,7 +426,6 @@ function bucketSort(arr) {
         buckets[i].bucket.style.backgroundColor = '#f9fafb';
       }
       
-      // Create sorted array visualization
       sortedArray.innerHTML = '';
       for (let i = 0; i < sortedValues.length; i++) {
         await new Promise(r => setTimeout(r, 100));
@@ -463,16 +440,13 @@ function bucketSort(arr) {
       const totalElements = values.length;
       
       if (currentStep < totalElements) {
-        // Distribution phase
         const success = await distributionStep(currentStep);
         if (success) currentStep++;
       } else if (currentStep < totalElements + numBuckets) {
-        // Sorting buckets phase
         const bucketIndex = currentStep - totalElements;
         const success = await sortBucketStep(bucketIndex);
         if (success) currentStep++;
       } else if (currentStep === totalElements + numBuckets) {
-        // Concatenation phase
         await concatenateStep();
         currentStep++;
         isComplete = true;
@@ -561,10 +535,8 @@ function bucketSort(arr) {
       }
     });
 
-    // Initialize the visualizer
     generateBars();
 
-    // Quiz Data for Bucket Sort
     const bucketSortQuizData = [
       {
         question: "What is the average-case time complexity of Bucket Sort?",
@@ -602,7 +574,6 @@ function bucketSort(arr) {
       }
     ];
 
-    // Initialize the quiz
     AlgorithmQuiz.create('quiz-container', bucketSortQuizData);
   </script>
 </body>

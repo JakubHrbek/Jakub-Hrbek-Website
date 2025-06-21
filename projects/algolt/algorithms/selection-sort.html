@@ -74,21 +74,18 @@
       
       <div class="lg:col-span-1">
         <div class="code-block h-full">
-          <pre><code class="language-js">// Selection Sort Algorithm
-function selectionSort(arr) {
+          <pre><code class="language-js">function selectionSort(arr) {
   const n = arr.length;
   
   for (let i = 0; i < n - 1; i++) {
     let minIndex = i;
     
-    // Find minimum element in remaining array
     for (let j = i + 1; j < n; j++) {
       if (arr[j] < arr[minIndex]) {
         minIndex = j;
       }
     }
     
-    // Swap minimum with first element
     if (minIndex !== i) {
       [arr[i], arr[minIndex]] = 
         [arr[minIndex], arr[i]];
@@ -181,11 +178,9 @@ function selectionSort(arr) {
     </section>
   </main>
 
-  <!-- Include the external quiz system -->
   <script src="quiz.js"></script>
   
   <script>
-    // Selection Sort Visualizer Logic
     const visualizer = document.getElementById("visualizer");
     const playBtn = document.getElementById("playBtn");
     const pauseBtn = document.getElementById("pauseBtn");
@@ -274,13 +269,11 @@ function selectionSort(arr) {
 
       resetBarColors();
       
-      // Mark sorted portion
       for (let k = 0; k < i; k++) {
         bars[k].classList.add('sorted');
       }
 
       if (!searchingForMin) {
-        // Starting new pass - initialize
         minIndex = i;
         j = i + 1;
         searchingForMin = true;
@@ -290,7 +283,6 @@ function selectionSort(arr) {
       }
 
       if (j < values.length) {
-        // Comparing current element with minimum
         comparisons++;
         bars[j].classList.add('comparing');
         
@@ -306,7 +298,6 @@ function selectionSort(arr) {
         bars[j].classList.remove('comparing');
         j++;
       } else {
-        // Finished searching for minimum, now swap if needed
         searchingForMin = false;
         
         if (minIndex !== i) {
@@ -317,7 +308,6 @@ function selectionSort(arr) {
           bars[i].style.height = `${Math.min((values[i] / 100) * maxHeight, maxHeight)}px`;
           bars[minIndex].style.height = `${Math.min((values[minIndex] / 100) * maxHeight, maxHeight)}px`;
           
-          // Visual feedback for swap
           bars[i].classList.add('comparing');
           bars[minIndex].classList.add('comparing');
           
@@ -415,10 +405,8 @@ function selectionSort(arr) {
       }
     });
 
-    // Initialize the visualizer
     generateBars();
 
-    // Quiz Data for Selection Sort
     const selectionSortQuizData = [
       {
         question: "What is the time complexity of Selection Sort in all cases?",
@@ -456,7 +444,6 @@ function selectionSort(arr) {
       }
     ];
 
-    // Initialize the quiz
     AlgorithmQuiz.create('quiz-container', selectionSortQuizData);
   </script>
 </body>

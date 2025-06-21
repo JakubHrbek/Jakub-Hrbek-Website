@@ -74,8 +74,7 @@
       
       <div class="lg:col-span-1">
         <div class="code-block h-full">
-          <pre><code class="language-js">// Quick Sort Algorithm
-function quickSort(arr, low = 0, high = arr.length - 1) {
+          <pre><code class="language-js">function quickSort(arr, low = 0, high = arr.length - 1) {
   if (low < high) {
     const pivotIndex = partition(arr, low, high);
     
@@ -183,11 +182,9 @@ function partition(arr, low, high) {
     </section>
   </main>
 
-  <!-- Include the external quiz system -->
   <script src="quiz.js"></script>
   
   <script>
-    // Quick Sort Visualizer Logic
     const visualizer = document.getElementById("visualizer");
     const playBtn = document.getElementById("playBtn");
     const pauseBtn = document.getElementById("pauseBtn");
@@ -245,7 +242,6 @@ function partition(arr, low, high) {
       timerDisplay.innerText = "0.00s";
       updateStats();
       
-      // Generate sorting steps
       generateQuickSortSteps();
       
       playBtn.disabled = false;
@@ -263,10 +259,8 @@ function partition(arr, low, high) {
         if (low < high) {
           maxDepth = Math.max(maxDepth, depth);
           
-          // Partition step
           const pivotIndex = partitionSteps(arr, low, high, depth);
           
-          // Recursive calls
           quickSortSteps(arr, low, pivotIndex - 1, depth + 1);
           quickSortSteps(arr, pivotIndex + 1, high, depth + 1);
         }
@@ -276,7 +270,6 @@ function partition(arr, low, high) {
         const pivot = arr[high];
         let i = low - 1;
         
-        // Mark pivot
         sortingSteps.push({
           type: 'pivot',
           pivot: high,
@@ -287,7 +280,6 @@ function partition(arr, low, high) {
         });
         
         for (let j = low; j < high; j++) {
-          // Compare step
           sortingSteps.push({
             type: 'compare',
             comparing: [j, high],
@@ -303,7 +295,6 @@ function partition(arr, low, high) {
           if (arr[j] <= pivot) {
             i++;
             if (i !== j) {
-              // Swap step
               [arr[i], arr[j]] = [arr[j], arr[i]];
               sortingSteps.push({
                 type: 'swap',
@@ -318,7 +309,6 @@ function partition(arr, low, high) {
           }
         }
         
-        // Final pivot swap
         [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
         sortingSteps.push({
           type: 'pivot_final',
@@ -335,7 +325,6 @@ function partition(arr, low, high) {
       
       quickSortSteps(arr, 0, arr.length - 1);
       
-      // Add completion step
       sortingSteps.push({
         type: 'complete',
         array: [...arr]
@@ -363,7 +352,6 @@ function partition(arr, low, high) {
     function updateVisualization(step) {
       resetBarColors();
       
-      // Update bar heights based on current array state
       step.array.forEach((value, index) => {
         const maxHeight = window.innerWidth <= 768 ? 220 : 260;
         const height = Math.min((value / 100) * maxHeight, maxHeight);
@@ -506,10 +494,8 @@ function partition(arr, low, high) {
       }
     });
 
-    // Initialize the visualizer
     generateBars();
 
-    // Quiz Data for Quick Sort
     const quickSortQuizData = [
       {
         question: "What is the average-case time complexity of Quick Sort?",
@@ -547,7 +533,6 @@ function partition(arr, low, high) {
       }
     ];
 
-    // Initialize the quiz
     AlgorithmQuiz.create('quiz-container', quickSortQuizData);
   </script>
 </body>

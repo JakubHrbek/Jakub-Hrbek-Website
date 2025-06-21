@@ -1,5 +1,3 @@
-/* style.css */
-
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap');
 
 :root {
@@ -33,7 +31,6 @@ section {
   padding: 100px 10%;
 }
 
-/* Hero Section */
 #hero {
   height: 100vh;
   background: var(--chrome);
@@ -78,7 +75,6 @@ section {
   box-shadow: 0 0 25px var(--accent);
 }
 
-/* Project Grid */
 .project-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -186,7 +182,6 @@ footer {
   .nav-links li a:hover {
     color: #fff;
   }
-  /* Hamburger Menu Styles */
 .menu-toggle {
     display: none;
     flex-direction: column;
@@ -203,7 +198,7 @@ footer {
   }
 
   ul ul {
-    margin-left: 1.5rem; /* or padding-left: 1.5rem; */
+    margin-left: 1.5rem;
   }
   
   .hero-content {
@@ -338,7 +333,6 @@ footer {
   
   
   
-  /* Responsive Nav */
   @media (max-width: 768px) {
     .menu-toggle {
       display: flex;

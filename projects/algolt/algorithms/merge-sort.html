@@ -74,8 +74,7 @@
       
       <div class="lg:col-span-1">
         <div class="code-block h-full">
-          <pre><code class="language-js">// Merge Sort Algorithm
-function mergeSort(arr) {
+          <pre><code class="language-js">function mergeSort(arr) {
   if (arr.length <= 1) return arr;
   
   const mid = Math.floor(arr.length / 2);
@@ -189,11 +188,9 @@ function merge(left, right) {
     </section>
   </main>
 
-  <!-- Include the external quiz system -->
   <script src="quiz.js"></script>
   
   <script>
-    // Merge Sort Visualizer Logic
     const visualizer = document.getElementById("visualizer");
     const playBtn = document.getElementById("playBtn");
     const pauseBtn = document.getElementById("pauseBtn");
@@ -219,7 +216,7 @@ function merge(left, right) {
 
     function getOptimalArraySize() {
       const isMobile = window.innerWidth <= 768;
-      return isMobile ? 16 : 16; // Merge sort works better with power of 2
+      return isMobile ? 16 : 16;
     }
 
     function generateBars(custom = null) {
@@ -245,7 +242,6 @@ function merge(left, right) {
       timerDisplay.innerText = "0.00s";
       updateStats();
       
-      // Generate sorting steps
       generateSortSteps();
       currentStep = 0;
       
@@ -267,7 +263,6 @@ function merge(left, right) {
       
       const mid = Math.floor((left + right) / 2);
       
-      // Record divide step
       sortSteps.push({
         type: 'divide',
         left: left,
@@ -279,7 +274,6 @@ function merge(left, right) {
       mergeSortWithSteps(arr, left, mid, depth + 1);
       mergeSortWithSteps(arr, mid + 1, right, depth + 1);
       
-      // Record merge step
       const leftArr = arr.slice(left, mid + 1);
       const rightArr = arr.slice(mid + 1, right + 1);
       
@@ -293,7 +287,6 @@ function merge(left, right) {
         depth: depth
       });
       
-      // Perform actual merge for step generation
       mergeArrays(arr, left, mid, right);
     }
 
@@ -349,12 +342,10 @@ function merge(left, right) {
       resetBarColors();
 
       if (step.type === 'divide') {
-        // Highlight the section being divided
         for (let i = step.left; i <= step.right; i++) {
           bars[i].classList.add('dividing');
         }
       } else if (step.type === 'merge') {
-        // Highlight sections being merged
         for (let i = step.left; i <= step.mid; i++) {
           bars[i].classList.add('comparing');
         }
@@ -362,7 +353,6 @@ function merge(left, right) {
           bars[i].classList.add('merging');
         }
         
-        // Perform the merge on the visual representation
         const leftArr = step.leftArr;
         const rightArr = step.rightArr;
         let i = 0, j = 0, k = step.left;
@@ -375,7 +365,6 @@ function merge(left, right) {
             values[k] = rightArr[j++];
           }
           
-          // Update bar height
           const maxHeight = window.innerWidth <= 768 ? 220 : 260;
           bars[k].style.height = `${Math.min((values[k] / 100) * maxHeight, maxHeight)}px`;
           k++;
@@ -483,10 +472,8 @@ function merge(left, right) {
       }
     });
 
-    // Initialize the visualizer
     generateBars();
 
-    // Quiz Data for Merge Sort
     const mergeSortQuizData = [
       {
         question: "What is the time complexity of Merge Sort in all cases?",
@@ -524,7 +511,6 @@ function merge(left, right) {
       }
     ];
 
-    // Initialize the quiz
     AlgorithmQuiz.create('quiz-container', mergeSortQuizData);
   </script>
 </body>

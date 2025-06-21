@@ -83,9 +83,7 @@
   
   <div class="lg:col-span-1">
     <div class="code-block h-full">
-      <pre><code class="language-js">// Breadth First Search Algorithm
-
-function BFS(graph, startNode) {
+      <pre><code class="language-js">function BFS(graph, startNode) {
 const visited = new Set();
 const queue = [startNode];
 const result = [];
@@ -96,7 +94,6 @@ while (queue.length > 0) {
 const current = queue.shift();
 result.push(current);
 
-// Visit all neighbors
 for (const neighbor of graph[current]) {
   if (!visited.has(neighbor)) {
     visited.add(neighbor);
@@ -217,12 +214,9 @@ return result;
 
   </main>
 
-  <!-- Include the external quiz system -->
-
   <script src="quiz.js"></script>
 
   <script>
-    // BFS Visualizer Logic
     const canvas = document.getElementById("graphCanvas");
     const ctx = canvas.getContext('2d');
     const playBtn = document.getElementById("playBtn");
@@ -243,7 +237,6 @@ return result;
     let isPlaying = false, isPaused = false, isComplete = false;
     let startTime, elapsedTime = 0, timerInterval;
 
-    // Graph generation and drawing
     function generateRandomGraph() {
       nodes = [];
       edges = [];
@@ -254,7 +247,6 @@ return result;
       const canvasHeight = canvas.height;
       const padding = 60;
       
-      // Generate nodes in a circular layout
       for (let i = 0; i < numNodes; i++) {
         const angle = (i / numNodes) * 2 * Math.PI;
         const centerX = canvasWidth / 2;
@@ -272,17 +264,14 @@ return result;
         graph[i] = [];
       }
       
-      // Generate random edges (ensure connectivity)
       const edgeCount = Math.floor(Math.random() * 5) + numNodes;
       const edgeSet = new Set();
       
-      // Ensure the graph is connected by creating a spanning tree
       for (let i = 1; i < numNodes; i++) {
         const parent = Math.floor(Math.random() * i);
         addEdge(parent, i, edgeSet);
       }
       
-      // Add additional random edges
       while (edges.length < edgeCount) {
         const from = Math.floor(Math.random() * numNodes);
         const to = Math.floor(Math.random() * numNodes);
@@ -307,7 +296,6 @@ return result;
     function drawGraph() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Draw edges
       ctx.strokeStyle = '#e5e7eb';
       ctx.lineWidth = 2;
       edges.forEach(edge => {
@@ -320,19 +308,18 @@ return result;
         ctx.stroke();
       });
       
-      // Draw nodes
       nodes.forEach(node => {
         ctx.beginPath();
         ctx.arc(node.x, node.y, 25, 0, 2 * Math.PI);
         
         if (node.current) {
-          ctx.fillStyle = '#dc2626'; // Red for current
+          ctx.fillStyle = '#dc2626';
         } else if (node.visited) {
-          ctx.fillStyle = '#059669'; // Green for visited
+          ctx.fillStyle = '#059669';
         } else if (node.inQueue) {
-          ctx.fillStyle = '#2563eb'; // Blue for in queue
+          ctx.fillStyle = '#2563eb';
         } else {
-          ctx.fillStyle = '#f3f4f6'; // Gray for unvisited
+          ctx.fillStyle = '#f3f4f6';
         }
         
         ctx.fill();
@@ -340,7 +327,6 @@ return result;
         ctx.lineWidth = 2;
         ctx.stroke();
         
-        // Draw node label
         ctx.fillStyle = node.visited || node.current || node.inQueue ? '#ffffff' : '#374151';
         ctx.font = 'bold 16px Inter';
         ctx.textAlign = 'center';
@@ -348,7 +334,6 @@ return result;
         ctx.fillText(node.id.toString(), node.x, node.y);
       });
       
-      // Draw start node indicator
       if (startNode < nodes.length) {
         const node = nodes[startNode];
         ctx.beginPath();
@@ -429,7 +414,6 @@ return result;
 
     async function bfsStep() {
       if (stepIndex === 0) {
-        // Initialize BFS
         queue.push(startNode);
         visited.add(startNode);
         nodes[startNode].inQueue = true;
@@ -440,13 +424,11 @@ return result;
       }
       
       if (queue.length === 0) {
-        // BFS complete
         isComplete = true;
         clearInterval(timerInterval);
         playBtn.textContent = "Complete";
         playBtn.disabled = true;
         
-        // Mark current node as no longer current
         if (currentNode !== null) {
           nodes[currentNode].current = false;
         }
@@ -454,24 +436,20 @@ return result;
         return;
       }
       
-      // Process next node from queue
       const nodeId = queue.shift();
       currentNode = nodeId;
       nodesVisited++;
       
-      // Update node states
       nodes[nodeId].inQueue = false;
       nodes[nodeId].visited = true;
       nodes[nodeId].current = true;
       
-      // Clear previous current node
       nodes.forEach((node, index) => {
         if (index !== nodeId) {
           node.current = false;
         }
       });
       
-      // Add neighbors to queue
       for (const neighbor of graph[nodeId]) {
         if (!visited.has(neighbor)) {
           visited.add(neighbor);
@@ -488,14 +466,13 @@ return result;
       startTimer();
       while (!isComplete && isPlaying && !isPaused) {
         await bfsStep();
-        await new Promise(r => setTimeout(r, 1000)); // 1 second delay
+        await new Promise(r => setTimeout(r, 1000));
       }
       if (isComplete) {
         clearInterval(timerInterval);
       }
     }
 
-    // Event handlers
     playBtn.onclick = () => {
       if (!isPlaying && !isComplete) {
         isPlaying = true;
@@ -546,7 +523,6 @@ return result;
       }
     };
 
-    // Canvas click handler
     canvas.onclick = (e) => {
       const rect = canvas.getBoundingClientRect();
       const x = (e.clientX - rect.left) * (canvas.width / rect.width);
@@ -568,7 +544,6 @@ return result;
       }
     });
 
-    // Initialize
     function resizeCanvas() {
       const container = canvas.parentElement;
       const rect = container.getBoundingClientRect();
@@ -582,7 +557,6 @@ return result;
     generateRandomGraph();
     resetVisualization();
 
-    // Quiz Data for BFS
     const bfsQuizData = [
       {
         question: "What data structure does BFS use to keep track of nodes to visit?",
@@ -615,7 +589,6 @@ return result;
       }
     ];
 
-    // Initialize the quiz
     AlgorithmQuiz.create('quiz-container', bfsQuizData);
   </script>
 

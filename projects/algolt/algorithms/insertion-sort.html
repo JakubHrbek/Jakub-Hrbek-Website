@@ -74,22 +74,18 @@
       
       <div class="lg:col-span-1">
         <div class="code-block h-full">
-          <pre><code class="language-js">// Insertion Sort Algorithm
-function insertionSort(arr) {
+          <pre><code class="language-js">function insertionSort(arr) {
   const n = arr.length;
   
   for (let i = 1; i < n; i++) {
     let key = arr[i];
     let j = i - 1;
     
-    // Move elements greater than key
-    // one position ahead
     while (j >= 0 && arr[j] > key) {
       arr[j + 1] = arr[j];
       j--;
     }
     
-    // Insert key at correct position
     arr[j + 1] = key;
   }
   
@@ -183,11 +179,9 @@ function insertionSort(arr) {
     </section>
   </main>
 
-  <!-- Include the external quiz system -->
   <script src="quiz.js"></script>
   
   <script>
-    // Insertion Sort Visualizer Logic
     const visualizer = document.getElementById("visualizer");
     const playBtn = document.getElementById("playBtn");
     const pauseBtn = document.getElementById("pauseBtn");
@@ -238,7 +232,6 @@ function insertionSort(arr) {
       timerDisplay.innerText = "0.00s";
       updateStats();
       
-      // Mark first element as sorted initially
       if (bars.length > 0) {
         bars[0].classList.add('sorted');
       }
@@ -264,7 +257,6 @@ function insertionSort(arr) {
     function resetBarColors() {
       bars.forEach((bar, index) => {
         bar.classList.remove('comparing', 'current-key');
-        // Keep sorted elements marked
         if (index < i) {
           bar.classList.add('sorted');
         } else {
@@ -283,7 +275,6 @@ function insertionSort(arr) {
         return;
       }
 
-      // Start of new iteration
       if (j === i - 1) {
         key = values[i];
         resetBarColors();
@@ -291,13 +282,11 @@ function insertionSort(arr) {
         j = i - 1;
       }
 
-      // Compare current element with key
       if (j >= 0) {
         comparisons++;
         bars[j].classList.add('comparing');
         
         if (values[j] > key) {
-          // Shift element to the right
           shifts++;
           values[j + 1] = values[j];
           const maxHeight = window.innerWidth <= 768 ? 220 : 260;
@@ -305,26 +294,22 @@ function insertionSort(arr) {
           bars[j + 1].classList.remove('current-key');
           j--;
         } else {
-          // Found correct position, insert key
           values[j + 1] = key;
           const maxHeight = window.innerWidth <= 768 ? 220 : 260;
           bars[j + 1].style.height = `${Math.min((key / 100) * maxHeight, maxHeight)}px`;
           bars[j + 1].classList.remove('current-key');
           bars[j + 1].classList.add('sorted');
           
-          // Move to next element
           i++;
           j = i - 1;
         }
       } else {
-        // Insert at beginning
         values[0] = key;
         const maxHeight = window.innerWidth <= 768 ? 220 : 260;
         bars[0].style.height = `${Math.min((key / 100) * maxHeight, maxHeight)}px`;
         bars[0].classList.remove('current-key');
         bars[0].classList.add('sorted');
         
-        // Move to next element
         i++;
         j = i - 1;
       }
@@ -332,7 +317,6 @@ function insertionSort(arr) {
       const delay = window.innerWidth <= 768 ? 300 : 200;
       await new Promise(r => setTimeout(r, delay));
       
-      // Clean up comparing state
       bars.forEach(bar => bar.classList.remove('comparing'));
       
       updateStats();
@@ -415,10 +399,8 @@ function insertionSort(arr) {
       }
     });
 
-    // Initialize the visualizer
     generateBars();
 
-    // Quiz Data for Insertion Sort
     const insertionSortQuizData = [
       {
         question: "What is the best-case time complexity of Insertion Sort?",
@@ -461,7 +443,6 @@ function insertionSort(arr) {
       }
     ];
 
-    // Initialize the quiz
     AlgorithmQuiz.create('quiz-container', insertionSortQuizData);
   </script>
 </body>

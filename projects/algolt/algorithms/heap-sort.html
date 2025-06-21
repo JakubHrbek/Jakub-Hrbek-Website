@@ -74,21 +74,16 @@
       
       <div class="lg:col-span-1">
         <div class="code-block h-full">
-          <pre><code class="language-js">// Heap Sort Algorithm
-function heapSort(arr) {
+          <pre><code class="language-js">function heapSort(arr) {
   const n = arr.length;
   
-  // Build max heap
   for (let i = Math.floor(n/2) - 1; i >= 0; i--) {
     heapify(arr, n, i);
   }
   
-  // Extract elements one by one
   for (let i = n - 1; i > 0; i--) {
-    // Move root to end
     [arr[0], arr[i]] = [arr[i], arr[0]];
     
-    // Heapify reduced heap
     heapify(arr, i, 0);
   }
   
@@ -196,11 +191,9 @@ function heapify(arr, n, i) {
     </section>
   </main>
 
-  <!-- Include the external quiz system -->
   <script src="quiz.js"></script>
   
   <script>
-    // Heap Sort Visualizer Logic
     const visualizer = document.getElementById("visualizer");
     const playBtn = document.getElementById("playBtn");
     const pauseBtn = document.getElementById("pauseBtn");
@@ -256,7 +249,6 @@ function heapify(arr, n, i) {
       timerDisplay.innerText = "0.00s";
       updateStats();
       
-      // Generate sorting steps
       generateSortingSteps();
       
       playBtn.disabled = false;
@@ -271,14 +263,11 @@ function heapify(arr, n, i) {
       const arr = [...values];
       const n = arr.length;
       
-      // Build heap phase
       for (let i = Math.floor(n/2) - 1; i >= 0; i--) {
         heapifySteps(arr, n, i, "Build Heap");
       }
       
-      // Sort phase
       for (let i = n - 1; i > 0; i--) {
-        // Move root to end
         sortingSteps.push({
           type: 'swap',
           indices: [0, i],
@@ -287,7 +276,6 @@ function heapify(arr, n, i) {
         });
         [arr[0], arr[i]] = [arr[i], arr[0]];
         
-        // Heapify reduced heap
         heapifySteps(arr, i, 0, "Extract Max");
       }
     }
@@ -297,7 +285,6 @@ function heapify(arr, n, i) {
       let left = 2 * i + 1;
       let right = 2 * i + 2;
       
-      // Compare with left child
       if (left < n) {
         sortingSteps.push({
           type: 'compare',
@@ -309,7 +296,6 @@ function heapify(arr, n, i) {
         }
       }
       
-      // Compare with right child
       if (right < n) {
         sortingSteps.push({
           type: 'compare',
@@ -321,7 +307,6 @@ function heapify(arr, n, i) {
         }
       }
       
-      // If largest is not root, swap and continue heapifying
       if (largest !== i) {
         sortingSteps.push({
           type: 'swap',
@@ -385,14 +370,11 @@ function heapify(arr, n, i) {
         swaps++;
         const [i, j] = step.indices;
         
-        // Highlight swapping elements
         bars[i].classList.add('comparing');
         bars[j].classList.add('comparing');
         
-        // Swap values
         [values[i], values[j]] = [values[j], values[i]];
         
-        // Update bar heights
         const maxHeight = window.innerWidth <= 768 ? 220 : 260;
         bars[i].style.height = `${Math.min((values[i] / 100) * maxHeight, maxHeight)}px`;
         bars[j].style.height = `${Math.min((values[j] / 100) * maxHeight, maxHeight)}px`;
@@ -483,10 +465,8 @@ function heapify(arr, n, i) {
       }
     });
 
-    // Initialize the visualizer
     generateBars();
 
-    // Quiz Data for Heap Sort
     const heapSortQuizData = [
       {
         question: "What is the time complexity of Heap Sort in all cases?",
@@ -524,7 +504,6 @@ function heapify(arr, n, i) {
       }
     ];
 
-    // Initialize the quiz
     AlgorithmQuiz.create('quiz-container', heapSortQuizData);
   </script>
 </body>

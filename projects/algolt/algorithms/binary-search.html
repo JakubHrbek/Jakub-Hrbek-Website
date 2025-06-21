@@ -110,8 +110,7 @@
       
       <div class="lg:col-span-1">
         <div class="code-block h-full">
-          <pre><code class="language-js">// Binary Search Algorithm
-function binarySearch(arr, target) {
+          <pre><code class="language-js">function binarySearch(arr, target) {
   let left = 0;
   let right = arr.length - 1;
   
@@ -119,15 +118,15 @@ function binarySearch(arr, target) {
     const mid = Math.floor((left + right) / 2);
     
     if (arr[mid] === target) {
-      return mid; // Found target
+      return mid;
     } else if (arr[mid] < target) {
-      left = mid + 1; // Search right half
+      left = mid + 1;
     } else {
-      right = mid - 1; // Search left half
+      right = mid - 1;
     }
   }
   
-  return -1; // Target not found
+  return -1;
 }</code></pre>
         </div>
       </div>
@@ -236,11 +235,9 @@ function binarySearch(arr, target) {
     </section>
   </main>
 
-  <!-- Include the external quiz system -->
   <script src="quiz.js"></script>
   
   <script>
-    // Binary Search Visualizer Logic
     const arrayContainer = document.getElementById("arrayContainer");
     const playBtn = document.getElementById("playBtn");
     const pauseBtn = document.getElementById("pauseBtn");
@@ -307,7 +304,6 @@ function binarySearch(arr, target) {
       const height = Math.max((value / Math.max(...values)) * maxHeight, 20);
       bar.style.height = `${height}px`;
       
-      // Add value label
       const label = document.createElement("span");
       label.textContent = value;
       label.style.fontSize = "12px";
@@ -317,7 +313,6 @@ function binarySearch(arr, target) {
       label.style.bottom = "4px";
       bar.appendChild(label);
       
-      // Add index label
       const indexLabel = document.createElement("span");
       indexLabel.textContent = index;
       indexLabel.style.fontSize = "10px";
@@ -337,20 +332,16 @@ function binarySearch(arr, target) {
       if (custom) {
         originalValues = [...custom];
       } else {
-        // Generate a sorted array
         const randomValues = Array.from({ length: arraySize }, () => Math.floor(Math.random() * 99) + 1);
         originalValues = randomValues.sort((a, b) => a - b);
       }
       
       values = [...originalValues];
       
-      // Clear containers
       arrayContainer.innerHTML = "";
       
-      // Create array visualization
       values.forEach((value, index) => createBar(value, index, arrayContainer));
       
-      // Reset state
       resetSearch();
       
       playBtn.disabled = true;
@@ -358,7 +349,6 @@ function binarySearch(arr, target) {
     }
 
     function resetSearch() {
-      // Clear any pending animations
       if (animationTimeout) {
         clearTimeout(animationTimeout);
         animationTimeout = null;
@@ -442,7 +432,6 @@ function binarySearch(arr, target) {
     function highlightRange() {
       clearHighlights();
       
-      // Highlight eliminated ranges
       for (let i = 0; i < left; i++) {
         highlightElement(i, 'eliminated');
       }
@@ -450,7 +439,6 @@ function binarySearch(arr, target) {
         highlightElement(i, 'eliminated');
       }
       
-      // Highlight current pointers
       if (left <= right) {
         highlightElement(left, 'left');
         highlightElement(right, 'right');
@@ -461,7 +449,6 @@ function binarySearch(arr, target) {
     function performSearchStep() {
       return new Promise((resolve) => {
         if (left > right) {
-          // Target not found
           searchResult = -1;
           isComplete = true;
           stopTimer();
@@ -478,14 +465,11 @@ function binarySearch(arr, target) {
         mid = Math.floor((left + right) / 2);
         comparisons++;
         
-        // Highlight current search range
         highlightRange();
         updateStats();
         
-        // Wait for animation
         animationTimeout = setTimeout(() => {
           if (values[mid] === target) {
-            // Found target
             searchResult = mid;
             isComplete = true;
             stopTimer();
@@ -497,11 +481,9 @@ function binarySearch(arr, target) {
             updateStats();
             resolve();
           } else if (values[mid] < target) {
-            // Search right half
             left = mid + 1;
             resolve();
           } else {
-            // Search left half
             right = mid - 1;
             resolve();
           }
@@ -540,7 +522,6 @@ function binarySearch(arr, target) {
       await performSearchStep();
     }
 
-    // Event Listeners
     setTargetBtn.onclick = () => {
       const targetValue = parseInt(targetInput.value);
       if (!isNaN(targetValue)) {
@@ -602,7 +583,6 @@ function binarySearch(arr, target) {
       
       if (isComplete) return;
       
-      // Stop any running search
       if (isPlaying) {
         isPlaying = false;
         isPaused = true;
@@ -632,7 +612,6 @@ function binarySearch(arr, target) {
         .filter(n => !isNaN(n));
       
       if (nums.length > 1) {
-        // Check if array is sorted
         const isSorted = nums.every((val, i) => i === 0 || nums[i - 1] <= val);
         if (!isSorted) {
           alert('Array must be sorted in ascending order for binary search. Sorting automatically...');
@@ -648,7 +627,6 @@ function binarySearch(arr, target) {
       }
     };
 
-    // Keyboard event listeners
     targetInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
         setTargetBtn.click();
@@ -661,12 +639,10 @@ function binarySearch(arr, target) {
       }
     });
 
-    // Window resize handler
     window.addEventListener('resize', () => {
       generateBars(originalValues);
     });
 
-    // Initialize the visualizer
     generateBars();
   </script>
 </body>
